@@ -13,6 +13,61 @@ You can run the KitKey server either from the nuget package or by downloading th
 - **Server:** https://github.com/NTDLS/KitKey/releases
 - **Client:** https://github.com/NTDLS/KitKey/releases
 
+## Server
+Besides runing the dedicated service using the installer, yyou can run the server from code:
+
+```csharp
+var serverConfig = new KkServerConfiguration()
+{
+    PersistencePath = Path.GetDirectoryName(Environment.ProcessPath)
+};
+
+var server = new KkServer(serverConfig);
+            
+server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
+
+Console.WriteLine("Press [enter] to stop.");
+Console.ReadLine();
+
+server.Stop();
+```
+
+## Client
+The client is quite configurable, but the basic connection, store creation and get, set, delete it straight forward.
+
+```csharp
+var client = new KkClient();
+
+client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
+
+client.CreateStore("MyFirstStore");
+
+for (int i = 0; i < 100000; i++)
+{
+    var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
+    var randomValue = Guid.NewGuid().ToString();
+
+    client.Set("MyFirstStore", randomKey, randomValue);
+}
+
+Console.WriteLine("Press [enter] to stop.");
+Console.ReadLine();
+
+client.Disconnect();
+```
+
+Getting, settng and deleting a value from the key store server.
+```csharp
+//Set a value:
+client.Set("MyFirstStore", "Key_Name", "Some text value");
+
+//Get a value:
+var value = client.Get("MyFirstStore", "Key_Name");
+
+//Delete a value:
+client.Delete("MyFirstStore", "Key_Name");
+```
+
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/d1f8559d-ade8-409d-8bbb-c38770f3bfdf)
 
