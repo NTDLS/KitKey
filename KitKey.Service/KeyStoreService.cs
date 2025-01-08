@@ -5,15 +5,15 @@ using System.Text.Json.Serialization;
 
 namespace KitKey.Service
 {
-    public class QueuingService
+    public class KeyStoreService
     {
-        private KkServer? _mqServer;
+        private KkServer? _keyServer;
 
         public void Start()
         {
             var serviceConfiguration = Configs.GetServiceConfig();
 
-            _mqServer = new KkServer(new KkServerConfiguration
+            _keyServer = new KkServer(new KkServerConfiguration
             {
                 PersistencePath = serviceConfiguration.DataPath,
                 AsynchronousAcknowledgment = serviceConfiguration.AsynchronousAcknowledgment,
@@ -22,10 +22,10 @@ namespace KitKey.Service
                 AcknowledgmentTimeoutSeconds = serviceConfiguration.AcknowledgmentTimeoutSeconds,
                 ReceiveBufferGrowthRate = serviceConfiguration.ReceiveBufferGrowthRate,
             });
-            _mqServer.OnLog += MqServer_OnLog;
+            _keyServer.OnLog += MqServer_OnLog;
 
             Log.Verbose($"Starting key store service on port: {serviceConfiguration.ServicePort}.");
-            _mqServer.Start(serviceConfiguration.ServicePort);
+            _keyServer.Start(serviceConfiguration.ServicePort);
             Log.Verbose("Key store service started.");
 
             if (serviceConfiguration.WebListenURL != null && (serviceConfiguration.EnableWebApi || serviceConfiguration.EnableWebUI))
@@ -38,7 +38,7 @@ namespace KitKey.Service
                         options.LoginPath = "/Login";
                     });
 
-                builder.Services.AddSingleton(_mqServer);
+                builder.Services.AddSingleton(_keyServer);
                 builder.Services.AddSingleton(serviceConfiguration);
 
                 if (serviceConfiguration.EnableWebUI)
@@ -92,10 +92,10 @@ namespace KitKey.Service
 
         public void Stop()
         {
-            if (_mqServer != null)
+            if (_keyServer != null)
             {
                 Log.Verbose("Stopping key store service.");
-                _mqServer.Stop();
+                _keyServer.Stop();
                 Log.Verbose("Key store service stopped.");
             }
         }

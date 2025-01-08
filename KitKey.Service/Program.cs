@@ -26,9 +26,9 @@ namespace KitKey.Service
                     rc.RestartService(1);
                 });
 
-                x.Service<QueuingService>(s =>
+                x.Service<KeyStoreService>(s =>
                 {
-                    s.ConstructUsing(hostSettings => new QueuingService());
+                    s.ConstructUsing(hostSettings => new KeyStoreService());
                     s.WhenStarted(tc => tc.Start());
                     s.WhenStopped(tc => tc.Stop());
                 });

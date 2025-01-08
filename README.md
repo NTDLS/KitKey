@@ -14,7 +14,7 @@ You can run the KitKey server either from the nuget package or by downloading th
 - **Client:** https://github.com/NTDLS/KitKey/releases
 
 ## Server
-Besides runing the dedicated service using the installer, yyou can run the server from code:
+Besides running the dedicated service using the installer, you can run the server from code:
 
 ```csharp
 var serverConfig = new KkServerConfiguration()
@@ -56,7 +56,7 @@ Console.ReadLine();
 client.Disconnect();
 ```
 
-Getting, settng and deleting a value from the key store server.
+Getting, setting, and deleting a value from the key store server.
 ```csharp
 //Set a value:
 client.Set("MyFirstStore", "Key_Name", "Some text value");

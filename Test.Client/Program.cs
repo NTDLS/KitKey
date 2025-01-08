@@ -7,7 +7,7 @@ namespace Test.Client
     {
         static void Main()
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 1; i++)
             {
                 new Thread(ThreadProc).Start();
             }

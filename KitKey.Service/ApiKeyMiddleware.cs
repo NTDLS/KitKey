@@ -3,7 +3,7 @@
     public class ApiKeyMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string ApiKeyHeaderName = "x-KitKey-api-Key";
+        private const string ApiKeyHeaderName = "x-kitkey-api-Key";
 
         public ApiKeyMiddleware(RequestDelegate next)
         {
