@@ -3,32 +3,32 @@
 namespace NTDLS.KitKey.Server.Management
 {
     /// <summary>
-    /// Defines a queue configuration.
+    /// Defines a key-store configuration.
     /// </summary>
     public class KkStoreDescriptor()
     {
         /// <summary>
-        /// The name of the queue.
+        /// The name of the key-store.
         /// </summary>
         public string StoreName { get; internal set; } = string.Empty;
 
         /// <summary>
-        /// The current number of messages that are enqueued in this message queue.
+        /// The current number of values in this key store.
         /// </summary>
-        public int CurrentMessageCount { get; internal set; }
+        public int CurrentValueCount { get; internal set; }
 
         /// <summary>
-        /// The total number of messages that have been enqueued into this queue.
+        /// The total number of values that have been sent into this key-store.
         /// </summary>
-        public ulong ReceivedMessageCount { get; internal set; }
+        public ulong UpsertCount { get; internal set; }
 
         /// <summary>
-        /// The total number of messages that have been delivered from this queue to subscribers.
+        /// The total number of values that have been retrieved from this key-store to subscribers.
         /// </summary>
-        public ulong DeliveredMessageCount { get; internal set; }
+        public ulong GetCount { get; internal set; }
 
         /// <summary>
-        /// Whether the queue is persisted or ephemeral.
+        /// Whether the key-store is persisted or ephemeral.
         /// </summary>
         public CMqPersistenceScheme PersistenceScheme { get; set; } = CMqPersistenceScheme.Ephemeral;
     }

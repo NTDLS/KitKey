@@ -8,21 +8,15 @@ namespace KitKey.Service.Pages
 {
     [Authorize]
 
-    public class IndexModel(ILogger<IndexModel> logger, KkServer mqServer) : BasePageModel
+    public class StoresModel(ILogger<StoresModel> logger, KkServer mqServer) : BasePageModel
     {
-        private readonly ILogger<IndexModel> _logger = logger;
+        private readonly ILogger<StoresModel> _logger = logger;
         public List<KkStoreDescriptor> Stores { get; private set; } = new();
-        public KkServerDescriptor ServerConfig = new();
-        public string ApplicationVersion { get; private set; } = string.Empty;
 
         public void OnGet()
         {
-            ApplicationVersion = string.Join('.', (Assembly.GetExecutingAssembly()
-                .GetName().Version?.ToString() ?? "0.0.0.0").Split('.').Take(3)); //Major.Minor.Patch
-
             try
             {
-                ServerConfig = mqServer.GetConfiguration();
                 Stores = mqServer.GetStores()?.OrderBy(o => o.StoreName)?.ToList() ?? new();
             }
             catch (Exception ex)

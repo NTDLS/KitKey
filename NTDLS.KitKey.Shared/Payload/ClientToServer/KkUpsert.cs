@@ -3,31 +3,31 @@
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
     public class KkUpsert(string storeName, string key, string value)
-        : IRmQuery<CMqUpsertReply>
+        : IRmQuery<KkUpsertReply>
     {
         public string StoreName { get; set; } = storeName;
         public string Key { get; set; } = key;
         public string Value { get; set; } = value;
     }
 
-    public class CMqUpsertReply
+    public class KkUpsertReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public CMqUpsertReply(Exception exception)
+        public KkUpsertReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public CMqUpsertReply(bool isSuccess)
+        public KkUpsertReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public CMqUpsertReply()
+        public KkUpsertReply()
         {
         }
     }

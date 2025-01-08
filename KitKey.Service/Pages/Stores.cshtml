@@ -1,8 +1,8 @@
 ﻿@page
 @using NTDLS.Helpers
-@model QueuesModel
+@model StoresModel
 @{
-    ViewData["Title"] = "Key-Stores";
+    ViewData["Title"] = "Stores";
 }
 
 <div>
@@ -22,13 +22,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var queue in Model.Queues)
+                @foreach (var store in Model.Stores)
                 {
                     <tr>
-                        <td><a href="/queue/@queue.StoreName">@queue.StoreName</a></td>
-                        <td><a href="/messages/@queue.StoreName">@queue.CurrentMessageCount.ToString("n0")</a></td>
-                        <td>@queue.ReceivedMessageCount.ToString("n0")</td>
-                        <td>@queue.DeliveredMessageCount.ToString("n0")</td>
+                        <td><a href="/store/@store.StoreName">@store.StoreName</a></td>
+                        <td><a href="/messages/@store.StoreName">@store.CurrentValueCount.ToString("n0")</a></td>
+                        <td>@store.UpsertCount.ToString("n0")</td>
+                        <td>@store.GetCount.ToString("n0")</td>
                     </tr>
                 }
             </tbody>

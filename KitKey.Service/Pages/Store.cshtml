@@ -1,7 +1,7 @@
-﻿@page "/queue/{QueueName}"
-@model QueueModel
+﻿@page "/store/{StoreName}"
+@model StoreModel
 @{
-    ViewData["Title"] = $"{@Model.QueueName} Key-Store";
+    ViewData["Title"] = $"{@Model.StoreName} Store";
 }
 
 <div>
@@ -24,8 +24,8 @@
                 <tr>
                     <td>@Model.Store.PersistenceScheme</td>
                     <td>@Html.Raw(ConfirmActionHelper.GenerateDangerLink(
-                        $"Deleting the queue '{@Model.Store.StoreName}' will result in permanent message loss and any subscribers will fail. Continue?",
-                        "Delete", $"/DeleteQueue/{@Model.Store.StoreName}"))
+                        $"Deleting the key-store '{@Model.Store.StoreName}' will result in permanent key-value loss. Continue?",
+                        "Delete", $"/DeleteStore/{@Model.Store.StoreName}"))
                     </td>
                 </tr>
             </tbody>
@@ -47,12 +47,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="/messages/@Model.Store.StoreName">@Model.Store.CurrentMessageCount.ToString("n0")</a></td>
-                    <td>@Model.Store.ReceivedMessageCount.ToString("n0")</td>
-                    <td>@Model.Store.DeliveredMessageCount.ToString("n0")</td>
+                    <td><a href="/messages/@Model.Store.StoreName">@Model.Store.CurrentValueCount.ToString("n0")</a></td>
+                    <td>@Model.Store.UpsertCount.ToString("n0")</td>
+                    <td>@Model.Store.GetCount.ToString("n0")</td>
                     <td>@Html.Raw(ConfirmActionHelper.GenerateDangerLink(
-                        $"Purging the queue '{@Model.Store.StoreName}' will result in permanent message loss. Continue?",
-                        "Purge", $"/PurgeQueue/{@Model.Store.StoreName}"))
+                        $"Purging the key-store '{@Model.Store.StoreName}' will result in permanent key-value loss. Continue?",
+                        "Purge", $"/PurgeStore/{@Model.Store.StoreName}"))
                     </td>
                 </tr>
             </tbody>

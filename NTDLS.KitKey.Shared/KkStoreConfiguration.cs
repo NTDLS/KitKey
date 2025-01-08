@@ -10,7 +10,7 @@ namespace NTDLS.KitKey.Shared
     {
         private string? _storeName;
         /// <summary>
-        /// The name of the queue.
+        /// The name of the key-store.
         /// </summary>
         public string StoreName
         {
@@ -19,20 +19,20 @@ namespace NTDLS.KitKey.Shared
         }
 
         /// <summary>
-        /// Whether the queue is persisted or ephemeral.
+        /// Whether the key-store is persisted or ephemeral.
         /// </summary>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public CMqPersistenceScheme PersistenceScheme { get; set; } = CMqPersistenceScheme.Ephemeral;
 
         /// <summary>
-        /// Instantiates a new instance of CMqQueueConfiguration.
+        /// Instantiates a new instance of KkStoreConfiguration.
         /// </summary>
         public KkStoreConfiguration()
         {
         }
 
         /// <summary>
-        /// Instantiates a new instance of CMqQueueConfiguration.
+        /// Instantiates a new instance of KkStoreConfiguration.
         /// </summary>
         public KkStoreConfiguration(string storeName)
         {

@@ -46,11 +46,11 @@ namespace KitKey.Service
         }
 
         /// <summary>
-        /// The port which the queue service will listen on.
+        /// The port which the key-value store service will listen on.
         /// </summary>
-        [Required(ErrorMessage = "Queue Port is required.")]
-        [Range(1, 65535, ErrorMessage = "Queue Port must be between 1 and 65,535.")]
-        public int QueuePort { get; set; } = KkDefaults.DEFAULT_LISTEN_PORT;
+        [Required(ErrorMessage = "Port is required.")]
+        [Range(1, 65535, ErrorMessage = "Port must be between 1 and 65,535.")]
+        public int ServicePort { get; set; } = KkDefaults.DEFAULT_LISTEN_PORT;
 
         [Required(ErrorMessage = "Web UI URL is required.")]
         public string? WebListenURL { get; set; } = "http://localhost:45487";

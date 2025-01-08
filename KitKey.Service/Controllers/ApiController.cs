@@ -14,60 +14,59 @@ namespace KitKey.Service.Controllers
             _mqServer = mqServer;
         }
 
-        [HttpPost("Enqueue/{queueName}/{assemblyQualifiedTypeName}")]
+        [HttpPost("Upsert/{storeName}/{key}")]
         [Consumes("text/plain", "application/json")]
-        public IActionResult Enqueue(string queueName, string assemblyQualifiedTypeName, [FromBody] dynamic messageJson)
+        public IActionResult Upsert(string storeName, string key, [FromBody] dynamic value)
         {
-            string jsonText = messageJson.ToString();
-            _mqServer.Upsert(queueName, assemblyQualifiedTypeName, jsonText);
+            _mqServer.Upsert(storeName, key, value.ToString());
             return Ok();
         }
 
         /// <summary>
-        /// Creates a queue with the default configuration.
+        /// Creates a key-value store with the default configuration.
         /// </summary>
-        /// <param name="queueName"></param>
+        /// <param name="storeName"></param>
         /// <returns></returns>
-        [HttpPost("CreateQueue/{queueName}")]
-        public IActionResult CreateQueue(string queueName)
+        [HttpPost("CreateStore/{storeName}")]
+        public IActionResult CreateStore(string storeName)
         {
             _mqServer.CreateStore(new KkStoreConfiguration
             {
-                StoreName = queueName
+                StoreName = storeName
             });
             return Ok();
         }
 
         /// <summary>
-        /// Creates a queue with a custom configuration.
+        /// Creates a key-value store with a custom configuration.
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        [HttpPost("CreateQueue")]
-        public IActionResult CreateQueue([FromBody] KkStoreConfiguration config)
+        [HttpPost("CreateStore")]
+        public IActionResult CreateStore([FromBody] KkStoreConfiguration config)
         {
             if (config == null || string.IsNullOrEmpty(config.StoreName))
             {
-                return BadRequest("QueueName is required.");
+                return BadRequest("StoreName is required.");
             }
 
             _mqServer.CreateStore(config);
 
-            return Ok(new { Message = "Queue created successfully.", config.StoreName });
+            return Ok(new { Message = "Key-value store created successfully.", config.StoreName });
         }
 
-        [HttpDelete("Purge/{queueName}")]
-        public IActionResult Purge(string queueName)
+        [HttpDelete("PurgeStore/{storeName}")]
+        public IActionResult Purge(string storeName)
         {
-            _mqServer.PurgeStore(queueName);
+            _mqServer.PurgeStore(storeName);
             return Ok();
         }
 
 
-        [HttpDelete("DeleteQueue/{queueName}")]
-        public IActionResult DeleteQueue(string queueName)
+        [HttpDelete("DeleteStore/{storeName}")]
+        public IActionResult DeleteStore(string storeName)
         {
-            _mqServer.DeleteStore(queueName);
+            _mqServer.DeleteStore(storeName);
             return Ok();
         }
     }

@@ -1,8 +1,8 @@
-﻿@page "/DeleteQueue/{QueueName}"
+﻿@page "/PurgeStore/{StoreName}"
 @using NTDLS.Helpers
-@model DeleteQueueModel
+@model PurgeStoreModel
 @{
-    ViewData["Title"] = "Delete Queue";
+    ViewData["Title"] = "Purge Store";
     var redirectTimeout = 5;
 }
 
@@ -32,7 +32,7 @@
                     <h4>@ViewData["Title"]</h4>
                 </div>
                 <div class="card-body">
-                    The message queue has been deleted.
+                    The key-store messages have been purged.
                     <p>
                         <a href="@Model.RedirectURL">Continue now</a> or you will be redirected in <span id="countdown">@redirectTimeout</span> seconds.
                     </p>

@@ -5,25 +5,20 @@ using RocksDbSharp;
 namespace NTDLS.KitKey.Server.Server
 {
     /// <summary>
-    /// A named message queue and its delivery thread.
+    /// A named key store and its delivery thread.
     /// </summary>
-    internal class MessageQueue
+    internal class KeyStore
     {
         private readonly KkServer _keyServer;
 
-        /// <summary>
-        /// Messages that are enqueued in this list.
-        /// </summary>
         internal OptimisticCriticalResource<RocksDb>? Database { get; set; }
-
         internal KkStoreConfiguration Configuration { get; set; }
+        internal KeyStoreStatistics Statistics { get; set; } = new();
 
-        internal MessageQueueStatistics Statistics { get; set; } = new();
-
-        public MessageQueue(KkServer keyServer, KkStoreConfiguration queueConfiguration)
+        public KeyStore(KkServer keyServer, KkStoreConfiguration storeConfiguration)
         {
             _keyServer = keyServer;
-            Configuration = queueConfiguration;
+            Configuration = storeConfiguration;
         }
 
         public void Start()
@@ -85,7 +80,7 @@ namespace NTDLS.KitKey.Server.Server
 
                             _messageQueues.Read(mqd =>
                             {
-                                string queueKey = queueName.ToLowerInvariant();
+                                string queueKey = storeName.ToLowerInvariant();
                                 if (mqd.TryGetValue(queueKey, out var messageQueue))
                                 {
                                     success = messageQueue.EnqueuedMessages.TryWrite(CMqDefaults.DEFAULT_TRY_WAIT_MS, m =>
@@ -102,7 +97,7 @@ namespace NTDLS.KitKey.Server.Server
                                 }
                                 else
                                 {
-                                    throw new Exception($"Queue not found: [{queueName}].");
+                                    throw new Exception($"Queue not found: [{storeName}].");
                                 }
                             });
 

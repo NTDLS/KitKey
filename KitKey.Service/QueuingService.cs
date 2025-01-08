@@ -24,9 +24,9 @@ namespace KitKey.Service
             });
             _mqServer.OnLog += MqServer_OnLog;
 
-            Log.Verbose($"Starting message queue service on port: {serviceConfiguration.QueuePort}.");
-            _mqServer.Start(serviceConfiguration.QueuePort);
-            Log.Verbose("Message queue service started.");
+            Log.Verbose($"Starting key store service on port: {serviceConfiguration.ServicePort}.");
+            _mqServer.Start(serviceConfiguration.ServicePort);
+            Log.Verbose("Key store service started.");
 
             if (serviceConfiguration.WebListenURL != null && (serviceConfiguration.EnableWebApi || serviceConfiguration.EnableWebUI))
             {
@@ -94,9 +94,9 @@ namespace KitKey.Service
         {
             if (_mqServer != null)
             {
-                Log.Verbose("Stopping message queue service.");
+                Log.Verbose("Stopping key store service.");
                 _mqServer.Stop();
-                Log.Verbose("Message queue service stopped.");
+                Log.Verbose("Key store service stopped.");
             }
         }
 

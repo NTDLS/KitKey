@@ -2,30 +2,30 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkCreateStore(KkStoreConfiguration queueConfiguration)
-        : IRmQuery<CMqCreateQueueQueryReply>
+    public class KkCreateStore(KkStoreConfiguration storeConfiguration)
+        : IRmQuery<KkCreateStoreReply>
     {
-        public KkStoreConfiguration QueueConfiguration { get; set; } = queueConfiguration;
+        public KkStoreConfiguration StoreConfiguration { get; set; } = storeConfiguration;
     }
 
-    public class CMqCreateQueueQueryReply
+    public class KkCreateStoreReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public CMqCreateQueueQueryReply(Exception exception)
+        public KkCreateStoreReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public CMqCreateQueueQueryReply(bool isSuccess)
+        public KkCreateStoreReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public CMqCreateQueueQueryReply()
+        public KkCreateStoreReply()
         {
         }
     }

@@ -2,30 +2,30 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkPurgeStore(string queueName)
-        : IRmQuery<CMqPurgeQueueQueryReply>
+    public class KkPurgeStore(string storeName)
+        : IRmQuery<KkPurgeStoreReply>
     {
-        public string QueueName { get; set; } = queueName;
+        public string StoreName { get; set; } = storeName;
     }
 
-    public class CMqPurgeQueueQueryReply
+    public class KkPurgeStoreReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public CMqPurgeQueueQueryReply(Exception exception)
+        public KkPurgeStoreReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public CMqPurgeQueueQueryReply(bool isSuccess)
+        public KkPurgeStoreReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public CMqPurgeQueueQueryReply()
+        public KkPurgeStoreReply()
         {
         }
     }

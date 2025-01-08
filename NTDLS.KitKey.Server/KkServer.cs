@@ -17,23 +17,23 @@ namespace NTDLS.KitKey.Server
         private bool _keepRunning = false;
         private readonly KkServerConfiguration _configuration;
         private readonly JsonSerializerOptions _indentedJsonOptions = new() { WriteIndented = true };
-        private readonly OptimisticCriticalResource<CaseInsensitiveMessageQueueDictionary> _messageQueues = new();
+        private readonly OptimisticCriticalResource<CaseInsensitiveKeyStoreDictionary> _keyStores = new();
         private readonly RmServer _rmServer;
 
         internal KkServerConfiguration Configuration => _configuration;
 
         /// <summary>
-        /// Delegate used to notify of queue server exceptions.
+        /// Delegate used to notify of key-store server exceptions.
         /// </summary>
         public delegate void OnLogEvent(KkServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null);
 
         /// <summary>
-        /// Event used to notify of queue server exceptions.
+        /// Event used to notify of key-store server exceptions.
         /// </summary>
         public event OnLogEvent? OnLog;
 
         /// <summary>
-        /// Creates a new instance of the queue service.
+        /// Creates a new instance of the key-store service.
         /// </summary>
         public KkServer(KkServerConfiguration configuration)
         {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Creates a new instance of the queue service.
+        /// Creates a new instance of the key-store service.
         /// </summary>
         public KkServer()
         {
@@ -67,25 +67,25 @@ namespace NTDLS.KitKey.Server
         #region Management.
 
         /// <summary>
-        /// Saves persistent message queues and their statistics to disk.
+        /// Saves persistent key stores and their statistics to disk.
         /// </summary>
         public void CheckpointPersistentStores()
         {
-            _messageQueues.Read(mqd => CheckpointPersistentStores(mqd));
+            _keyStores.Read(mqd => CheckpointPersistentStores(mqd));
         }
 
-        private void CheckpointPersistentStores(CaseInsensitiveMessageQueueDictionary mqd)
+        private void CheckpointPersistentStores(CaseInsensitiveKeyStoreDictionary mqd)
         {
             if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
             {
-                OnLog?.Invoke(this, CMqErrorLevel.Verbose, "Checkpoint persistent queues.");
+                OnLog?.Invoke(this, CMqErrorLevel.Verbose, "Checkpoint persistent key-stores.");
 
-                var queueMetas = mqd.Where(q => q.Value.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
-                    .Select(q => new MessageQueueMetadata(q.Value.Configuration, q.Value.Statistics)).ToList();
+                var storeMetas = mqd.Where(q => q.Value.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                    .Select(q => new KeyStoreMetadata(q.Value.Configuration, q.Value.Statistics)).ToList();
 
                 //Serialize using System.Text.Json as opposed to Newtonsoft for efficiency.
-                var persistedQueuesJson = JsonSerializer.Serialize(queueMetas, _indentedJsonOptions);
-                File.WriteAllText(Path.Join(_configuration.PersistencePath, "stores.json"), persistedQueuesJson);
+                var persistedStoresJson = JsonSerializer.Serialize(storeMetas, _indentedJsonOptions);
+                File.WriteAllText(Path.Join(_configuration.PersistencePath, "stores.json"), persistedStoresJson);
             }
         }
 
@@ -108,13 +108,13 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Returns a read-only copy of the queues.
+        /// Returns a read-only copy of the key-stores.
         /// </summary>
         public ReadOnlyCollection<KkStoreDescriptor>? GetStores()
         {
             List<KkStoreDescriptor>? result = new();
 
-            _messageQueues.Read(mqd =>
+            _keyStores.Read(mqd =>
             {
                 foreach (var mqKVP in mqd)
                 {
@@ -125,8 +125,8 @@ namespace NTDLS.KitKey.Server
 
                         //TODO: CurrentMessageCount = m.Messages.Count,
 
-                        ReceivedMessageCount = mqKVP.Value.Statistics.ReceivedMessageCount,
-                        DeliveredMessageCount = mqKVP.Value.Statistics.DeliveredMessageCount,
+                        UpsertCount = mqKVP.Value.Statistics.UpsertCount,
+                        GetCount = mqKVP.Value.Statistics.GetCount,
                     });
                 }
             });
@@ -145,7 +145,7 @@ namespace NTDLS.KitKey.Server
         #region Start & Stop.
 
         /// <summary>
-        /// Starts the message queue server.
+        /// Starts the key store server.
         /// </summary>
         public void Start(int listenPort)
         {
@@ -156,7 +156,7 @@ namespace NTDLS.KitKey.Server
 
             _keepRunning = true;
 
-            var storesToStart = new List<MessageQueue>();
+            var storesToStart = new List<KeyStore>();
 
             if (_configuration.PersistencePath != null)
             {
@@ -165,22 +165,22 @@ namespace NTDLS.KitKey.Server
                 {
                     OnLog?.Invoke(this, CMqErrorLevel.Information, "Loading persistent key-stores.");
 
-                    var persistedQueuesJson = File.ReadAllText(persistedStoresFile);
+                    var keyStoresJson = File.ReadAllText(persistedStoresFile);
                     //Deserialize using System.Text.Json as opposed to Newtonsoft for efficiency.
-                    var storesMeta = JsonSerializer.Deserialize<List<MessageQueueMetadata>>(persistedQueuesJson);
+                    var storesMeta = JsonSerializer.Deserialize<List<KeyStoreMetadata>>(keyStoresJson);
 
                     if (storesMeta != null)
                     {
-                        _messageQueues.Write(mqd =>
+                        _keyStores.Write(mqd =>
                         {
                             foreach (var storeMeta in storesMeta)
                             {
-                                var messageQueue = new MessageQueue(this, storeMeta.Configuration)
+                                var keyStore = new KeyStore(this, storeMeta.Configuration)
                                 {
                                     Statistics = storeMeta.Statistics
                                 };
-                                storesToStart.Add(messageQueue);
-                                mqd.Add(storeMeta.Configuration.StoreName.ToLowerInvariant(), messageQueue);
+                                storesToStart.Add(keyStore);
+                                mqd.Add(storeMeta.Configuration.StoreName.ToLowerInvariant(), keyStore);
                             }
                         });
                     }
@@ -215,7 +215,7 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Stops the message queue server.
+        /// Stops the key store server.
         /// </summary>
         public void Stop()
         {
@@ -225,16 +225,16 @@ namespace NTDLS.KitKey.Server
             OnLog?.Invoke(this, CMqErrorLevel.Information, "Stopping reliable messaging.");
             _rmServer.Stop();
 
-            var messageQueues = new List<MessageQueue>();
+            var keyStores = new List<KeyStore>();
 
-            _messageQueues.Read(mqd =>
+            _keyStores.Read(mqd =>
             {
-                //Stop all message queues.
+                //Stop all key stores.
                 foreach (var mqKVP in mqd)
                 {
-                    OnLog?.Invoke(this, CMqErrorLevel.Information, $"Stopping queue [{mqKVP.Value.Configuration.StoreName}].");
+                    OnLog?.Invoke(this, CMqErrorLevel.Information, $"Stopping key-store [{mqKVP.Value.Configuration.StoreName}].");
                     mqKVP.Value.Stop();
-                    messageQueues.Add(mqKVP.Value);
+                    keyStores.Add(mqKVP.Value);
                 }
 
                 if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
@@ -249,26 +249,26 @@ namespace NTDLS.KitKey.Server
         #region Client interactions.
 
         /// <summary>
-        /// Creates a new empty queue if it does not already exist.
+        /// Creates a new empty key-store if it does not already exist.
         /// </summary>
-        public void CreateStore(KkStoreConfiguration queueConfiguration)
+        public void CreateStore(KkStoreConfiguration storeConfiguration)
         {
-            if (string.IsNullOrEmpty(queueConfiguration.StoreName))
+            if (string.IsNullOrEmpty(storeConfiguration.StoreName))
             {
-                throw new Exception("A queue name is required.");
+                throw new Exception("A key-store name is required.");
             }
 
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Creating queue: [{queueConfiguration.StoreName}].");
+            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Creating key-store: [{storeConfiguration.StoreName}].");
 
-            _messageQueues.Write(mqd =>
+            _keyStores.Write(mqd =>
             {
-                string queueKey = queueConfiguration.StoreName.ToLowerInvariant();
-                if (mqd.ContainsKey(queueKey) == false)
+                string storeKey = storeConfiguration.StoreName.ToLowerInvariant();
+                if (mqd.ContainsKey(storeKey) == false)
                 {
-                    var messageQueue = new MessageQueue(this, queueConfiguration);
-                    mqd.Add(queueKey, messageQueue);
+                    var keyStore = new KeyStore(this, storeConfiguration);
+                    mqd.Add(storeKey, keyStore);
 
-                    if (queueConfiguration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                    if (storeConfiguration.PersistenceScheme == CMqPersistenceScheme.Persistent)
                     {
                         if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
                         {
@@ -280,38 +280,38 @@ namespace NTDLS.KitKey.Server
                         }
                     }
 
-                    messageQueue.Start();
+                    keyStore.Start();
                 }
             });
         }
 
         /// <summary>
-        /// Deletes an existing queue.
+        /// Deletes an existing key-store.
         /// </summary>
-        public void DeleteStore(string queueName)
+        public void DeleteStore(string storeName)
         {
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Deleting queue: [{queueName}].");
+            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Deleting key-store: [{storeName}].");
 
-            string queueKey = queueName.ToLowerInvariant();
+            string storeKey = storeName.ToLowerInvariant();
 
             while (_keepRunning)
             {
                 bool success = true;
 
-                MessageQueue? cleanupStore = null;
+                KeyStore? cleanupStore = null;
 
-                _messageQueues.Write(mqd =>
+                _keyStores.Write(mqd =>
                 {
-                    if (mqd.TryGetValue(queueKey, out var messageQueue))
+                    if (mqd.TryGetValue(storeKey, out var store))
                     {
-                        messageQueue.Stop();
+                        store.Stop();
 
-                        if (messageQueue.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && messageQueue.Database != null)
+                        if (store.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && store.Database != null)
                         {
-                            success = messageQueue.Database.TryWrite(KkDefaults.DEFAULT_TRY_WAIT_MS, m =>
+                            success = store.Database.TryWrite(KkDefaults.DEFAULT_TRY_WAIT_MS, m =>
                             {
-                                cleanupStore = messageQueue;
-                                mqd.Remove(queueKey);
+                                cleanupStore = store;
+                                mqd.Remove(storeKey);
                             }) && success;
                         }
 
@@ -337,7 +337,7 @@ namespace NTDLS.KitKey.Server
                         }
                         catch (Exception ex)
                         {
-                            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Failed to delete persisted queue messages for [{queueName}].", ex);
+                            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
                         }
                     }
                     return;
@@ -347,7 +347,7 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Removes a subscription from a queue for a given connection id.
+        /// Inserts/updates a value in the key-store.
         /// </summary>
         public void Upsert(string storeName, string key, string value)
         {
@@ -355,7 +355,7 @@ namespace NTDLS.KitKey.Server
 
             string storeKey = storeName.ToLowerInvariant();
 
-            _messageQueues.Read(mqd =>
+            _keyStores.Read(mqd =>
             {
                 if (mqd.TryGetValue(storeKey, out var store))
                 {
@@ -369,7 +369,7 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Removes all messages from the given queue.
+        /// Removes all messages from the given key-store.
         /// </summary>
         public void PurgeStore(string storeName)
         {
@@ -377,7 +377,7 @@ namespace NTDLS.KitKey.Server
 
             string storeKey = storeName.ToLowerInvariant();
 
-            _messageQueues.Read(mqd =>
+            _keyStores.Read(mqd =>
             {
                 if (mqd.TryGetValue(storeKey, out var store))
                 {

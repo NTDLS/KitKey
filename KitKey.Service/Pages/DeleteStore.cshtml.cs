@@ -7,27 +7,27 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class DeleteQueueModel(ILogger<DeleteQueueModel> logger, KkServer mqServer) : BasePageModel
+    public class DeleteStoreModel(ILogger<DeleteStoreModel> logger, KkServer mqServer) : BasePageModel
     {
-        private readonly ILogger<DeleteQueueModel> _logger = logger;
+        private readonly ILogger<DeleteStoreModel> _logger = logger;
 
         public string? RedirectURL { get; set; }
 
         [BindProperty]
-        public string QueueName { get; set; } = string.Empty;
+        public string StoreName { get; set; } = string.Empty;
 
         [BindProperty]
         public string? UserSelection { get; set; }
 
         public IActionResult OnPost()
         {
-            RedirectURL = $"/Queues";
+            RedirectURL = $"/Stores";
 
             try
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.DeleteStore(QueueName);
+                    mqServer.DeleteStore(StoreName);
                 }
                 else
                 {

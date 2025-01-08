@@ -41,14 +41,14 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>Message Queue</h4>
+                    <h4>Key Store</h4>
                 </div>
                 <div class="card-body">
 
                     <div class="mb-3">
-                        <label for="queuePort" class="form-label fw-bold">Queue Port</label>
-                        <span asp-validation-for="ServerConfig.QueuePort" class="text-danger"></span>
-                        <input type="number" id="queuePort" class="form-control" asp-for="ServerConfig.QueuePort" min="1" max="65535">
+                        <label for="servicePort" class="form-label fw-bold">Service Port</label>
+                        <span asp-validation-for="ServerConfig.ServicePort" class="text-danger"></span>
+                        <input type="number" id="servicePort" class="form-control" asp-for="ServerConfig.ServicePort" min="1" max="65535">
                     </div>
                     <div class="mb-3">
                         <label for="dataPath" class="form-label fw-bold">Data Path</label>

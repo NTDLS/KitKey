@@ -41,7 +41,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Delegate used to notify of key-store client exceptions.
         /// </summary>
-        public delegate void OnExceptionEvent(KkClient client, string? queueName, Exception ex);
+        public delegate void OnExceptionEvent(KkClient client, string? storeName, Exception ex);
 
         /// <summary>
         /// Event used to notify of key-store client exceptions.
@@ -213,9 +213,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store.
         /// </summary>
-        public void CreateStore(string queueName)
+        public void CreateStore(string storeName)
         {
-            var result = _rmClient.Query(new KkCreateStore(new KkStoreConfiguration(queueName))).Result;
+            var result = _rmClient.Query(new KkCreateStore(new KkStoreConfiguration(storeName))).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -225,9 +225,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store.
         /// </summary>
-        public void CreateStore(KkStoreConfiguration queueConfiguration)
+        public void CreateStore(KkStoreConfiguration storeConfiguration)
         {
-            var result = _rmClient.Query(new KkCreateStore(queueConfiguration)).Result;
+            var result = _rmClient.Query(new KkCreateStore(storeConfiguration)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -237,9 +237,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Deletes a key-store and all its values.
         /// </summary>
-        public void DeleteStore(string queueName)
+        public void DeleteStore(string storeName)
         {
-            var result = _rmClient.Query(new KkDeleteStore(queueName)).Result;
+            var result = _rmClient.Query(new KkDeleteStore(storeName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -249,9 +249,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Removes all values from a key-store.
         /// </summary>
-        public void PurgeStore(string queueName)
+        public void PurgeStore(string storeName)
         {
-            var result = _rmClient.Query(new KkPurgeStore(queueName)).Result;
+            var result = _rmClient.Query(new KkPurgeStore(storeName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);

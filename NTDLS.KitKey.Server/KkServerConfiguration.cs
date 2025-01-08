@@ -3,7 +3,7 @@
 namespace NTDLS.KitKey.Server
 {
     /// <summary>
-    /// Queue client configuration parameters.
+    /// Key-store client configuration parameters.
     /// </summary>
     public class KkServerConfiguration
     {
@@ -34,7 +34,7 @@ namespace NTDLS.KitKey.Server
         public double ReceiveBufferGrowthRate { get; set; } = KkDefaults.DEFAULT_BUFFER_GROWTH_RATE;
 
         /// <summary>
-        /// For persistent queues, this is where the data will be stored.
+        /// For persistent key-stores, this is where the data will be stored.
         /// </summary>
         public string? PersistencePath { get; set; }
     }

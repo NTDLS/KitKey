@@ -8,55 +8,55 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
     {
         private readonly KkServer _mqServer = mqServer;
 
-        public CMqCreateQueueQueryReply CreateQueueQuery(RmContext context, KkCreateStore param)
+        public KkCreateStoreReply KkCreateStoreQuery(RmContext context, KkCreateStore param)
         {
             try
             {
-                _mqServer.CreateStore(param.QueueConfiguration);
-                return new CMqCreateQueueQueryReply(true);
+                _mqServer.CreateStore(param.StoreConfiguration);
+                return new KkCreateStoreReply(true);
             }
             catch (Exception ex)
             {
-                return new CMqCreateQueueQueryReply(ex.GetBaseException());
+                return new KkCreateStoreReply(ex.GetBaseException());
             }
         }
 
-        public CMqDeleteQueueQueryReply DeleteQueueQuery(RmContext context, KkDeleteStore param)
+        public KkDeleteStoreReply KkDeleteStoreQuery(RmContext context, KkDeleteStore param)
         {
             try
             {
-                _mqServer.DeleteStore(param.QueueName);
-                return new CMqDeleteQueueQueryReply(true);
+                _mqServer.DeleteStore(param.StoreName);
+                return new KkDeleteStoreReply(true);
             }
             catch (Exception ex)
             {
-                return new CMqDeleteQueueQueryReply(ex.GetBaseException());
+                return new KkDeleteStoreReply(ex.GetBaseException());
             }
         }
 
-        public CMqPurgeQueueQueryReply PurgeQueueQuery(RmContext context, KkPurgeStore param)
+        public KkPurgeStoreReply KkPurgeStoreQuery(RmContext context, KkPurgeStore param)
         {
             try
             {
-                _mqServer.PurgeStore(param.QueueName);
-                return new CMqPurgeQueueQueryReply(true);
+                _mqServer.PurgeStore(param.StoreName);
+                return new KkPurgeStoreReply(true);
             }
             catch (Exception ex)
             {
-                return new CMqPurgeQueueQueryReply(ex.GetBaseException());
+                return new KkPurgeStoreReply(ex.GetBaseException());
             }
         }
 
-        public CMqUpsertReply EnqueueMessageToQueue(RmContext context, KkUpsert param)
+        public KkUpsertReply KkUpsertQuery(RmContext context, KkUpsert param)
         {
             try
             {
                 _mqServer.Upsert(param.StoreName, param.Key, param.Value);
-                return new CMqUpsertReply(true);
+                return new KkUpsertReply(true);
             }
             catch (Exception ex)
             {
-                return new CMqUpsertReply(ex.GetBaseException());
+                return new KkUpsertReply(ex.GetBaseException());
             }
         }
     }

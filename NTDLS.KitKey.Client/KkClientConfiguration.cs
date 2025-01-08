@@ -3,7 +3,7 @@
 namespace NTDLS.KitKey.Client
 {
     /// <summary>
-    /// Queue client configuration parameters.
+    /// Key-store client configuration parameters.
     /// </summary>
     public class KkClientConfiguration
     {

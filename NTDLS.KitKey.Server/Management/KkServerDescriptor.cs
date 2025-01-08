@@ -3,7 +3,7 @@
 namespace NTDLS.KitKey.Server.Management
 {
     /// <summary>
-    /// Queue client configuration parameters.
+    /// Key-store client configuration parameters.
     /// </summary>
     public class KkServerDescriptor
     {
@@ -34,7 +34,7 @@ namespace NTDLS.KitKey.Server.Management
         public double ReceiveBufferGrowthRate { get; internal set; } = KkDefaults.DEFAULT_BUFFER_GROWTH_RATE;
 
         /// <summary>
-        /// The TCP/IP port that the message queue server is listening on.
+        /// The TCP/IP port that the key store server is listening on.
         /// </summary>
         public int ListenPort { get; internal set; }
         /// <summary>
