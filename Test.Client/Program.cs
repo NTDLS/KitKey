@@ -5,7 +5,15 @@ namespace Test.Client
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                new Thread(ThreadProc).Start();
+            }
+        }
+
+        private static void ThreadProc()
         {
             var _client = new KkClient();
 
@@ -21,6 +29,8 @@ namespace Test.Client
                 PersistenceScheme = CMqPersistenceScheme.Ephemeral
             });
 
+            var rand = new Random();
+
             for (int i = 0; i < 100000; i++)
             {
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
@@ -32,12 +42,19 @@ namespace Test.Client
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 _ = _client.Get("MyPersistentStore", randomKey);
                 _ = _client.Get("MyEphemeralStore", randomKey);
+
+                if (rand.Next(0, 100) > 75)
+                {
+                    randomKey = Guid.NewGuid().ToString().Substring(0, 4);
+                    _client.Delete("MyPersistentStore", randomKey);
+                    _client.Delete("MyEphemeralStore", randomKey);
+                }
             }
 
             Console.WriteLine("Press [enter] to stop.");
             Console.ReadLine();
 
-            //_client.Disconnect();
+            _client.Disconnect();
         }
     }
 }

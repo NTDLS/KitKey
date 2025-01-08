@@ -79,7 +79,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.Get(param.StoreName, param.Key);
+                _keyStoreServer.Delete(param.StoreName, param.Key);
                 return new KkDeleteReply(true);
             }
             catch (Exception ex)

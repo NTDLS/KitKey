@@ -23,6 +23,18 @@ namespace NTDLS.KitKey.Server.Server
             _keyServer = keyServer;
             Configuration = storeConfiguration;
             _memoryCache = new PartitionedMemoryCache();
+
+            if (Configuration.CacheExpiration == null)
+            {
+                if (Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                {
+                    Configuration.CacheExpiration = TimeSpan.FromSeconds(KkDefaults.DEFAULT_CACHE_SECONDS);
+                }
+                else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
+                {
+                    Configuration.CacheExpiration= TimeSpan.FromDays(1);
+                }
+            }
         }
 
         public void Start()
@@ -55,10 +67,27 @@ namespace NTDLS.KitKey.Server.Server
             });
         }
 
+        public long CurrentValueCount()
+        {
+            if (Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+            {
+                return _database?.Read(db =>
+                {
+                    string property = db.GetProperty("rocksdb.estimate-num-keys");
+                    return long.Parse(property);
+                }) ?? 0;
+            }
+            else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
+            {
+                return _memoryCache.Count();
+            }
+            throw new Exception("Undefined PersistenceScheme.");
+        }
+
         public void Set(string key, string value)
         {
             Statistics.SetCount++;
-            _memoryCache.Upsert(key, value);
+            _memoryCache.Upsert(key, value, Configuration.CacheExpiration);
             _database?.Write(db => db.Put(key, value));
         }
 

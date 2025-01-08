@@ -3,6 +3,11 @@
     public static class KkDefaults
     {
         /// <summary>
+        /// The amount of (sliding expiration) time that a key/value should stay in cache. 
+        /// </summary>
+        public const int DEFAULT_CACHE_SECONDS = 60;
+
+        /// <summary>
         /// The amount of time to wait when performing deadlock avoidance locks.
         /// </summary>
         public const int DEFAULT_DEADLOCK_AVOIDANCE_WAIT_MS = 1;

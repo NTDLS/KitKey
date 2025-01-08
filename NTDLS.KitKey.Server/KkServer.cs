@@ -37,8 +37,6 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public KkServer(KkServerConfiguration configuration)
         {
-            //ThreadLockOwnershipTracking.Enable();
-
             _configuration = configuration;
 
             var rmConfiguration = new RmConfiguration()
@@ -114,22 +112,23 @@ namespace NTDLS.KitKey.Server
         {
             List<KkStoreDescriptor>? result = new();
 
-            _keyStores.Read(mqd =>
+            _keyStores.Read(ks =>
             {
-                foreach (var mqKVP in mqd)
+                foreach (var ksKPV in ks)
                 {
                     result.Add(new KkStoreDescriptor
                     {
-                        //TODO: CurrentMessageCount = m.Messages.Count,
-                        CacheHits = mqKVP.Value.Statistics.CacheHits,
-                        CacheMisses = mqKVP.Value.Statistics.CacheMisses,
-                        DatabaseHits = mqKVP.Value.Statistics.DatabaseHits,
-                        DatabaseMisses = mqKVP.Value.Statistics.DatabaseMisses,
-                        DeleteCount = mqKVP.Value.Statistics.DeleteCount,
-                        GetCount = mqKVP.Value.Statistics.GetCount,
-                        PersistenceScheme = mqKVP.Value.Configuration.PersistenceScheme,
-                        SetCount = mqKVP.Value.Statistics.SetCount,
-                        StoreName = mqKVP.Value.Configuration.StoreName,
+                        CurrentValueCount = ksKPV.Value.CurrentValueCount(),
+                        CacheHits = ksKPV.Value.Statistics.CacheHits,
+                        CacheMisses = ksKPV.Value.Statistics.CacheMisses,
+                        DatabaseHits = ksKPV.Value.Statistics.DatabaseHits,
+                        DatabaseMisses = ksKPV.Value.Statistics.DatabaseMisses,
+                        DeleteCount = ksKPV.Value.Statistics.DeleteCount,
+                        GetCount = ksKPV.Value.Statistics.GetCount,
+                        PersistenceScheme = ksKPV.Value.Configuration.PersistenceScheme,
+                        CacheExpiration = ksKPV.Value.Configuration.CacheExpiration,
+                        SetCount = ksKPV.Value.Statistics.SetCount,
+                        StoreName = ksKPV.Value.Configuration.StoreName,
                     });
                 }
             });
@@ -303,6 +302,7 @@ namespace NTDLS.KitKey.Server
                     {
                         keyStore = store;
                         store.Stop();
+                        mqd.Remove(storeKey);
                         CheckpointPersistentStores(mqd);
                     }
                 });
