@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NTDLS.KitKey.Shared\NTDLS.KitKey.Shared.csproj" />
+    <PackageReference Include="NTDLS.KitKey.Shared" Version="1.0.1" />
   </ItemGroup>
 
 </Project>
