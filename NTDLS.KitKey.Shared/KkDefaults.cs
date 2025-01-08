@@ -35,8 +35,8 @@
         public const int DEFAULT_ACK_TIMEOUT_SECONDS = 30;
 
         /// <summary>
-        /// The port which the key-store service will listen on.
+        /// The port which the key-store server and client communicate on.
         /// </summary>
-        public const int DEFAULT_LISTEN_PORT = 45487;
+        public const int DEFAULT_KEYSTORE_PORT = 45488;
     }
 }

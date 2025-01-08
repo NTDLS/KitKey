@@ -50,7 +50,7 @@ namespace KitKey.Service
         /// </summary>
         [Required(ErrorMessage = "Port is required.")]
         [Range(1, 65535, ErrorMessage = "Port must be between 1 and 65,535.")]
-        public int ServicePort { get; set; } = KkDefaults.DEFAULT_LISTEN_PORT;
+        public int ServicePort { get; set; } = KkDefaults.DEFAULT_KEYSTORE_PORT;
 
         [Required(ErrorMessage = "Web UI URL is required.")]
         public string? WebListenURL { get; set; } = "http://localhost:45487";

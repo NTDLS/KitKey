@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NTDLS.KitKey.Client\NTDLS.KitKey.Client.csproj" />
-    <ProjectReference Include="..\NTDLS.KitKey.Server\NTDLS.KitKey.Server.csproj" />
   </ItemGroup>
 
 </Project>

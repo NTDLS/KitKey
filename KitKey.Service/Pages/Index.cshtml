@@ -42,15 +42,20 @@
         <table class="table table-striped table-bordered">
             <thead class="table-light">
                 <tr>
-                    <th colspan="4">Key Stores</th>
+                    <th colspan="9">Key-Stores</th>
                 </tr>
             </thead>
             <thead class="table-light">
                 <tr>
                     <th>Name</th>
-                    <th>Depth</th>
-                    <th>Received</th>
-                    <th>Delivered</th>
+                    <th>Current</th>
+                    <th>Sets</th>
+                    <th>Gets</th>
+                    <th>Deletes</th>
+                    <th>Cache Hits</th>
+                    <th>Cache Misses</th>
+                    <th>Db Hits</th>
+                    <th>Db Misses</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,9 +63,16 @@
                 {
                     <tr>
                         <td><a href="/store/@store.StoreName">@store.StoreName</a></td>
-                        <td>@store.CurrentValueCount.ToString("n0")</td>
-                        <td>@store.UpsertCount.ToString("n0")</td>
+                        <td><a href="/messages/@store.StoreName">@store.CurrentValueCount.ToString("n0")</a></td>
+                        <td>@store.SetCount.ToString("n0")</td>
                         <td>@store.GetCount.ToString("n0")</td>
+                        <td>@store.DeleteCount.ToString("n0")</td>
+
+                        <td>@store.CacheHits.ToString("n0")</td>
+                        <td>@store.CacheMisses.ToString("n0")</td>
+                        <td>@store.DatabaseHits.ToString("n0")</td>
+                        <td>@store.DatabaseMisses.ToString("n0")</td>
+
                     </tr>
                 }
             </tbody>

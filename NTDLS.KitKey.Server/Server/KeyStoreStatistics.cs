@@ -19,5 +19,25 @@
         /// The count of values that have been retrieved from the key-store
         /// </summary>
         public ulong GetCount { get; set; }
+
+        /// <summary>
+        /// The count of gets that were satisfied by the key-store cache.
+        /// </summary>
+        public ulong CacheHits { get; set; }
+
+        /// <summary>
+        /// The count of gets that were satisfied by the key-store database.
+        /// </summary>
+        public ulong DatabaseHits { get; set; }
+
+        /// <summary>
+        /// The count of gets that were not satisfied by the key-store cache.
+        /// </summary>
+        public ulong CacheMisses { get; set; }
+
+        /// <summary>
+        /// The count of gets that were not satisfied by the key-store database.
+        /// </summary>
+        public ulong DatabaseMisses { get; set; }
     }
 }

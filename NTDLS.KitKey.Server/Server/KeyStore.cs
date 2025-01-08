@@ -57,38 +57,43 @@ namespace NTDLS.KitKey.Server.Server
 
         public void Set(string key, string value)
         {
+            Statistics.SetCount++;
             _memoryCache.Upsert(key, value);
-
-            _database?.Write(db =>
-            {
-                Statistics.SetCount++;
-                db.Put(key, value);
-            });
+            _database?.Write(db => db.Put(key, value));
         }
 
         public string? Get(string key)
         {
+            Statistics.GetCount++;
+
             if (_memoryCache.TryGet(key, out string? value) && value != null)
             {
+                Statistics.CacheHits++;
                 return value;
             }
+            Statistics.CacheMisses++;
 
-            return _database?.Write(db =>
+            return _database?.Read(db =>
             {
-                Statistics.GetCount++;
-                return db.Get(key);
+                var result = db.Get(key);
+                if (result != null)
+                {
+                    Statistics.DatabaseHits++;
+                }
+                else
+                {
+                    Statistics.DatabaseMisses++;
+                }
+
+                return result;
             });
         }
 
         public void Delete(string key)
         {
+            Statistics.DeleteCount++;
             _memoryCache.Remove(key);
-
-            _database?.Write(db =>
-            {
-                Statistics.DeleteCount++;
-                db.Remove(key);
-            });
+            _database?.Write(db => db.Remove(key));
         }
 
         public void Purge()
@@ -106,7 +111,6 @@ namespace NTDLS.KitKey.Server.Server
                     db.Remove(key); // Remove the key-value pair
                     iterator.Next();
                 }
-
             });
         }
     }

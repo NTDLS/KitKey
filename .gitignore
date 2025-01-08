@@ -88,3 +88,7 @@ Test.Stress/obj/
 Test.Harness/obj/
 
 Test.Harness/bin/
+
+Test.Client/bin/
+
+Test.Client/obj/

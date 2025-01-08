@@ -1,23 +1,14 @@
 ﻿using NTDLS.KitKey.Client;
-using NTDLS.KitKey.Server;
 using NTDLS.KitKey.Shared;
 
-namespace Test.Harness
+namespace Test.Client
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
-            var serverConfig = new KkServerConfiguration()
-            {
-                PersistencePath = Path.GetDirectoryName(Environment.ProcessPath)
-            };
-
-            var _server = new KkServer(serverConfig);
             var _client = new KkClient();
 
-            _server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
             _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
@@ -37,14 +28,16 @@ namespace Test.Harness
 
                 _client.Set("MyPersistentStore", randomKey, randomValue);
                 _client.Set("MyEphemeralStore", randomKey, randomValue);
+
+                randomKey = Guid.NewGuid().ToString().Substring(0, 4);
+                _ = _client.Get("MyPersistentStore", randomKey);
+                _ = _client.Get("MyEphemeralStore", randomKey);
             }
 
             Console.WriteLine("Press [enter] to stop.");
             Console.ReadLine();
 
-            _client.Disconnect();
-
-            _server.Stop();
+            //_client.Disconnect();
         }
     }
 }

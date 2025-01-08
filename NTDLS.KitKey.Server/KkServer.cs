@@ -120,13 +120,16 @@ namespace NTDLS.KitKey.Server
                 {
                     result.Add(new KkStoreDescriptor
                     {
-                        PersistenceScheme = mqKVP.Value.Configuration.PersistenceScheme,
-                        StoreName = mqKVP.Value.Configuration.StoreName,
-
                         //TODO: CurrentMessageCount = m.Messages.Count,
-
-                        UpsertCount = mqKVP.Value.Statistics.SetCount,
+                        CacheHits = mqKVP.Value.Statistics.CacheHits,
+                        CacheMisses = mqKVP.Value.Statistics.CacheMisses,
+                        DatabaseHits = mqKVP.Value.Statistics.DatabaseHits,
+                        DatabaseMisses = mqKVP.Value.Statistics.DatabaseMisses,
+                        DeleteCount = mqKVP.Value.Statistics.DeleteCount,
                         GetCount = mqKVP.Value.Statistics.GetCount,
+                        PersistenceScheme = mqKVP.Value.Configuration.PersistenceScheme,
+                        SetCount = mqKVP.Value.Statistics.SetCount,
+                        StoreName = mqKVP.Value.Configuration.StoreName,
                     });
                 }
             });
