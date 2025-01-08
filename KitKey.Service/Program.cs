@@ -34,8 +34,8 @@ namespace KitKey.Service
                 });
                 x.RunAsLocalSystem();
 
-                x.SetDescription("A high-performance and reliable persistent message queue designed for efficient inter-process communication, task queuing, load balancing, and data buffering over TCP/IP.");
-                x.SetDisplayName("KitKey Message Queuing");
+                x.SetDescription("A high-performance and reliable persistent key-value store over TCP/IP.");
+                x.SetDisplayName("KitKey Key-Value Store");
                 x.SetServiceName("KitKeyService");
             });
         }

@@ -1,6 +1,5 @@
 ﻿using NTDLS.KitKey.Shared.Payload.ClientToServer;
 using NTDLS.ReliableMessaging;
-using System.Net;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
