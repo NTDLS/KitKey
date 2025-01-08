@@ -28,7 +28,7 @@
                     <td>
                         @Html.Raw(ConfirmActionHelper.GenerateDangerLink(
                                  $"Deleting the key-store '{@Model.Store.StoreName}' will result in permanent key-value loss. Continue?",
-                                 "Delete", $"/DeleteStore/{@Model.Store.StoreName}"))
+                                 "Delete", $"/DeleteStore/{@Model.Store.StoreName}", "btn-thin"))
                     </td>
                 </tr>
             </tbody>
@@ -70,7 +70,7 @@
                     <td>
                         @Html.Raw(ConfirmActionHelper.GenerateDangerLink(
                                  $"Purging the key-store '{@Model.Store.StoreName}' will result in permanent key-value loss. Continue?",
-                                 "Purge", $"/PurgeStore/{@Model.Store.StoreName}"))
+                                 "Purge", $"/PurgeStore/{@Model.Store.StoreName}", "btn-thin"))
                     </td>
 
                 </tr>

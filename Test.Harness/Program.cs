@@ -6,7 +6,6 @@ namespace Test.Harness
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             var serverConfig = new KkServerConfiguration()
@@ -14,18 +13,18 @@ namespace Test.Harness
                 PersistencePath = Path.GetDirectoryName(Environment.ProcessPath)
             };
 
-            var _server = new KkServer(serverConfig);
-            var _client = new KkClient();
+            var server = new KkServer(serverConfig);
+            var client = new KkClient();
 
-            _server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
-            _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
+            server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
+            client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
+            client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
             {
                 PersistenceScheme = CMqPersistenceScheme.Persistent
             });
 
-            _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
+            client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
             {
                 PersistenceScheme = CMqPersistenceScheme.Ephemeral
             });
@@ -35,16 +34,16 @@ namespace Test.Harness
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                _client.Set("MyPersistentStore", randomKey, randomValue);
-                _client.Set("MyEphemeralStore", randomKey, randomValue);
+                client.Set("MyPersistentStore", randomKey, randomValue);
+                client.Set("MyEphemeralStore", randomKey, randomValue);
             }
 
             Console.WriteLine("Press [enter] to stop.");
             Console.ReadLine();
 
-            _client.Disconnect();
+            client.Disconnect();
 
-            _server.Stop();
+            server.Stop();
         }
     }
 }
