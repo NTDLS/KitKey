@@ -1,0 +1,61 @@
+﻿@page "/queue/{QueueName}"
+@model QueueModel
+@{
+    ViewData["Title"] = $"{@Model.QueueName} Key-Store";
+}
+
+<div>
+    <h6 class="display-6">@Model.Store.StoreName</h6>
+
+    <div class="container mt-4">
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th colspan="4">Configuration</th>
+                </tr>
+            </thead>
+            <thead class="table-light">
+                <tr>
+                    <th>Persistence</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Store.PersistenceScheme</td>
+                    <td>@Html.Raw(ConfirmActionHelper.GenerateDangerLink(
+                        $"Deleting the queue '{@Model.Store.StoreName}' will result in permanent message loss and any subscribers will fail. Continue?",
+                        "Delete", $"/DeleteQueue/{@Model.Store.StoreName}"))
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th colspan="4">Statistics</th>
+                </tr>
+            </thead>
+            <thead class="table-light">
+                <tr>
+                    <th>Depth</th>
+                    <th>Received</th>
+                    <th>Delivered</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/messages/@Model.Store.StoreName">@Model.Store.CurrentMessageCount.ToString("n0")</a></td>
+                    <td>@Model.Store.ReceivedMessageCount.ToString("n0")</td>
+                    <td>@Model.Store.DeliveredMessageCount.ToString("n0")</td>
+                    <td>@Html.Raw(ConfirmActionHelper.GenerateDangerLink(
+                        $"Purging the queue '{@Model.Store.StoreName}' will result in permanent message loss. Continue?",
+                        "Purge", $"/PurgeQueue/{@Model.Store.StoreName}"))
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KitKey</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/KitKey.Server.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><span class="text-dark"><img src="/images/32.png" /> KitKey</span></a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav ms-auto">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="nav-link" asp-page="/Accounts">Accounts</a>
+                                    <a class="nav-link" asp-page="/Configuration">Configuration</a>
+                                    <a class="nav-link" asp-page="/Queues">Queues</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="nav-link" asp-page="/Account">Account</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="nav-link" asp-page="/Logout">Logout</a>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <div class="container" style="margin-top:80px;" )>
+        <main role="main" class="pb-3">
+            @if (Model.SuccessMessage != null)
+            {
+                <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <p class="fw-bold">@Html.Raw(Model.SuccessMessage)</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        setTimeout(function () {
+                            let alertElement = document.getElementById('success-alert');
+                            if (alertElement) {
+                                // Add fade-out effect
+                                alertElement.classList.remove('show');
+                                alertElement.classList.add('fade');
+
+                                // Remove the alert completely after the fade-out animation
+                                setTimeout(() => alertElement.remove(), 300);
+                            }
+                        }, 5000);
+                    });
+                </script>
+            }
+
+            @if (Model.WarningMessage != null)
+            {
+                <div id="success-alert" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <p class="fw-bold">@Html.Raw(Model.WarningMessage)</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (Model.ErrorMessage != null)
+            {
+                <div class="alert alert-dismissible fade show" role="alert">
+                    <div class="card bg-danger-subtle text-dark">
+                        <div class="card-header">
+                            <h4>Error</h4>
+                        </div>
+                        <div class="card-body text-dark">
+                            <p>@Html.Raw(Model.ErrorMessage)</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            KitKey &copy; 2025 - NetworkDLS
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
