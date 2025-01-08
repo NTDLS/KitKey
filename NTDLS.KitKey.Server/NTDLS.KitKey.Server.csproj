@@ -9,7 +9,7 @@
     <Title>NTDLS.KitKey.Server</Title>
     <Copyright>Copyright © 2025 NetworkDLS</Copyright>
     <Description>
-      A high-performance and reliable persistent key-value store over TCP/IP.
+      A low latency, high-performance, and reliable persistent or ephemeral key-value store over TCP/IP.
     </Description>
     <PackageProjectUrl>https://github.com/NTDLS/NTDLS.KitKey</PackageProjectUrl>
     <RepositoryUrl>https://github.com/NTDLS/NTDLS.KitKey</RepositoryUrl>
@@ -21,7 +21,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>NetworkDLS</Authors>
     <Company>NetworkDLS</Company>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>Logo.png</PackageIcon>
     <ApplicationIcon>Logo.ico</ApplicationIcon>

@@ -34,7 +34,7 @@ namespace KitKey.Service
                 });
                 x.RunAsLocalSystem();
 
-                x.SetDescription("A high-performance and reliable persistent key-value store over TCP/IP.");
+                x.SetDescription("A low latency, high-performance, and reliable persistent or ephemeral key-value store over TCP/IP.");
                 x.SetDisplayName("KitKey Key-Value Store");
                 x.SetServiceName("KitKeyService");
             });

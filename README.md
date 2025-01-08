@@ -10,8 +10,8 @@ KitKey utilizes RocksDB for persistence, wrapped in a partitioned memory cache f
 You can run the KitKey server either from the nuget package or by downloading the dedicated [service installer](https://github.com/NTDLS/KitKey/releases)
 
 ## Nuget Packages
-- **Server:** https://github.com/NTDLS/KitKey/releases
-- **Client:** https://github.com/NTDLS/KitKey/releases
+- **Server:** https://www.nuget.org/packages/NTDLS.KitKey.Server
+- **Client:** https://www.nuget.org/packages/NTDLS.KitKey.Client
 
 ## Server
 Besides running the dedicated service using the installer, you can run the server from code:
