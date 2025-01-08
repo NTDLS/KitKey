@@ -63,7 +63,7 @@
                 {
                     <tr>
                         <td><a href="/store/@store.StoreName">@store.StoreName</a></td>
-                        <td><a href="/messages/@store.StoreName">@store.CurrentValueCount.ToString("n0")</a></td>
+                        <td>@store.CurrentValueCount.ToString("n0")</td>
                         <td>@store.SetCount.ToString("n0")</td>
                         <td>@store.GetCount.ToString("n0")</td>
                         <td>@store.DeleteCount.ToString("n0")</td>
@@ -72,7 +72,6 @@
                         <td>@store.CacheMisses.ToString("n0")</td>
                         <td>@store.DatabaseHits.ToString("n0")</td>
                         <td>@store.DatabaseMisses.ToString("n0")</td>
-
                     </tr>
                 }
             </tbody>

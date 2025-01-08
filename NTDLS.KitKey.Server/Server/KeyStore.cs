@@ -32,7 +32,7 @@ namespace NTDLS.KitKey.Server.Server
                 }
                 else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
                 {
-                    Configuration.CacheExpiration= TimeSpan.FromDays(1);
+                    Configuration.CacheExpiration = TimeSpan.FromDays(1);
                 }
             }
         }
@@ -73,8 +73,16 @@ namespace NTDLS.KitKey.Server.Server
             {
                 return _database?.Read(db =>
                 {
-                    string property = db.GetProperty("rocksdb.estimate-num-keys");
-                    return long.Parse(property);
+                    using var iterator = db.NewIterator();
+                    long count = 0;
+                    iterator.SeekToFirst();
+                    while (iterator.Valid())
+                    {
+                        count++;
+                        iterator.Next();
+                    }
+
+                    return count;
                 }) ?? 0;
             }
             else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
