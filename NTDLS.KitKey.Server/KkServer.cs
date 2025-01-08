@@ -12,20 +12,20 @@ namespace NTDLS.KitKey.Server
     /// <summary>
     /// Listens for connections from MessageClients and processes the incoming notifications/queries.
     /// </summary>
-    public class CMqServer
+    public class KkServer
     {
         private bool _keepRunning = false;
-        private readonly CMqServerConfiguration _configuration;
+        private readonly KkServerConfiguration _configuration;
         private readonly JsonSerializerOptions _indentedJsonOptions = new() { WriteIndented = true };
         private readonly OptimisticCriticalResource<CaseInsensitiveMessageQueueDictionary> _messageQueues = new();
         private readonly RmServer _rmServer;
 
-        internal CMqServerConfiguration Configuration => _configuration;
+        internal KkServerConfiguration Configuration => _configuration;
 
         /// <summary>
         /// Delegate used to notify of queue server exceptions.
         /// </summary>
-        public delegate void OnLogEvent(CMqServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null);
+        public delegate void OnLogEvent(KkServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null);
 
         /// <summary>
         /// Event used to notify of queue server exceptions.
@@ -35,7 +35,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the queue service.
         /// </summary>
-        public CMqServer(CMqServerConfiguration configuration)
+        public KkServer(KkServerConfiguration configuration)
         {
             //ThreadLockOwnershipTracking.Enable();
 
@@ -57,9 +57,9 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the queue service.
         /// </summary>
-        public CMqServer()
+        public KkServer()
         {
-            _configuration = new CMqServerConfiguration();
+            _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
             _rmServer.AddHandler(new InternalServerQueryHandlers(this));
         }
@@ -93,9 +93,9 @@ namespace NTDLS.KitKey.Server
         /// Returns a read-only copy of the running configuration.
         /// </summary>
         /// <returns></returns>
-        public CMqServerDescriptor GetConfiguration()
+        public KkServerDescriptor GetConfiguration()
         {
-            return new CMqServerDescriptor
+            return new KkServerDescriptor
             {
                 AsynchronousAcknowledgment = _configuration.AsynchronousAcknowledgment,
                 AcknowledgmentTimeoutSeconds = _configuration.AcknowledgmentTimeoutSeconds,
@@ -110,15 +110,15 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Returns a read-only copy of the queues.
         /// </summary>
-        public ReadOnlyCollection<CMqStoreDescriptor>? GetStores()
+        public ReadOnlyCollection<KkStoreDescriptor>? GetStores()
         {
-            List<CMqStoreDescriptor>? result = new();
+            List<KkStoreDescriptor>? result = new();
 
             _messageQueues.Read(mqd =>
             {
                 foreach (var mqKVP in mqd)
                 {
-                    result.Add(new CMqStoreDescriptor
+                    result.Add(new KkStoreDescriptor
                     {
                         PersistenceScheme = mqKVP.Value.Configuration.PersistenceScheme,
                         StoreName = mqKVP.Value.Configuration.StoreName,
@@ -131,7 +131,7 @@ namespace NTDLS.KitKey.Server
                 }
             });
 
-            return new ReadOnlyCollection<CMqStoreDescriptor>(result);
+            return new ReadOnlyCollection<KkStoreDescriptor>(result);
         }
 
         #endregion
@@ -251,7 +251,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new empty queue if it does not already exist.
         /// </summary>
-        public void CreateStore(CMqStoreConfiguration queueConfiguration)
+        public void CreateStore(KkStoreConfiguration queueConfiguration)
         {
             if (string.IsNullOrEmpty(queueConfiguration.StoreName))
             {
@@ -308,7 +308,7 @@ namespace NTDLS.KitKey.Server
 
                         if (messageQueue.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && messageQueue.Database != null)
                         {
-                            success = messageQueue.Database.TryWrite(CMqDefaults.DEFAULT_TRY_WAIT_MS, m =>
+                            success = messageQueue.Database.TryWrite(KkDefaults.DEFAULT_TRY_WAIT_MS, m =>
                             {
                                 cleanupStore = messageQueue;
                                 mqd.Remove(queueKey);
@@ -342,7 +342,7 @@ namespace NTDLS.KitKey.Server
                     }
                     return;
                 }
-                Thread.Sleep(CMqDefaults.DEFAULT_DEADLOCK_AVOIDANCE_WAIT_MS);
+                Thread.Sleep(KkDefaults.DEFAULT_DEADLOCK_AVOIDANCE_WAIT_MS);
             }
         }
 

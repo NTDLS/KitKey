@@ -2,32 +2,30 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class CMqGet(string storeName, string key)
-        : IRmQuery<CMqGetReply>
+    public class KkDeleteStore(string queueName)
+        : IRmQuery<CMqDeleteQueueQueryReply>
     {
-        public string StoreName { get; set; } = storeName;
-        public string Key { get; set; } = key;
+        public string QueueName { get; set; } = queueName;
     }
 
-    public class CMqGetReply
+    public class CMqDeleteQueueQueryReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public string? Value { get; set; }
 
-        public CMqGetReply(Exception exception)
+        public CMqDeleteQueueQueryReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public CMqGetReply(bool isSuccess)
+        public CMqDeleteQueueQueryReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public CMqGetReply()
+        public CMqDeleteQueueQueryReply()
         {
         }
     }

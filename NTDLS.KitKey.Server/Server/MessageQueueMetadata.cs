@@ -7,10 +7,10 @@ namespace NTDLS.KitKey.Server.Server
     /// </summary>
     internal class MessageQueueMetadata
     {
-        public CMqStoreConfiguration Configuration { get; set; } = new();
+        public KkStoreConfiguration Configuration { get; set; } = new();
         public MessageQueueStatistics Statistics { get; set; } = new();
 
-        public MessageQueueMetadata(CMqStoreConfiguration configuration, MessageQueueStatistics statistics)
+        public MessageQueueMetadata(KkStoreConfiguration configuration, MessageQueueStatistics statistics)
         {
             Configuration = configuration;
             Statistics = statistics;

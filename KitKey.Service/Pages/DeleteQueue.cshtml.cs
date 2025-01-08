@@ -7,7 +7,7 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class DeleteQueueModel(ILogger<DeleteQueueModel> logger, CMqServer mqServer) : BasePageModel
+    public class DeleteQueueModel(ILogger<DeleteQueueModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<DeleteQueueModel> _logger = logger;
 

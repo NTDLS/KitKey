@@ -8,11 +8,11 @@ namespace NTDLS.KitKey.Client
     /// <summary>
     /// Connects to a MessageServer then sends/received and processes notifications/queries.
     /// </summary>
-    public class CMqClient
+    public class KkClient
     {
         private readonly RmClient _rmClient;
         private bool _explicitDisconnect = false;
-        private readonly CMqClientConfiguration _configuration;
+        private readonly KkClientConfiguration _configuration;
 
         private string? _lastReconnectHost;
         private int _lastReconnectPort;
@@ -26,7 +26,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Event used for server-to-client delivery notifications containing raw JSON.
         /// </summary>
-        public delegate void OnConnectedEvent(CMqClient client);
+        public delegate void OnConnectedEvent(KkClient client);
 
         /// <summary>
         /// Event used client connectivity notifications.
@@ -41,7 +41,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Delegate used to notify of key-store client exceptions.
         /// </summary>
-        public delegate void OnExceptionEvent(CMqClient client, string? queueName, Exception ex);
+        public delegate void OnExceptionEvent(KkClient client, string? queueName, Exception ex);
 
         /// <summary>
         /// Event used to notify of key-store client exceptions.
@@ -51,7 +51,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new instance of the key-store client.
         /// </summary>
-        public CMqClient(CMqClientConfiguration configuration)
+        public KkClient(KkClientConfiguration configuration)
         {
             _configuration = configuration;
 
@@ -70,9 +70,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new instance of the key-store client.
         /// </summary>
-        public CMqClient()
+        public KkClient()
         {
-            _configuration = new CMqClientConfiguration();
+            _configuration = new KkClientConfiguration();
             _rmClient = new RmClient();
 
             _rmClient.OnConnected += RmClient_OnConnected;
@@ -215,7 +215,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void CreateStore(string queueName)
         {
-            var result = _rmClient.Query(new CMqCreateStore(new CMqStoreConfiguration(queueName))).Result;
+            var result = _rmClient.Query(new KkCreateStore(new KkStoreConfiguration(queueName))).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -225,9 +225,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store.
         /// </summary>
-        public void CreateStore(CMqStoreConfiguration queueConfiguration)
+        public void CreateStore(KkStoreConfiguration queueConfiguration)
         {
-            var result = _rmClient.Query(new CMqCreateStore(queueConfiguration)).Result;
+            var result = _rmClient.Query(new KkCreateStore(queueConfiguration)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -239,7 +239,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void DeleteStore(string queueName)
         {
-            var result = _rmClient.Query(new CMqDeleteStore(queueName)).Result;
+            var result = _rmClient.Query(new KkDeleteStore(queueName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -251,7 +251,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void PurgeStore(string queueName)
         {
-            var result = _rmClient.Query(new CMqPurgeStore(queueName)).Result;
+            var result = _rmClient.Query(new KkPurgeStore(queueName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -263,7 +263,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void Upsert(string storeName, string key, string value)
         {
-            var result = _rmClient.Query(new CMqUpsert(storeName, key, value)).Result;
+            var result = _rmClient.Query(new KkUpsert(storeName, key, value)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -275,7 +275,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public string? Upsert(string storeName, string key)
         {
-            var result = _rmClient.Query(new CMqGet(storeName, key)).Result;
+            var result = _rmClient.Query(new KkGet(storeName, key)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);

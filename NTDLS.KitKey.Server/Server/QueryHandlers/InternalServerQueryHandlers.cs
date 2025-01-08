@@ -3,12 +3,12 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class InternalServerQueryHandlers(CMqServer mqServer)
+    internal class InternalServerQueryHandlers(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly CMqServer _mqServer = mqServer;
+        private readonly KkServer _mqServer = mqServer;
 
-        public CMqCreateQueueQueryReply CreateQueueQuery(RmContext context, CMqCreateStore param)
+        public CMqCreateQueueQueryReply CreateQueueQuery(RmContext context, KkCreateStore param)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public CMqDeleteQueueQueryReply DeleteQueueQuery(RmContext context, CMqDeleteStore param)
+        public CMqDeleteQueueQueryReply DeleteQueueQuery(RmContext context, KkDeleteStore param)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public CMqPurgeQueueQueryReply PurgeQueueQuery(RmContext context, CMqPurgeStore param)
+        public CMqPurgeQueueQueryReply PurgeQueueQuery(RmContext context, KkPurgeStore param)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public CMqUpsertReply EnqueueMessageToQueue(RmContext context, CMqUpsert param)
+        public CMqUpsertReply EnqueueMessageToQueue(RmContext context, KkUpsert param)
         {
             try
             {

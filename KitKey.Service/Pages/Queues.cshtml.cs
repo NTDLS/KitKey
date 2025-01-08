@@ -8,10 +8,10 @@ namespace KitKey.Service.Pages
 {
     [Authorize]
 
-    public class QueuesModel(ILogger<QueuesModel> logger, CMqServer mqServer) : BasePageModel
+    public class QueuesModel(ILogger<QueuesModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<QueuesModel> _logger = logger;
-        public List<CMqStoreDescriptor> Queues { get; private set; } = new();
+        public List<KkStoreDescriptor> Queues { get; private set; } = new();
 
         public void OnGet()
         {

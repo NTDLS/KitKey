@@ -5,7 +5,7 @@ namespace NTDLS.KitKey.Server.Management
     /// <summary>
     /// Defines a queue configuration.
     /// </summary>
-    public class CMqStoreDescriptor()
+    public class KkStoreDescriptor()
     {
         /// <summary>
         /// The name of the queue.

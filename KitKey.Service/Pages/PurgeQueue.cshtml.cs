@@ -7,7 +7,7 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class PurgeQueueModel(ILogger<PurgeQueueModel> logger, CMqServer mqServer) : BasePageModel
+    public class PurgeQueueModel(ILogger<PurgeQueueModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<PurgeQueueModel> _logger = logger;
 

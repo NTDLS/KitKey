@@ -6,7 +6,7 @@ namespace NTDLS.KitKey.Shared
     /// <summary>
     /// Defines a key store configuration.
     /// </summary>
-    public class CMqStoreConfiguration
+    public class KkStoreConfiguration
     {
         private string? _storeName;
         /// <summary>
@@ -27,14 +27,14 @@ namespace NTDLS.KitKey.Shared
         /// <summary>
         /// Instantiates a new instance of CMqQueueConfiguration.
         /// </summary>
-        public CMqStoreConfiguration()
+        public KkStoreConfiguration()
         {
         }
 
         /// <summary>
         /// Instantiates a new instance of CMqQueueConfiguration.
         /// </summary>
-        public CMqStoreConfiguration(string storeName)
+        public KkStoreConfiguration(string storeName)
         {
             StoreName = storeName;
         }

@@ -9,18 +9,18 @@ namespace NTDLS.KitKey.Server.Server
     /// </summary>
     internal class MessageQueue
     {
-        private readonly CMqServer _keyServer;
+        private readonly KkServer _keyServer;
 
         /// <summary>
         /// Messages that are enqueued in this list.
         /// </summary>
         internal OptimisticCriticalResource<RocksDb>? Database { get; set; }
 
-        internal CMqStoreConfiguration Configuration { get; set; }
+        internal KkStoreConfiguration Configuration { get; set; }
 
         internal MessageQueueStatistics Statistics { get; set; } = new();
 
-        public MessageQueue(CMqServer keyServer, CMqStoreConfiguration queueConfiguration)
+        public MessageQueue(KkServer keyServer, KkStoreConfiguration queueConfiguration)
         {
             _keyServer = keyServer;
             Configuration = queueConfiguration;

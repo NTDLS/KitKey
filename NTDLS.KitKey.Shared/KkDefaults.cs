@@ -1,6 +1,6 @@
 ﻿namespace NTDLS.KitKey.Shared
 {
-    public static class CMqDefaults
+    public static class KkDefaults
     {
         /// <summary>
         /// The amount of time to wait when performing deadlock avoidance locks.

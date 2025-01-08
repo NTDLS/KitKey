@@ -2,7 +2,7 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class CMqUpsert(string storeName, string key, string value)
+    public class KkUpsert(string storeName, string key, string value)
         : IRmQuery<CMqUpsertReply>
     {
         public string StoreName { get; set; } = storeName;

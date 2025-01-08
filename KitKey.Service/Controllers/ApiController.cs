@@ -7,9 +7,9 @@ namespace KitKey.Service.Controllers
     [Route("api")]
     public class ApiController : Controller
     {
-        private readonly CMqServer _mqServer;
+        private readonly KkServer _mqServer;
 
-        public ApiController(CMqServer mqServer)
+        public ApiController(KkServer mqServer)
         {
             _mqServer = mqServer;
         }
@@ -31,7 +31,7 @@ namespace KitKey.Service.Controllers
         [HttpPost("CreateQueue/{queueName}")]
         public IActionResult CreateQueue(string queueName)
         {
-            _mqServer.CreateStore(new CMqStoreConfiguration
+            _mqServer.CreateStore(new KkStoreConfiguration
             {
                 StoreName = queueName
             });
@@ -44,7 +44,7 @@ namespace KitKey.Service.Controllers
         /// <param name="config"></param>
         /// <returns></returns>
         [HttpPost("CreateQueue")]
-        public IActionResult CreateQueue([FromBody] CMqStoreConfiguration config)
+        public IActionResult CreateQueue([FromBody] KkStoreConfiguration config)
         {
             if (config == null || string.IsNullOrEmpty(config.StoreName))
             {

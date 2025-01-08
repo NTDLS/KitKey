@@ -2,10 +2,10 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class CMqCreateStore(CMqStoreConfiguration queueConfiguration)
+    public class KkCreateStore(KkStoreConfiguration queueConfiguration)
         : IRmQuery<CMqCreateQueueQueryReply>
     {
-        public CMqStoreConfiguration QueueConfiguration { get; set; } = queueConfiguration;
+        public KkStoreConfiguration QueueConfiguration { get; set; } = queueConfiguration;
     }
 
     public class CMqCreateQueueQueryReply

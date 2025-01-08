@@ -7,13 +7,13 @@ namespace KitKey.Service
 {
     public class QueuingService
     {
-        private CMqServer? _mqServer;
+        private KkServer? _mqServer;
 
         public void Start()
         {
             var serviceConfiguration = Configs.GetServiceConfig();
 
-            _mqServer = new CMqServer(new CMqServerConfiguration
+            _mqServer = new KkServer(new KkServerConfiguration
             {
                 PersistencePath = serviceConfiguration.DataPath,
                 AsynchronousAcknowledgment = serviceConfiguration.AsynchronousAcknowledgment,
@@ -100,7 +100,7 @@ namespace KitKey.Service
             }
         }
 
-        private void MqServer_OnLog(CMqServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null)
+        private void MqServer_OnLog(KkServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null)
         {
             switch (errorLevel)
             {

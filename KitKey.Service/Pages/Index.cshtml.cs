@@ -8,11 +8,11 @@ namespace KitKey.Service.Pages
 {
     [Authorize]
 
-    public class IndexModel(ILogger<IndexModel> logger, CMqServer mqServer) : BasePageModel
+    public class IndexModel(ILogger<IndexModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<IndexModel> _logger = logger;
-        public List<CMqStoreDescriptor> Queues { get; private set; } = new();
-        public CMqServerDescriptor ServerConfig = new();
+        public List<KkStoreDescriptor> Queues { get; private set; } = new();
+        public KkServerDescriptor ServerConfig = new();
         public string ApplicationVersion { get; private set; } = string.Empty;
 
         public void OnGet()

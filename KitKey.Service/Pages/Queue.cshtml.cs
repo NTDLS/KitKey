@@ -8,13 +8,13 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class QueueModel(ILogger<QueueModel> logger, CMqServer mqServer) : BasePageModel
+    public class QueueModel(ILogger<QueueModel> logger, KkServer mqServer) : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
         public string QueueName { get; set; } = string.Empty;
 
         private readonly ILogger<QueueModel> _logger = logger;
-        public CMqStoreDescriptor Store { get; private set; } = new();
+        public KkStoreDescriptor Store { get; private set; } = new();
 
         public void OnGet()
         {
