@@ -6,12 +6,17 @@
     internal class KeyStoreStatistics
     {
         /// <summary>
-        /// The total number of values that have been sent into this key-store.
+        /// The count of values that have been inserted/updated into the key-store
         /// </summary>
-        public ulong UpsertCount { get; set; }
+        public ulong SetCount { get; set; }
 
         /// <summary>
-        /// The total number of values that have been retrieved from this key-store to subscribers.
+        /// The count of values that have been removed into the key-store
+        /// </summary>
+        public ulong DeleteCount { get; set; }
+
+        /// <summary>
+        /// The count of values that have been retrieved from the key-store
         /// </summary>
         public ulong GetCount { get; set; }
     }

@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NTDLS.FastMemoryCache" Version="1.9.0" />
     <PackageReference Include="RocksDB" Version="9.7.3.54622" />
   </ItemGroup>
 

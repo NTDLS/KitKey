@@ -211,7 +211,7 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Creates a new key-store.
+        /// Creates a new key-store with a default configuration.
         /// </summary>
         public void CreateStore(string storeName)
         {
@@ -223,7 +223,7 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Creates a new key-store.
+        /// Creates a new key-store with a custom configuration.
         /// </summary>
         public void CreateStore(KkStoreConfiguration storeConfiguration)
         {
@@ -261,9 +261,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Inserts or updates a value in a key-store.
         /// </summary>
-        public void Upsert(string storeName, string key, string value)
+        public void Set(string storeName, string key, string value)
         {
-            var result = _rmClient.Query(new KkUpsert(storeName, key, value)).Result;
+            var result = _rmClient.Query(new KkSet(storeName, key, value)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -273,7 +273,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a value from a key-store.
         /// </summary>
-        public string? Upsert(string storeName, string key)
+        public string? Get(string storeName, string key)
         {
             var result = _rmClient.Query(new KkGet(storeName, key)).Result;
             if (result.IsSuccess == false)
@@ -281,6 +281,18 @@ namespace NTDLS.KitKey.Client
                 throw new Exception(result.ErrorMessage);
             }
             return result.Value;
+        }
+
+        /// <summary>
+        /// Deletes a value from a key-store.
+        /// </summary>
+        public void Delete(string storeName, string key)
+        {
+            var result = _rmClient.Query(new KkDelete(storeName, key)).Result;
+            if (result.IsSuccess == false)
+            {
+                throw new Exception(result.ErrorMessage);
+            }
         }
     }
 }

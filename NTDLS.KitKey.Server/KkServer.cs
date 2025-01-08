@@ -125,7 +125,7 @@ namespace NTDLS.KitKey.Server
 
                         //TODO: CurrentMessageCount = m.Messages.Count,
 
-                        UpsertCount = mqKVP.Value.Statistics.UpsertCount,
+                        UpsertCount = mqKVP.Value.Statistics.SetCount,
                         GetCount = mqKVP.Value.Statistics.GetCount,
                     });
                 }
@@ -258,8 +258,6 @@ namespace NTDLS.KitKey.Server
                 throw new Exception("A key-store name is required.");
             }
 
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Creating key-store: [{storeConfiguration.StoreName}].");
-
             _keyStores.Write(mqd =>
             {
                 string storeKey = storeConfiguration.StoreName.ToLowerInvariant();
@@ -290,76 +288,91 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public void DeleteStore(string storeName)
         {
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Deleting key-store: [{storeName}].");
-
             string storeKey = storeName.ToLowerInvariant();
 
             while (_keepRunning)
             {
-                bool success = true;
-
-                KeyStore? cleanupStore = null;
+                KeyStore? keyStore = null;
 
                 _keyStores.Write(mqd =>
                 {
                     if (mqd.TryGetValue(storeKey, out var store))
                     {
+                        keyStore = store;
                         store.Stop();
-
-                        if (store.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && store.Database != null)
-                        {
-                            success = store.Database.TryWrite(KkDefaults.DEFAULT_TRY_WAIT_MS, m =>
-                            {
-                                cleanupStore = store;
-                                mqd.Remove(storeKey);
-                            }) && success;
-                        }
-
-                        if (success)
-                        {
-                            if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
-                            {
-                                CheckpointPersistentStores(mqd);
-                            }
-                        }
+                        CheckpointPersistentStores(mqd);
                     }
                 });
 
-                if (success)
+                if (keyStore != null)
                 {
-                    if (cleanupStore != null)
-                    {
-                        var databasePath = Path.Join(Configuration.PersistencePath, "store", cleanupStore.Configuration.StoreName);
+                    var databasePath = Path.Join(Configuration.PersistencePath, "store", keyStore.Configuration.StoreName);
 
-                        try
-                        {
-                            Directory.Delete(databasePath, true);
-                        }
-                        catch (Exception ex)
-                        {
-                            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
-                        }
+                    try
+                    {
+                        Directory.Delete(databasePath, true);
                     }
-                    return;
+                    catch (Exception ex)
+                    {
+                        OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
+                    }
                 }
-                Thread.Sleep(KkDefaults.DEFAULT_DEADLOCK_AVOIDANCE_WAIT_MS);
+                return;
             }
         }
 
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void Upsert(string storeName, string key, string value)
+        public void Set(string storeName, string key, string value)
         {
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Storing value to key-store: [{storeName}].");
-
             string storeKey = storeName.ToLowerInvariant();
 
             _keyStores.Read(mqd =>
             {
                 if (mqd.TryGetValue(storeKey, out var store))
                 {
-                    store.Upsert(key, value);
+                    store.Set(key, value);
+                }
+                else
+                {
+                    throw new Exception($"Key-store not found: [{storeName}].");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public string? Get(string storeName, string key)
+        {
+            string storeKey = storeName.ToLowerInvariant();
+
+            return _keyStores.ReadNullable(mqd =>
+            {
+                if (mqd.TryGetValue(storeKey, out var store))
+                {
+                    return store.Get(key);
+                }
+                else
+                {
+                    throw new Exception($"Key-store not found: [{storeName}].");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Removes a value form the key-store.
+        /// </summary>
+        public void Delete(string storeName, string key)
+        {
+            string storeKey = storeName.ToLowerInvariant();
+
+            _keyStores.Read(mqd =>
+            {
+                if (mqd.TryGetValue(storeKey, out var store))
+                {
+                    store.Delete(key);
                 }
                 else
                 {
@@ -373,8 +386,6 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public void PurgeStore(string storeName)
         {
-            OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Purging key-store: [{storeName}].");
-
             string storeKey = storeName.ToLowerInvariant();
 
             _keyStores.Read(mqd =>

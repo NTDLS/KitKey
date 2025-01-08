@@ -18,7 +18,7 @@ namespace KitKey.Service.Controllers
         [Consumes("text/plain", "application/json")]
         public IActionResult Upsert(string storeName, string key, [FromBody] dynamic value)
         {
-            _mqServer.Upsert(storeName, key, value.ToString());
+            _mqServer.Set(storeName, key, value.ToString());
             return Ok();
         }
 

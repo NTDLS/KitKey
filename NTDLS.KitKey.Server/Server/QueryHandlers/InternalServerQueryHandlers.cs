@@ -6,13 +6,13 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
     internal class InternalServerQueryHandlers(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkServer _mqServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
-        public KkCreateStoreReply KkCreateStoreQuery(RmContext context, KkCreateStore param)
+        public KkCreateStoreReply KkCreateStore(RmContext context, KkCreateStore param)
         {
             try
             {
-                _mqServer.CreateStore(param.StoreConfiguration);
+                _keyStoreServer.CreateStore(param.StoreConfiguration);
                 return new KkCreateStoreReply(true);
             }
             catch (Exception ex)
@@ -21,11 +21,11 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkDeleteStoreReply KkDeleteStoreQuery(RmContext context, KkDeleteStore param)
+        public KkDeleteStoreReply KkDeleteStore(RmContext context, KkDeleteStore param)
         {
             try
             {
-                _mqServer.DeleteStore(param.StoreName);
+                _keyStoreServer.DeleteStore(param.StoreName);
                 return new KkDeleteStoreReply(true);
             }
             catch (Exception ex)
@@ -34,11 +34,11 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkPurgeStoreReply KkPurgeStoreQuery(RmContext context, KkPurgeStore param)
+        public KkPurgeStoreReply KkPurgeStore(RmContext context, KkPurgeStore param)
         {
             try
             {
-                _mqServer.PurgeStore(param.StoreName);
+                _keyStoreServer.PurgeStore(param.StoreName);
                 return new KkPurgeStoreReply(true);
             }
             catch (Exception ex)
@@ -47,16 +47,44 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkUpsertReply KkUpsertQuery(RmContext context, KkUpsert param)
+        public KkSetReply KkSet(RmContext context, KkSet param)
         {
             try
             {
-                _mqServer.Upsert(param.StoreName, param.Key, param.Value);
-                return new KkUpsertReply(true);
+                _keyStoreServer.Set(param.StoreName, param.Key, param.Value);
+                return new KkSetReply(true);
             }
             catch (Exception ex)
             {
-                return new KkUpsertReply(ex.GetBaseException());
+                return new KkSetReply(ex.GetBaseException());
+            }
+        }
+
+        public KkGetReply KkGet(RmContext context, KkGet param)
+        {
+            try
+            {
+                return new KkGetReply(true)
+                {
+                    Value = _keyStoreServer.Get(param.StoreName, param.Key)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new KkGetReply(ex.GetBaseException());
+            }
+        }
+
+        public KkDeleteReply KkDelete(RmContext context, KkDelete param)
+        {
+            try
+            {
+                _keyStoreServer.Get(param.StoreName, param.Key);
+                return new KkDeleteReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkDeleteReply(ex.GetBaseException());
             }
         }
     }

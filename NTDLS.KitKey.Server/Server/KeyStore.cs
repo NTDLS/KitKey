@@ -1,4 +1,5 @@
-﻿using NTDLS.KitKey.Shared;
+﻿using NTDLS.FastMemoryCache;
+using NTDLS.KitKey.Shared;
 using NTDLS.Semaphore;
 using RocksDbSharp;
 
@@ -11,14 +12,17 @@ namespace NTDLS.KitKey.Server.Server
     {
         private readonly KkServer _keyServer;
 
-        internal OptimisticCriticalResource<RocksDb>? Database { get; set; }
-        internal KkStoreConfiguration Configuration { get; set; }
+        private OptimisticCriticalResource<RocksDb>? _database;
+        private readonly PartitionedMemoryCache _memoryCache;
+
+        internal KkStoreConfiguration Configuration { get; private set; }
         internal KeyStoreStatistics Statistics { get; set; } = new();
 
         public KeyStore(KkServer keyServer, KkStoreConfiguration storeConfiguration)
         {
             _keyServer = keyServer;
             Configuration = storeConfiguration;
+            _memoryCache = new PartitionedMemoryCache();
         }
 
         public void Start()
@@ -37,78 +41,73 @@ namespace NTDLS.KitKey.Server.Server
             var options = new DbOptions().SetCreateIfMissing(true);
             var persistenceDatabase = RocksDb.Open(options, databasePath);
 
-            Database = new(persistenceDatabase);
+            _database = new(persistenceDatabase);
         }
 
         public void Stop()
         {
             _keyServer.InvokeOnLog(CMqErrorLevel.Information, $"Signaling shutdown for [{Configuration.StoreName}].");
 
-            Database?.Write(o =>
+            _database?.Write(o =>
             {
                 o.Checkpoint();
                 o.Dispose();
             });
         }
 
-        public void Upsert(string key, string value)
+        public void Set(string key, string value)
         {
-            /*
-            success = messageQueue.Database.TryWrite(CMqDefaults.DEFAULT_TRY_WAIT_MS, m =>
-            {
-                messageQueue.Statistics.ReceivedMessageCount++;
-                var message = new EnqueuedMessage(queueKey, assemblyQualifiedTypeName, messageJson);
-                if (messageQueue.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && m.Database != null)
-                {
-                    //Serialize using System.Text.Json as opposed to Newtonsoft for efficiency.
-                    var persistedJson = JsonSerializer.Serialize(message);
-                    m.Database?.Put(message.MessageId.ToString(), persistedJson);
-                }
+            _memoryCache.Upsert(key, value);
 
-                m.Messages.Add(message);
-                messageQueue.DeliveryThreadWaitEvent.Set();
-            }) && success;
-            */
+            _database?.Write(db =>
+            {
+                Statistics.SetCount++;
+                db.Put(key, value);
+            });
+        }
+
+        public string? Get(string key)
+        {
+            if (_memoryCache.TryGet(key, out string? value) && value != null)
+            {
+                return value;
+            }
+
+            return _database?.Write(db =>
+            {
+                Statistics.GetCount++;
+                return db.Get(key);
+            });
+        }
+
+        public void Delete(string key)
+        {
+            _memoryCache.Remove(key);
+
+            _database?.Write(db =>
+            {
+                Statistics.DeleteCount++;
+                db.Remove(key);
+            });
         }
 
         public void Purge()
         {
-            /*
-                        while (_keepRunning)
-                        {
-                            bool success = true;
+            _memoryCache.Clear();
 
-                            _messageQueues.Read(mqd =>
-                            {
-                                string queueKey = storeName.ToLowerInvariant();
-                                if (mqd.TryGetValue(queueKey, out var messageQueue))
-                                {
-                                    success = messageQueue.EnqueuedMessages.TryWrite(CMqDefaults.DEFAULT_TRY_WAIT_MS, m =>
-                                    {
-                                        if (messageQueue.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent && m.Database != null)
-                                        {
-                                            foreach (var message in m.Messages)
-                                            {
-                                                m.Database?.Remove(message.MessageId.ToString());
-                                            }
-                                        }
-                                        m.Messages.Clear();
-                                    }) && success;
-                                }
-                                else
-                                {
-                                    throw new Exception($"Queue not found: [{storeName}].");
-                                }
-                            });
+            _database?.Write(db =>
+            {
+                using var iterator = db.NewIterator();
+                iterator.SeekToFirst();
 
-                            if (success)
-                            {
-                                return;
-                            }
-                            Thread.Sleep(CMqDefaults.DEFAULT_DEADLOCK_AVOIDANCE_WAIT_MS);
-                        }
-             */
+                while (iterator.Valid())
+                {
+                    var key = iterator.Key();
+                    db.Remove(key); // Remove the key-value pair
+                    iterator.Next();
+                }
 
+            });
         }
     }
 }

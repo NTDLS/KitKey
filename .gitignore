@@ -84,3 +84,7 @@ Test.QueueServer/bin/
 Test.Stress/bin/
 
 Test.Stress/obj/
+
+Test.Harness/obj/
+
+Test.Harness/bin/
