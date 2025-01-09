@@ -298,7 +298,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public List<KkListItem>? GetList(string storeName, string key)
+        public Dictionary<Guid, string>? GetList(string storeName, string key)
         {
             var result = _rmClient.Query(new KkGetList(storeName, key)).Result;
             if (result.IsSuccess == false)

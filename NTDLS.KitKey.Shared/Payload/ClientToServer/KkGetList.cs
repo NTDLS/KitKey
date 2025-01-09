@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public List<KkListItem>? List { get; set; }
+        public Dictionary<Guid, string>? List { get; set; }
 
         public KkGetListReply(Exception exception)
         {

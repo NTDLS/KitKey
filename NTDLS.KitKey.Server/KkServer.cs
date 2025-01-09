@@ -370,7 +370,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public List<KkListItem>? GetList(string storeName, string key)
+        public Dictionary<Guid, string>? GetList(string storeName, string key)
             => GetKeyStore(storeName)?.GetList(key);
 
         #endregion

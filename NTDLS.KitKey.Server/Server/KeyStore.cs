@@ -155,7 +155,7 @@ namespace NTDLS.KitKey.Server.Server
             _concurrentKeyOperation.Execute(key, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(key, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(key, out Dictionary<Guid, string>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -174,7 +174,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (listJson != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = JsonSerializer.Deserialize<List<KkListItem>>(listJson);
+                            list = JsonSerializer.Deserialize<Dictionary<Guid, string>>(listJson);
                         }
                         else
                         {
@@ -184,13 +184,9 @@ namespace NTDLS.KitKey.Server.Server
                 });
 
                 //If the list does not exist. We need to create it.
-                list ??= new List<KkListItem>();
+                list ??= new Dictionary<Guid, string>();
 
-                list.Add(new KkListItem()
-                {
-                    Id = Guid.NewGuid(),
-                    Value = valueToAdd
-                });
+                list.Add(Guid.NewGuid(), valueToAdd);
 
                 //Persist the serialized list.
                 _database?.Write(db => db.Put(key, JsonSerializer.Serialize(list)));
@@ -200,7 +196,7 @@ namespace NTDLS.KitKey.Server.Server
             });
         }
 
-        public List<KkListItem>? GetList(string key)
+        public Dictionary<Guid, string>? GetList(string key)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {
@@ -209,12 +205,12 @@ namespace NTDLS.KitKey.Server.Server
 
             Statistics.SetCount++;
 
-            List<KkListItem>? result = null;
+            Dictionary<Guid, string>? result = null;
 
             _concurrentKeyOperation.Execute(key, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(key, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(key, out Dictionary<Guid, string>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -233,7 +229,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (listJson != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = JsonSerializer.Deserialize<List<KkListItem>>(listJson);
+                            list = JsonSerializer.Deserialize<Dictionary<Guid, string>>(listJson);
                         }
                         else
                         {
@@ -242,7 +238,7 @@ namespace NTDLS.KitKey.Server.Server
                     }
                 });
 
-                result = list?.ToList();
+                result = list?.ToDictionary();
             });
 
             return result;
