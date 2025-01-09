@@ -261,9 +261,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Inserts or updates a value in a key-store.
         /// </summary>
-        public void Set(string storeName, string key, string value)
+        public void SetString(string storeName, string key, string value)
         {
-            var result = _rmClient.Query(new KkSet(storeName, key, value)).Result;
+            var result = _rmClient.Query(new KkSetString(storeName, key, value)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -273,14 +273,39 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a value from a key-store.
         /// </summary>
-        public string? Get(string storeName, string key)
+        public string? GetString(string storeName, string key)
         {
-            var result = _rmClient.Query(new KkGet(storeName, key)).Result;
+            var result = _rmClient.Query(new KkGetString(storeName, key)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
             }
             return result.Value;
+        }
+
+        /// <summary>
+        /// Appends a value to a list key-store.
+        /// </summary>
+        public void AppendList(string storeName, string key, string value)
+        {
+            var result = _rmClient.Query(new KkAppendList(storeName, key, value)).Result;
+            if (result.IsSuccess == false)
+            {
+                throw new Exception(result.ErrorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Gets a list from the key-store by its key.
+        /// </summary>
+        public List<KkListItem>? GetList(string storeName, string key)
+        {
+            var result = _rmClient.Query(new KkGetList(storeName, key)).Result;
+            if (result.IsSuccess == false)
+            {
+                throw new Exception(result.ErrorMessage);
+            }
+            return result.List;
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Delegate used to notify of key-store server exceptions.
         /// </summary>
-        public delegate void OnLogEvent(KkServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null);
+        public delegate void OnLogEvent(KkServer server, KkErrorLevel errorLevel, string message, Exception? ex = null);
 
         /// <summary>
         /// Event used to notify of key-store server exceptions.
@@ -76,9 +76,9 @@ namespace NTDLS.KitKey.Server
         {
             if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
             {
-                OnLog?.Invoke(this, CMqErrorLevel.Verbose, "Checkpoint persistent key-stores.");
+                OnLog?.Invoke(this, KkErrorLevel.Verbose, "Checkpoint persistent key-stores.");
 
-                var storeMetas = mqd.Where(q => q.Value.Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                var storeMetas = mqd.Where(q => q.Value.Configuration.PersistenceScheme == KkPersistenceScheme.Persistent)
                     .Select(q => new KeyStoreMetadata(q.Value.Configuration, q.Value.Statistics)).ToList();
 
                 //Serialize using System.Text.Json as opposed to Newtonsoft for efficiency.
@@ -139,9 +139,9 @@ namespace NTDLS.KitKey.Server
         #endregion
 
         internal void InvokeOnLog(Exception ex)
-            => OnLog?.Invoke(this, CMqErrorLevel.Error, ex.Message, ex);
+            => OnLog?.Invoke(this, KkErrorLevel.Error, ex.Message, ex);
 
-        internal void InvokeOnLog(CMqErrorLevel errorLevel, string message)
+        internal void InvokeOnLog(KkErrorLevel errorLevel, string message)
             => OnLog?.Invoke(this, errorLevel, message);
 
         #region Start & Stop.
@@ -165,7 +165,7 @@ namespace NTDLS.KitKey.Server
                 var persistedStoresFile = Path.Join(_configuration.PersistencePath, "stores.json");
                 if (File.Exists(persistedStoresFile))
                 {
-                    OnLog?.Invoke(this, CMqErrorLevel.Information, "Loading persistent key-stores.");
+                    OnLog?.Invoke(this, KkErrorLevel.Information, "Loading persistent key-stores.");
 
                     var keyStoresJson = File.ReadAllText(persistedStoresFile);
                     //Deserialize using System.Text.Json as opposed to Newtonsoft for efficiency.
@@ -189,7 +189,7 @@ namespace NTDLS.KitKey.Server
                 }
             }
 
-            OnLog?.Invoke(this, CMqErrorLevel.Information, "Starting key-stores.");
+            OnLog?.Invoke(this, KkErrorLevel.Information, "Starting key-stores.");
             foreach (var store in storesToStart)
             {
                 store.Start();
@@ -221,10 +221,10 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public void Stop()
         {
-            OnLog?.Invoke(this, CMqErrorLevel.Information, "Stopping service.");
+            OnLog?.Invoke(this, KkErrorLevel.Information, "Stopping service.");
 
             _keepRunning = false;
-            OnLog?.Invoke(this, CMqErrorLevel.Information, "Stopping reliable messaging.");
+            OnLog?.Invoke(this, KkErrorLevel.Information, "Stopping reliable messaging.");
             _rmServer.Stop();
 
             var keyStores = new List<KeyStore>();
@@ -234,7 +234,7 @@ namespace NTDLS.KitKey.Server
                 //Stop all key stores.
                 foreach (var mqKVP in mqd)
                 {
-                    OnLog?.Invoke(this, CMqErrorLevel.Information, $"Stopping key-store [{mqKVP.Value.Configuration.StoreName}].");
+                    OnLog?.Invoke(this, KkErrorLevel.Information, $"Stopping key-store [{mqKVP.Value.Configuration.StoreName}].");
                     mqKVP.Value.Stop();
                     keyStores.Add(mqKVP.Value);
                 }
@@ -247,6 +247,25 @@ namespace NTDLS.KitKey.Server
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a reference to a key-store for read.
+        /// Read here means that we will not modify the collection of key stores, but we are
+        /// free to add/remove values as their concurrency is handled by the key-store itself.
+        /// </summary>
+        private KeyStore GetKeyStore(string storeName)
+        {
+            var storeKey = storeName.ToLowerInvariant();
+
+            return _keyStores.Read(mqd =>
+            {
+                if (mqd.TryGetValue(storeKey, out var store))
+                {
+                    return store;
+                }
+                throw new Exception($"Key-store not found: [{storeName}].");
+            });
+        }
 
         #region Client interactions.
 
@@ -268,7 +287,7 @@ namespace NTDLS.KitKey.Server
                     var keyStore = new KeyStore(this, storeConfiguration);
                     mqd.Add(storeKey, keyStore);
 
-                    if (storeConfiguration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                    if (storeConfiguration.PersistenceScheme == Shared.KkPersistenceScheme.Persistent)
                     {
                         if (string.IsNullOrEmpty(_configuration.PersistencePath) == false)
                         {
@@ -317,92 +336,56 @@ namespace NTDLS.KitKey.Server
                     }
                     catch (Exception ex)
                     {
-                        OnLog?.Invoke(this, CMqErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
+                        OnLog?.Invoke(this, KkErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
                     }
                 }
                 return;
             }
         }
 
+        #region String.
+
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void Set(string storeName, string key, string value)
-        {
-            string storeKey = storeName.ToLowerInvariant();
-
-            _keyStores.Read(mqd =>
-            {
-                if (mqd.TryGetValue(storeKey, out var store))
-                {
-                    store.Set(key, value);
-                }
-                else
-                {
-                    throw new Exception($"Key-store not found: [{storeName}].");
-                }
-            });
-        }
+        public void SetString(string storeName, string key, string value)
+            => GetKeyStore(storeName)?.SetString(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
-        public string? Get(string storeName, string key)
-        {
-            string storeKey = storeName.ToLowerInvariant();
+        public string? GetString(string storeName, string key)
+            => GetKeyStore(storeName)?.GetString(key);
 
-            return _keyStores.ReadNullable(mqd =>
-            {
-                if (mqd.TryGetValue(storeKey, out var store))
-                {
-                    return store.Get(key);
-                }
-                else
-                {
-                    throw new Exception($"Key-store not found: [{storeName}].");
-                }
-            });
-        }
+        #endregion
+
+        #region List.
+
+        /// <summary>
+        /// Appends a value to a list key-store.
+        /// </summary>
+        public void AppendList(string storeName, string key, string value)
+            => GetKeyStore(storeName)?.AppendList(key, value);
+
+        /// <summary>
+        /// Gets a list from the key-store by its key.
+        /// </summary>
+        public List<KkListItem>? GetList(string storeName, string key)
+            => GetKeyStore(storeName)?.GetList(key);
+
+        #endregion
 
         /// <summary>
         /// Removes a value form the key-store.
         /// </summary>
         public void Delete(string storeName, string key)
-        {
-            string storeKey = storeName.ToLowerInvariant();
-
-            _keyStores.Read(mqd =>
-            {
-                if (mqd.TryGetValue(storeKey, out var store))
-                {
-                    store.Delete(key);
-                }
-                else
-                {
-                    throw new Exception($"Key-store not found: [{storeName}].");
-                }
-            });
-        }
+            => GetKeyStore(storeName)?.Delete(key);
 
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
         public void PurgeStore(string storeName)
-        {
-            string storeKey = storeName.ToLowerInvariant();
-
-            _keyStores.Read(mqd =>
-            {
-                if (mqd.TryGetValue(storeKey, out var store))
-                {
-                    store.Purge();
-                }
-                else
-                {
-                    throw new Exception($"Key-store not found: [{storeName}].");
-                }
-            });
-        }
+            => GetKeyStore(storeName)?.Purge();
 
         #endregion
     }

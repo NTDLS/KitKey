@@ -48,8 +48,11 @@
 
   <ItemGroup>
     <PackageReference Include="NTDLS.FastMemoryCache" Version="1.9.0" />
-    <PackageReference Include="NTDLS.KitKey.Shared" Version="1.0.1" />
     <PackageReference Include="RocksDB" Version="9.7.3.54622" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NTDLS.KitKey.Shared\NTDLS.KitKey.Shared.csproj" />
   </ItemGroup>
 
 </Project>

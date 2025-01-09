@@ -2,16 +2,17 @@
 using NTDLS.KitKey.Shared;
 using NTDLS.Semaphore;
 using RocksDbSharp;
+using System.Text.Json;
 
 namespace NTDLS.KitKey.Server.Server
 {
     /// <summary>
-    /// A named key store and its delivery thread.
+    /// A named key store, its cache and persistence database.
     /// </summary>
     internal class KeyStore
     {
+        private readonly ConcurrentKeyOperation _concurrentKeyOperation = new();
         private readonly KkServer _keyServer;
-
         private OptimisticCriticalResource<RocksDb>? _database;
         private readonly PartitionedMemoryCache _memoryCache;
 
@@ -26,11 +27,11 @@ namespace NTDLS.KitKey.Server.Server
 
             if (Configuration.CacheExpiration == null)
             {
-                if (Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+                if (Configuration.PersistenceScheme == KkPersistenceScheme.Persistent)
                 {
                     Configuration.CacheExpiration = TimeSpan.FromSeconds(KkDefaults.DEFAULT_CACHE_SECONDS);
                 }
-                else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
+                else if (Configuration.PersistenceScheme == KkPersistenceScheme.Ephemeral)
                 {
                     Configuration.CacheExpiration = TimeSpan.FromDays(1);
                 }
@@ -39,17 +40,17 @@ namespace NTDLS.KitKey.Server.Server
 
         public void Start()
         {
-            if (Configuration.PersistenceScheme != CMqPersistenceScheme.Persistent)
+            if (Configuration.PersistenceScheme != KkPersistenceScheme.Persistent)
             {
                 return;
             }
 
-            _keyServer.InvokeOnLog(CMqErrorLevel.Verbose, $"Creating persistent path for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Verbose, $"Creating persistent path for [{Configuration.StoreName}].");
 
             var databasePath = Path.Join(_keyServer.Configuration.PersistencePath, "store", Configuration.StoreName);
             Directory.CreateDirectory(databasePath);
 
-            _keyServer.InvokeOnLog(CMqErrorLevel.Information, $"Instantiating persistent key-store for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Instantiating persistent key-store for [{Configuration.StoreName}].");
             var options = new DbOptions().SetCreateIfMissing(true);
             var persistenceDatabase = RocksDb.Open(options, databasePath);
 
@@ -58,7 +59,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public void Stop()
         {
-            _keyServer.InvokeOnLog(CMqErrorLevel.Information, $"Signaling shutdown for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Signaling shutdown for [{Configuration.StoreName}].");
 
             _database?.Write(o =>
             {
@@ -69,7 +70,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public long CurrentValueCount()
         {
-            if (Configuration.PersistenceScheme == CMqPersistenceScheme.Persistent)
+            if (Configuration.PersistenceScheme == KkPersistenceScheme.Persistent)
             {
                 return _database?.Read(db =>
                 {
@@ -85,22 +86,34 @@ namespace NTDLS.KitKey.Server.Server
                     return count;
                 }) ?? 0;
             }
-            else if (Configuration.PersistenceScheme == CMqPersistenceScheme.Ephemeral)
+            else if (Configuration.PersistenceScheme == KkPersistenceScheme.Ephemeral)
             {
                 return _memoryCache.Count();
             }
             throw new Exception("Undefined PersistenceScheme.");
         }
 
-        public void Set(string key, string value)
+        #region String.
+
+        public void SetString(string key, string value)
         {
+            if (Configuration.ValueType != KkValueType.String)
+            {
+                throw new Exception($"SetString is invalid for the key-store type: [{Configuration.ValueType}].");
+            }
+
             Statistics.SetCount++;
             _memoryCache.Upsert(key, value, Configuration.CacheExpiration);
             _database?.Write(db => db.Put(key, value));
         }
 
-        public string? Get(string key)
+        public string? GetString(string key)
         {
+            if (Configuration.ValueType != KkValueType.String)
+            {
+                throw new Exception($"GetString is invalid for the key-store type: [{Configuration.ValueType}].");
+            }
+
             Statistics.GetCount++;
 
             if (_memoryCache.TryGet(key, out string? value) && value != null)
@@ -125,6 +138,117 @@ namespace NTDLS.KitKey.Server.Server
                 return result;
             });
         }
+
+        #endregion
+
+        #region List.
+
+        public void AppendList(string key, string valueToAdd)
+        {
+            if (Configuration.ValueType != KkValueType.StringList)
+            {
+                throw new Exception($"AppendList is invalid for the key-store type: [{Configuration.ValueType}].");
+            }
+
+            Statistics.SetCount++;
+
+            _concurrentKeyOperation.Execute(key, () =>
+            {
+                //See if we have the list in memory.
+                if (_memoryCache.TryGet(key, out List<KkListItem>? list) && list != null)
+                {
+                    Statistics.CacheHits++;
+                }
+                else
+                {
+                    Statistics.CacheMisses++;
+                }
+
+                _database?.Read(db =>
+                {
+                    if (list == null)
+                    {
+                        //Looks like we did not have the list in memory, so we need to
+                        //check the database for the serialized list and deserialize it.
+                        var listJson = db.Get(key);
+                        if (listJson != null)
+                        {
+                            Statistics.DatabaseHits++;
+                            list = JsonSerializer.Deserialize<List<KkListItem>>(listJson);
+                        }
+                        else
+                        {
+                            Statistics.DatabaseHits++;
+                        }
+                    }
+                });
+
+                //If the list does not exist. We need to create it.
+                list ??= new List<KkListItem>();
+
+                list.Add(new KkListItem()
+                {
+                    Id = Guid.NewGuid(),
+                    Value = valueToAdd
+                });
+
+                //Persist the serialized list.
+                _database?.Write(db => db.Put(key, JsonSerializer.Serialize(list)));
+
+                //Recache the list.
+                _memoryCache.Upsert(key, list, Configuration.CacheExpiration);
+            });
+        }
+
+        public List<KkListItem>? GetList(string key)
+        {
+            if (Configuration.ValueType != KkValueType.StringList)
+            {
+                throw new Exception($"GetList is invalid for the key-store type: [{Configuration.ValueType}].");
+            }
+
+            Statistics.SetCount++;
+
+            List<KkListItem>? result = null;
+
+            _concurrentKeyOperation.Execute(key, () =>
+            {
+                //See if we have the list in memory.
+                if (_memoryCache.TryGet(key, out List<KkListItem>? list) && list != null)
+                {
+                    Statistics.CacheHits++;
+                }
+                else
+                {
+                    Statistics.CacheMisses++;
+                }
+
+                _database?.Read(db =>
+                {
+                    if (list == null)
+                    {
+                        //Looks like we did not have the list in memory, so we need to
+                        //check the database for the serialized list and deserialize it.
+                        var listJson = db.Get(key);
+                        if (listJson != null)
+                        {
+                            Statistics.DatabaseHits++;
+                            list = JsonSerializer.Deserialize<List<KkListItem>>(listJson);
+                        }
+                        else
+                        {
+                            Statistics.DatabaseHits++;
+                        }
+                    }
+                });
+
+                result = list?.ToList();
+            });
+
+            return result;
+        }
+
+        #endregion
 
         public void Delete(string key)
         {

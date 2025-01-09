@@ -100,41 +100,41 @@ namespace KitKey.Service
             }
         }
 
-        private void MqServer_OnLog(KkServer server, CMqErrorLevel errorLevel, string message, Exception? ex = null)
+        private void MqServer_OnLog(KkServer server, KkErrorLevel errorLevel, string message, Exception? ex = null)
         {
             switch (errorLevel)
             {
-                case CMqErrorLevel.Verbose:
+                case KkErrorLevel.Verbose:
                     if (ex != null)
                         Log.Verbose(ex, message);
                     else
                         Log.Verbose(message);
                     break;
-                case CMqErrorLevel.Debug:
+                case KkErrorLevel.Debug:
                     if (ex != null)
                         Log.Debug(ex, message);
                     else
                         Log.Debug(message);
                     break;
-                case CMqErrorLevel.Information:
+                case KkErrorLevel.Information:
                     if (ex != null)
                         Log.Information(ex, message);
                     else
                         Log.Information(message);
                     break;
-                case CMqErrorLevel.Warning:
+                case KkErrorLevel.Warning:
                     if (ex != null)
                         Log.Warning(ex, message);
                     else
                         Log.Warning(message);
                     break;
-                case CMqErrorLevel.Error:
+                case KkErrorLevel.Error:
                     if (ex != null)
                         Log.Error(ex, message);
                     else
                         Log.Error(message);
                     break;
-                case CMqErrorLevel.Fatal:
+                case KkErrorLevel.Fatal:
                     if (ex != null)
                         Log.Fatal(ex, message);
                     else

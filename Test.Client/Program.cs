@@ -7,13 +7,50 @@ namespace Test.Client
     {
         static void Main()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 32; i++)
             {
-                new Thread(ThreadProc).Start();
+                new Thread(ListTestsThreadProc).Start();
             }
+
+            /*
+            for (int i = 0; i < 16; i++)
+            {
+                new Thread(RandomInsertAndGetThreadProc).Start();
+            }
+            */
         }
 
-        private static void ThreadProc()
+        private static void ListTestsThreadProc()
+        {
+            var _client = new KkClient();
+
+            _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
+
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore")
+            {
+                PersistenceScheme = KkPersistenceScheme.Persistent,
+                ValueType = KkValueType.StringList
+            });
+
+            var rand = new Random();
+
+            for (int i = 0; i < 100000; i++)
+            {
+                var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
+                var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);
+
+                var list = _client.GetList("MyPersistentListStore", $"MyKey:{randomKey1}");
+
+                _client.AppendList("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+            }
+
+            Console.WriteLine("Press [enter] to stop.");
+            Console.ReadLine();
+
+            _client.Disconnect();
+        }
+
+        private static void RandomInsertAndGetThreadProc()
         {
             var _client = new KkClient();
 
@@ -21,12 +58,12 @@ namespace Test.Client
 
             _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
             {
-                PersistenceScheme = CMqPersistenceScheme.Persistent
+                PersistenceScheme = KkPersistenceScheme.Persistent
             });
 
             _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
             {
-                PersistenceScheme = CMqPersistenceScheme.Ephemeral
+                PersistenceScheme = KkPersistenceScheme.Ephemeral
             });
 
             var rand = new Random();
@@ -36,12 +73,12 @@ namespace Test.Client
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                _client.Set("MyPersistentStore", randomKey, randomValue);
-                _client.Set("MyEphemeralStore", randomKey, randomValue);
+                _client.SetString("MyPersistentStore", randomKey, randomValue);
+                _client.SetString("MyEphemeralStore", randomKey, randomValue);
 
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                _ = _client.Get("MyPersistentStore", randomKey);
-                _ = _client.Get("MyEphemeralStore", randomKey);
+                _ = _client.GetString("MyPersistentStore", randomKey);
+                _ = _client.GetString("MyEphemeralStore", randomKey);
 
                 if (rand.Next(0, 100) > 75)
                 {

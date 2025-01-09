@@ -3,22 +3,37 @@
     /// <summary>
     /// Whether the key-store is persisted or ephemeral.
     /// </summary>
-    public enum CMqPersistenceScheme
+    public enum KkPersistenceScheme
     {
         /// <summary>
-        /// Undelivered messages are lost when the the service stops.
+        /// Key-values are cached and removed when the service restarts.
         /// </summary>
         Ephemeral,
         /// <summary>
-        /// Messages are stored on disk and survive service restarts.
+        /// Key-values are stored on disk and survive service restarts.
         /// </summary>
         Persistent
     }
 
     /// <summary>
+    /// Specifies the format in which the value is to managed.
+    /// </summary>
+    public enum KkValueType
+    {
+        /// <summary>
+        /// Value is stored as a single string.
+        /// </summary>
+        String,
+        /// <summary>
+        /// Value is stored as a list of values whose contents can be modified.
+        /// </summary>
+        StringList
+    }
+
+    /// <summary>
     /// Used for message and error logging.
     /// </summary>
-    public enum CMqErrorLevel
+    public enum KkErrorLevel
     {
         /// <summary>
         /// Use for detailed diagnostic information.

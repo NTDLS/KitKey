@@ -15,7 +15,12 @@ namespace NTDLS.KitKey.Server.Management
         /// <summary>
         /// Whether the key-store is persisted or ephemeral.
         /// </summary>
-        public CMqPersistenceScheme PersistenceScheme { get; set; } = CMqPersistenceScheme.Ephemeral;
+        public KkPersistenceScheme PersistenceScheme { get; set; } = KkPersistenceScheme.Ephemeral;
+
+        /// <summary>
+        /// Specifies the format in which the value is to managed.
+        /// </summary>
+        public KkValueType ValueType { get; set; } = KkValueType.String;
 
         /// <summary>
         /// The amount of (sliding expiration) time that a key/value should stay in cache. If not defined, persistent

@@ -47,34 +47,6 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkSetReply KkSet(RmContext context, KkSet param)
-        {
-            try
-            {
-                _keyStoreServer.Set(param.StoreName, param.Key, param.Value);
-                return new KkSetReply(true);
-            }
-            catch (Exception ex)
-            {
-                return new KkSetReply(ex.GetBaseException());
-            }
-        }
-
-        public KkGetReply KkGet(RmContext context, KkGet param)
-        {
-            try
-            {
-                return new KkGetReply(true)
-                {
-                    Value = _keyStoreServer.Get(param.StoreName, param.Key)
-                };
-            }
-            catch (Exception ex)
-            {
-                return new KkGetReply(ex.GetBaseException());
-            }
-        }
-
         public KkDeleteReply KkDelete(RmContext context, KkDelete param)
         {
             try
@@ -87,5 +59,69 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
                 return new KkDeleteReply(ex.GetBaseException());
             }
         }
+
+        #region String.
+
+        public KkSetStringReply KkSetString(RmContext context, KkSetString param)
+        {
+            try
+            {
+                _keyStoreServer.SetString(param.StoreName, param.Key, param.Value);
+                return new KkSetStringReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkSetStringReply(ex.GetBaseException());
+            }
+        }
+
+        public KkGetStringReply KkGetString(RmContext context, KkGetString param)
+        {
+            try
+            {
+                return new KkGetStringReply(true)
+                {
+                    Value = _keyStoreServer.GetString(param.StoreName, param.Key)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new KkGetStringReply(ex.GetBaseException());
+            }
+        }
+
+        #endregion
+
+        #region List.
+
+        public KkAppendListReply KkAppendList(RmContext context, KkAppendList param)
+        {
+            try
+            {
+                _keyStoreServer.AppendList(param.StoreName, param.Key, param.Value);
+                return new KkAppendListReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkAppendListReply(ex.GetBaseException());
+            }
+        }
+
+        public KkGetListReply KkGetList(RmContext context, KkGetList param)
+        {
+            try
+            {
+                return new KkGetListReply(true)
+                {
+                    List = _keyStoreServer.GetList(param.StoreName, param.Key)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new KkGetListReply(ex.GetBaseException());
+            }
+        }
+
+        #endregion
     }
 }
