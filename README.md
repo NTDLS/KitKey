@@ -1,18 +1,17 @@
 # KitKey
+Ever wondered what it would be like if Redis hadn't become a fat beast? 👊💩
 
-Ever wondered what it would be like if Redis hadn't become a fat beast?
-Well, we wanted to keep it simple and really target the .net environment... so we wrote KitKey!
-
-A low latency, high-performance, and reliable persistent or ephemeral key-value store over TCP/IP.
-
-KitKey utilizes RocksDB for persistence, wrapped in a partitioned memory cache for level-1 caching.
+Well, we wanted to keep it simple and really target the .net environment... so we wrote KitKey. A low latency, high-performance, and reliable persistent or ephemeral key-value store over TCP/IP utilizing RocksDB for persistence, wrapped in a partitioned memory cache for level-1 caching, an optional web-service API, management interface, and accompanying nuget packages for server and client.
 
 You can run the KitKey server either from the nuget package or by downloading the dedicated [service installer](https://github.com/NTDLS/KitKey/releases)
 
-## Nuget Packages
+## Packages 📦
 - **Server:** https://www.nuget.org/packages/NTDLS.KitKey.Server
 - **Client:** https://www.nuget.org/packages/NTDLS.KitKey.Client
 
+## See also:
+ - https://github.com/NTDLS/CatMQ
+ - 
 ## Server
 Besides running the dedicated service using the installer, you can run the server from code:
 
