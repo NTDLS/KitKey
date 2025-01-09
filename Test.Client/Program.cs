@@ -26,7 +26,7 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore")
+            _client.StoreCreate(new KkStoreConfiguration("MyPersistentListStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
                 ValueType = KkValueType.StringList
@@ -39,9 +39,9 @@ namespace Test.Client
                 var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
                 var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);
 
-                var list = _client.GetList("MyPersistentListStore", $"MyKey:{randomKey1}");
+                var list = _client.ListGet("MyPersistentListStore", $"MyKey:{randomKey1}");
 
-                _client.AppendList("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+                _client.ListAdd("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
             }
 
             Console.WriteLine("Press [enter] to stop.");
@@ -56,12 +56,12 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
+            _client.StoreCreate(new KkStoreConfiguration("MyPersistentStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent
             });
 
-            _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
+            _client.StoreCreate(new KkStoreConfiguration("MyEphemeralStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Ephemeral
             });
@@ -73,12 +73,12 @@ namespace Test.Client
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                _client.SetString("MyPersistentStore", randomKey, randomValue);
-                _client.SetString("MyEphemeralStore", randomKey, randomValue);
+                _client.StringSet("MyPersistentStore", randomKey, randomValue);
+                _client.StringSet("MyEphemeralStore", randomKey, randomValue);
 
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                _ = _client.GetString("MyPersistentStore", randomKey);
-                _ = _client.GetString("MyEphemeralStore", randomKey);
+                _ = _client.StringGet("MyPersistentStore", randomKey);
+                _ = _client.StringGet("MyEphemeralStore", randomKey);
 
                 if (rand.Next(0, 100) > 75)
                 {

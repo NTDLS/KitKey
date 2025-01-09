@@ -19,13 +19,13 @@ namespace Test.Harness
             server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
             client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
+            client.StoreCreate(new KkStoreConfiguration("MyPersistentStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
 
             });
 
-            client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
+            client.StoreCreate(new KkStoreConfiguration("MyEphemeralStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Ephemeral
             });
@@ -35,8 +35,8 @@ namespace Test.Harness
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                client.SetString("MyPersistentStore", randomKey, randomValue);
-                client.SetString("MyEphemeralStore", randomKey, randomValue);
+                client.StringSet("MyPersistentStore", randomKey, randomValue);
+                client.StringSet("MyEphemeralStore", randomKey, randomValue);
             }
 
             Console.WriteLine("Press [enter] to stop.");

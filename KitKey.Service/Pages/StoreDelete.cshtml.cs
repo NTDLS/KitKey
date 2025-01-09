@@ -7,9 +7,9 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class DeleteStoreModel(ILogger<DeleteStoreModel> logger, KkServer mqServer) : BasePageModel
+    public class StoreDeleteModel(ILogger<StoreDeleteModel> logger, KkServer mqServer) : BasePageModel
     {
-        private readonly ILogger<DeleteStoreModel> _logger = logger;
+        private readonly ILogger<StoreDeleteModel> _logger = logger;
 
         public string? RedirectURL { get; set; }
 
@@ -27,7 +27,7 @@ namespace KitKey.Service.Pages
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.DeleteStore(StoreName);
+                    mqServer.StoreDelete(StoreName);
                 }
                 else
                 {

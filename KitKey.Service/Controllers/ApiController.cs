@@ -23,7 +23,7 @@ namespace KitKey.Service.Controllers
             {
                 using var reader = new StreamReader(Request.Body, Encoding.UTF8);
                 var bodyValue = await reader.ReadToEndAsync();
-                _keyServer.SetString(storeName, key, bodyValue);
+                _keyServer.StringSet(storeName, key, bodyValue);
                 return Ok("value stored");
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                var value = _keyServer.GetString(storeName, key);
+                var value = _keyServer.StringGet(storeName, key);
                 if (value == null)
                 {
                     return NoContent();
@@ -72,12 +72,12 @@ namespace KitKey.Service.Controllers
         /// </summary>
         /// <param name="storeName"></param>
         /// <returns></returns>
-        [HttpPost("CreateStore/{storeName}")]
-        public IActionResult CreateStore(string storeName)
+        [HttpPost("StoreCreate/{storeName}")]
+        public IActionResult StoreCreate(string storeName)
         {
             try
             {
-                _keyServer.CreateStore(new KkStoreConfiguration
+                _keyServer.StoreCreate(new KkStoreConfiguration
                 {
                     StoreName = storeName
                 });
@@ -95,8 +95,8 @@ namespace KitKey.Service.Controllers
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        [HttpPost("CreateStore")]
-        public IActionResult CreateStore([FromBody] KkStoreConfiguration config)
+        [HttpPost("StoreCreate")]
+        public IActionResult StoreCreate([FromBody] KkStoreConfiguration config)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace KitKey.Service.Controllers
                     return BadRequest("StoreName is required.");
                 }
 
-                _keyServer.CreateStore(config);
+                _keyServer.StoreCreate(config);
 
                 return Ok("store created");
             }
@@ -116,12 +116,12 @@ namespace KitKey.Service.Controllers
             }
         }
 
-        [HttpDelete("PurgeStore/{storeName}")]
+        [HttpDelete("StorePurge/{storeName}")]
         public IActionResult Purge(string storeName)
         {
             try
             {
-                _keyServer.PurgeStore(storeName);
+                _keyServer.StorePurge(storeName);
                 return Ok("store purged");
             }
             catch (Exception ex)
@@ -132,12 +132,12 @@ namespace KitKey.Service.Controllers
         }
 
 
-        [HttpDelete("DeleteStore/{storeName}")]
-        public IActionResult DeleteStore(string storeName)
+        [HttpDelete("StoreDelete/{storeName}")]
+        public IActionResult StoreDelete(string storeName)
         {
             try
             {
-                _keyServer.DeleteStore(storeName);
+                _keyServer.StoreDelete(storeName);
                 return Ok("store deleted");
             }
             catch (Exception ex)

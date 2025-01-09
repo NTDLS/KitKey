@@ -213,9 +213,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store with a default configuration.
         /// </summary>
-        public void CreateStore(string storeName)
+        public void StoreCreate(string storeName)
         {
-            var result = _rmClient.Query(new KkCreateStore(new KkStoreConfiguration(storeName))).Result;
+            var result = _rmClient.Query(new KkStoreCreate(new KkStoreConfiguration(storeName))).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -225,9 +225,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store with a custom configuration.
         /// </summary>
-        public void CreateStore(KkStoreConfiguration storeConfiguration)
+        public void StoreCreate(KkStoreConfiguration storeConfiguration)
         {
-            var result = _rmClient.Query(new KkCreateStore(storeConfiguration)).Result;
+            var result = _rmClient.Query(new KkStoreCreate(storeConfiguration)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -237,9 +237,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Deletes a key-store and all its values.
         /// </summary>
-        public void DeleteStore(string storeName)
+        public void StoreDelete(string storeName)
         {
-            var result = _rmClient.Query(new KkDeleteStore(storeName)).Result;
+            var result = _rmClient.Query(new KkStoreDelete(storeName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -249,9 +249,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Removes all values from a key-store.
         /// </summary>
-        public void PurgeStore(string storeName)
+        public void StorePurge(string storeName)
         {
-            var result = _rmClient.Query(new KkPurgeStore(storeName)).Result;
+            var result = _rmClient.Query(new KkStorePurge(storeName)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -261,9 +261,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Inserts or updates a value in a key-store.
         /// </summary>
-        public void SetString(string storeName, string key, string value)
+        public void StringSet(string storeName, string key, string value)
         {
-            var result = _rmClient.Query(new KkSetString(storeName, key, value)).Result;
+            var result = _rmClient.Query(new KkStringSet(storeName, key, value)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -273,9 +273,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a value from a key-store.
         /// </summary>
-        public string? GetString(string storeName, string key)
+        public string? StringGet(string storeName, string key)
         {
-            var result = _rmClient.Query(new KkGetString(storeName, key)).Result;
+            var result = _rmClient.Query(new KkStringGet(storeName, key)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -286,9 +286,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void AppendList(string storeName, string key, string value)
+        public void ListAdd(string storeName, string key, string value)
         {
-            var result = _rmClient.Query(new KkAppendList(storeName, key, value)).Result;
+            var result = _rmClient.Query(new KkListAdd(storeName, key, value)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -298,9 +298,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, string>? GetList(string storeName, string key)
+        public Dictionary<Guid, string>? ListGet(string storeName, string key)
         {
-            var result = _rmClient.Query(new KkGetList(storeName, key)).Result;
+            var result = _rmClient.Query(new KkListGet(storeName, key)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);

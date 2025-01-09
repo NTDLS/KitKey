@@ -2,32 +2,32 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkGetList(string storeName, string key)
-        : IRmQuery<KkGetListReply>
+    public class KkListGet(string storeName, string key)
+        : IRmQuery<KkListGetReply>
     {
         public string StoreName { get; set; } = storeName;
         public string Key { get; set; } = key;
     }
 
-    public class KkGetListReply
+    public class KkListGetReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
         public Dictionary<Guid, string>? List { get; set; }
 
-        public KkGetListReply(Exception exception)
+        public KkListGetReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkGetListReply(bool isSuccess)
+        public KkListGetReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkGetListReply()
+        public KkListGetReply()
         {
         }
     }

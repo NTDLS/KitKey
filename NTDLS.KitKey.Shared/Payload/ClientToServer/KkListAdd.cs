@@ -2,30 +2,35 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkDeleteStore(string storeName)
-        : IRmQuery<KkDeleteStoreReply>
+    /// <summary>
+    /// Appends a value to a string list key-store.
+    /// </summary>
+    public class KkListAdd(string storeName, string key, string value)
+        : IRmQuery<KkListAddReply>
     {
         public string StoreName { get; set; } = storeName;
+        public string Key { get; set; } = key;
+        public string Value { get; set; } = value;
     }
 
-    public class KkDeleteStoreReply
+    public class KkListAddReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkDeleteStoreReply(Exception exception)
+        public KkListAddReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkDeleteStoreReply(bool isSuccess)
+        public KkListAddReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkDeleteStoreReply()
+        public KkListAddReply()
         {
         }
     }

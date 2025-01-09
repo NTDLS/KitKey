@@ -2,35 +2,32 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    /// <summary>
-    /// Appends a value to a string list key-store.
-    /// </summary>
-    public class KkAppendList(string storeName, string key, string value)
-        : IRmQuery<KkAppendListReply>
+    public class KkStringGet(string storeName, string key)
+        : IRmQuery<KkStringGetReply>
     {
         public string StoreName { get; set; } = storeName;
         public string Key { get; set; } = key;
-        public string Value { get; set; } = value;
     }
 
-    public class KkAppendListReply
+    public class KkStringGetReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
+        public string? Value { get; set; }
 
-        public KkAppendListReply(Exception exception)
+        public KkStringGetReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkAppendListReply(bool isSuccess)
+        public KkStringGetReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkAppendListReply()
+        public KkStringGetReply()
         {
         }
     }

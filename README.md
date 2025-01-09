@@ -39,7 +39,7 @@ var client = new KkClient();
 
 client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-client.CreateStore("MyFirstStore");
+client.StoreCreate("MyFirstStore");
 
 for (int i = 0; i < 100000; i++)
 {

@@ -95,11 +95,11 @@ namespace NTDLS.KitKey.Server.Server
 
         #region String.
 
-        public void SetString(string key, string value)
+        public void StringSet(string key, string value)
         {
             if (Configuration.ValueType != KkValueType.String)
             {
-                throw new Exception($"SetString is invalid for the key-store type: [{Configuration.ValueType}].");
+                throw new Exception($"StringSet is invalid for the key-store type: [{Configuration.ValueType}].");
             }
 
             Statistics.SetCount++;
@@ -107,11 +107,11 @@ namespace NTDLS.KitKey.Server.Server
             _database?.Write(db => db.Put(key, value));
         }
 
-        public string? GetString(string key)
+        public string? StringGet(string key)
         {
             if (Configuration.ValueType != KkValueType.String)
             {
-                throw new Exception($"GetString is invalid for the key-store type: [{Configuration.ValueType}].");
+                throw new Exception($"StringGet is invalid for the key-store type: [{Configuration.ValueType}].");
             }
 
             Statistics.GetCount++;
@@ -143,11 +143,11 @@ namespace NTDLS.KitKey.Server.Server
 
         #region List.
 
-        public void AppendList(string key, string valueToAdd)
+        public void ListAdd(string key, string valueToAdd)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {
-                throw new Exception($"AppendList is invalid for the key-store type: [{Configuration.ValueType}].");
+                throw new Exception($"ListAdd is invalid for the key-store type: [{Configuration.ValueType}].");
             }
 
             Statistics.SetCount++;
@@ -196,11 +196,11 @@ namespace NTDLS.KitKey.Server.Server
             });
         }
 
-        public Dictionary<Guid, string>? GetList(string key)
+        public Dictionary<Guid, string>? ListGet(string key)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {
-                throw new Exception($"GetList is invalid for the key-store type: [{Configuration.ValueType}].");
+                throw new Exception($"ListGet is invalid for the key-store type: [{Configuration.ValueType}].");
             }
 
             Statistics.SetCount++;

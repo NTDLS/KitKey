@@ -7,9 +7,9 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class PurgeStoreModel(ILogger<PurgeStoreModel> logger, KkServer mqServer) : BasePageModel
+    public class StorePurgeModel(ILogger<StorePurgeModel> logger, KkServer mqServer) : BasePageModel
     {
-        private readonly ILogger<PurgeStoreModel> _logger = logger;
+        private readonly ILogger<StorePurgeModel> _logger = logger;
 
         public string? RedirectURL { get; set; }
 
@@ -27,7 +27,7 @@ namespace KitKey.Service.Pages
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.PurgeStore(StoreName);
+                    mqServer.StorePurge(StoreName);
                 }
                 else
                 {

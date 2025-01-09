@@ -2,30 +2,30 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkCreateStore(KkStoreConfiguration storeConfiguration)
-        : IRmQuery<KkCreateStoreReply>
+    public class KkStorePurge(string storeName)
+        : IRmQuery<KkStorePurgeReply>
     {
-        public KkStoreConfiguration StoreConfiguration { get; set; } = storeConfiguration;
+        public string StoreName { get; set; } = storeName;
     }
 
-    public class KkCreateStoreReply
+    public class KkStorePurgeReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkCreateStoreReply(Exception exception)
+        public KkStorePurgeReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkCreateStoreReply(bool isSuccess)
+        public KkStorePurgeReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkCreateStoreReply()
+        public KkStorePurgeReply()
         {
         }
     }

@@ -272,7 +272,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new empty key-store if it does not already exist.
         /// </summary>
-        public void CreateStore(KkStoreConfiguration storeConfiguration)
+        public void StoreCreate(KkStoreConfiguration storeConfiguration)
         {
             if (string.IsNullOrEmpty(storeConfiguration.StoreName))
             {
@@ -307,7 +307,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Deletes an existing key-store.
         /// </summary>
-        public void DeleteStore(string storeName)
+        public void StoreDelete(string storeName)
         {
             string storeKey = storeName.ToLowerInvariant();
 
@@ -348,14 +348,14 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void SetString(string storeName, string key, string value)
-            => GetKeyStore(storeName)?.SetString(key, value);
+        public void StringSet(string storeName, string key, string value)
+            => GetKeyStore(storeName)?.StringSet(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
-        public string? GetString(string storeName, string key)
-            => GetKeyStore(storeName)?.GetString(key);
+        public string? StringGet(string storeName, string key)
+            => GetKeyStore(storeName)?.StringGet(key);
 
         #endregion
 
@@ -364,14 +364,14 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void AppendList(string storeName, string key, string value)
-            => GetKeyStore(storeName)?.AppendList(key, value);
+        public void ListAdd(string storeName, string key, string value)
+            => GetKeyStore(storeName)?.ListAdd(key, value);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, string>? GetList(string storeName, string key)
-            => GetKeyStore(storeName)?.GetList(key);
+        public Dictionary<Guid, string>? ListGet(string storeName, string key)
+            => GetKeyStore(storeName)?.ListGet(key);
 
         #endregion
 
@@ -384,7 +384,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
-        public void PurgeStore(string storeName)
+        public void StorePurge(string storeName)
             => GetKeyStore(storeName)?.Purge();
 
         #endregion
