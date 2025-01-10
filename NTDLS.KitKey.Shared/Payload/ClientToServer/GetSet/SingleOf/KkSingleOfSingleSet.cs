@@ -1,35 +1,33 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ClientToServer
+namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf
 {
-    /// <summary>
-    /// Deletes a value of any type from a key-store. 
-    /// </summary>
-    public class KkDelete(string storeKey, string valueKey)
-        : IRmQuery<KkDeleteReply>
+    public class KkSingleOfSingleSet(string storeKey, string valueKey, Single value)
+        : IRmQuery<KkSingleOfSingleSetReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ValueKey { get; set; } = valueKey;
+        public Single Value { get; set; } = value;
     }
 
-    public class KkDeleteReply
+    public class KkSingleOfSingleSetReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkDeleteReply(Exception exception)
+        public KkSingleOfSingleSetReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkDeleteReply(bool isSuccess)
+        public KkSingleOfSingleSetReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkDeleteReply()
+        public KkSingleOfSingleSetReply()
         {
         }
     }

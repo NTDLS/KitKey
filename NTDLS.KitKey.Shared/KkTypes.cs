@@ -21,25 +21,25 @@
     public enum KkValueType
     {
         /// <summary>
-        /// Value is stored as a single string.
+        /// Value is stored as a single String value.
         /// </summary>
         String,
         /// <summary>
-        /// Value is stored as a single int32.
+        /// Value is stored as a single Int32 value.
         /// </summary>
         Int32,
         /// <summary>
-        /// Value is stored as a single int64.
+        /// Value is stored as a single Int64 value.
         /// </summary>
         Int64,
         /// <summary>
-        /// Value is stored as a single double.
+        /// Value is stored as a single Double value.
         /// </summary>
         Double,
         /// <summary>
-        /// Value is stored as a single float.
+        /// Value is stored as a single Single value.
         /// </summary>
-        Float,
+        Single,
         /// <summary>
         /// Value is stored as a single DateTime.
         /// </summary>
@@ -57,9 +57,9 @@
         /// </summary>
         Int64List,
         /// <summary>
-        /// Value is stored as a list of Floats.
+        /// Value is stored as a list of Doubles.
         /// </summary>
-        FloatList,
+        SingleList,
         /// <summary>
         /// Value is stored as a list of Doubles.
         /// </summary>

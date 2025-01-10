@@ -23,7 +23,7 @@ namespace KitKey.Service.Controllers
             {
                 using var reader = new StreamReader(Request.Body, Encoding.UTF8);
                 var bodyValue = await reader.ReadToEndAsync();
-                _keyServer.StringSet(storeKey, key, bodyValue);
+                _keyServer.SetValue(storeKey, key, bodyValue);
                 return Ok("value stored");
             }
             catch (Exception ex)
@@ -48,12 +48,12 @@ namespace KitKey.Service.Controllers
             }
         }
 
-        [HttpGet("Get/{storeKey}/{key}")]
+        [HttpGet("Get/String/{storeKey}/{key}")]
         public IActionResult Get(string storeKey, string key)
         {
             try
             {
-                var value = _keyServer.StringGet(storeKey, key);
+                var value = _keyServer.GetValue<string>(storeKey, key);
                 if (value == null)
                 {
                     return NoContent();

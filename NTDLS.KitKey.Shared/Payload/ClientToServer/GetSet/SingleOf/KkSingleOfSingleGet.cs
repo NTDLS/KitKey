@@ -1,33 +1,33 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ClientToServer
+namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf
 {
-    public class KkStringSet(string storeKey, string valueKey, string value)
-        : IRmQuery<KkStringSetReply>
+    public class KkSingleOfSingleGet(string storeKey, string valueKey)
+        : IRmQuery<KkSingleOfSingleGetReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ValueKey { get; set; } = valueKey;
-        public string Value { get; set; } = value;
     }
 
-    public class KkStringSetReply
+    public class KkSingleOfSingleGetReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
+        public Single? Value { get; set; }
 
-        public KkStringSetReply(Exception exception)
+        public KkSingleOfSingleGetReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkStringSetReply(bool isSuccess)
+        public KkSingleOfSingleGetReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkStringSetReply()
+        public KkSingleOfSingleGetReply()
         {
         }
     }

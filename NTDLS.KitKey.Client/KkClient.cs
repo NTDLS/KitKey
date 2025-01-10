@@ -1,5 +1,7 @@
 ﻿using NTDLS.KitKey.Shared;
 using NTDLS.KitKey.Shared.Payload.ClientToServer;
+using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf;
+using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf;
 using NTDLS.ReliableMessaging;
 using System.Net;
 
@@ -261,26 +263,123 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Inserts or updates a value in a key-store.
         /// </summary>
-        public void StringSet(string storeKey, string valueKey, string value)
+        public void Set<T>(string storeKey, string valueKey, T value)
         {
-            var result = _rmClient.Query(new KkStringSet(storeKey, valueKey, value)).Result;
-            if (result.IsSuccess == false)
+            if (value is string stringValue)
             {
-                throw new Exception(result.ErrorMessage);
+                var result = _rmClient.Query(new KkSingleOfStringSet(storeKey, valueKey, stringValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
             }
+            else if (value is Int32 int32Value)
+            {
+                var result = _rmClient.Query(new KkSingleOfInt32Set(storeKey, valueKey, int32Value)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (value is Int64 int64Value)
+            {
+                var result = _rmClient.Query(new KkSingleOfInt64Set(storeKey, valueKey, int64Value)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (value is Single singleValue)
+            {
+                var result = _rmClient.Query(new KkSingleOfSingleSet(storeKey, valueKey, singleValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (value is Double doubleValue)
+            {
+                var result = _rmClient.Query(new KkSingleOfDoubleSet(storeKey, valueKey, doubleValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (value is DateTime dateTimeValue)
+            {
+                var result = _rmClient.Query(new KkSingleOfDateTimeSet(storeKey, valueKey, dateTimeValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+
+            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
 
         /// <summary>
         /// Gets a value from a key-store.
         /// </summary>
-        public string? StringGet(string storeKey, string valueKey)
+        public T? Get<T>(string storeKey, string valueKey)
         {
-            var result = _rmClient.Query(new KkStringGet(storeKey, valueKey)).Result;
-            if (result.IsSuccess == false)
+            var genericType = typeof(T);
+
+            if (genericType == typeof(string))
             {
-                throw new Exception(result.ErrorMessage);
+                var result = _rmClient.Query(new KkSingleOfStringGet(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
             }
-            return result.Value;
+            else if (genericType == typeof(Int32))
+            {
+                var result = _rmClient.Query(new KkSingleOfInt32Get(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
+            }
+            else if (genericType == typeof(Int64))
+            {
+                var result = _rmClient.Query(new KkSingleOfInt64Get(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
+            }
+            else if (genericType == typeof(Single))
+            {
+                var result = _rmClient.Query(new KkSingleOfSingleGet(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
+            }
+            else if (genericType == typeof(Double))
+            {
+                var result = _rmClient.Query(new KkSingleOfDoubleGet(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
+            }
+            else if (genericType == typeof(DateTime))
+            {
+                var result = _rmClient.Query(new KkSingleOfDateTimeGet(storeKey, valueKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return (T?)(object?)result.Value;
+            }
+
+            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
 
         /// <summary>
@@ -288,7 +387,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void ListAdd(string storeKey, string listKey, string listValue)
         {
-            var result = _rmClient.Query(new KkListAdd(storeKey, listKey, listValue)).Result;
+            var result = _rmClient.Query(new KkListOfStringAdd(storeKey, listKey, listValue)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -300,7 +399,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public Dictionary<Guid, string>? ListGet(string storeKey, string listKey)
         {
-            var result = _rmClient.Query(new KkListGet(storeKey, listKey)).Result;
+            var result = _rmClient.Query(new KkListOfStringGet(storeKey, listKey)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -313,7 +412,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void Delete(string storeKey, string valueKey)
         {
-            var result = _rmClient.Query(new KkDelete(storeKey, valueKey)).Result;
+            var result = _rmClient.Query(new KkDeleteKey(storeKey, valueKey)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);

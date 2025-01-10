@@ -7,16 +7,10 @@ namespace Test.Client
     {
         static void Main()
         {
-            float aaa = 0;
-            double bbb = 0;
-
-            var ccc = aaa.GetType().Name;
-            var ddd = bbb.GetType().Name;
-
             for (int i = 0; i < 8; i++)
             {
                 //new Thread(ListTestsThreadProc).Start();
-                //new Thread(RandomInsertAndGetThreadProc).Start();
+                new Thread(RandomInsertAndGetThreadProc).Start();
             }
         }
 
@@ -73,12 +67,12 @@ namespace Test.Client
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                _client.StringSet("MyPersistentStore", randomKey, randomValue);
-                _client.StringSet("MyEphemeralStore", randomKey, randomValue);
+                _client.Set("MyPersistentStore", randomKey, randomValue);
+                _client.Set("MyEphemeralStore", randomKey, randomValue);
 
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                var a = _client.StringGet("MyPersistentStore", randomKey);
-                var b = _client.StringGet("MyEphemeralStore", randomKey);
+                var a = _client.Get<string>("MyPersistentStore", randomKey);
+                var b = _client.Get<string>("MyEphemeralStore", randomKey);
 
                 if (rand.Next(0, 100) > 75)
                 {

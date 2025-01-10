@@ -1,4 +1,6 @@
 ﻿using NTDLS.KitKey.Shared.Payload.ClientToServer;
+using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf;
+using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf;
 using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
@@ -8,16 +10,16 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
     {
         private readonly KkServer _keyStoreServer = mqServer;
 
-        public KkDeleteReply KkDelete(RmContext context, KkDelete param)
+        public KkDeleteKeyReply KkDelete(RmContext context, KkDeleteKey param)
         {
             try
             {
                 _keyStoreServer.Delete(param.StoreKey, param.ValueKey);
-                return new KkDeleteReply(true);
+                return new KkDeleteKeyReply(true);
             }
             catch (Exception ex)
             {
-                return new KkDeleteReply(ex.GetBaseException());
+                return new KkDeleteKeyReply(ex.GetBaseException());
             }
         }
 
@@ -66,31 +68,31 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
 
         #region String.
 
-        public KkStringSetReply KkStringSet(RmContext context, KkStringSet param)
+        public KkSingleOfStringSetReply KkStringSet(RmContext context, KkSingleOfStringSet param)
         {
             try
             {
-                _keyStoreServer.StringSet(param.StoreKey, param.ValueKey, param.Value);
-                return new KkStringSetReply(true);
+                _keyStoreServer.SetValue(param.StoreKey, param.ValueKey, param.Value);
+                return new KkSingleOfStringSetReply(true);
             }
             catch (Exception ex)
             {
-                return new KkStringSetReply(ex.GetBaseException());
+                return new KkSingleOfStringSetReply(ex.GetBaseException());
             }
         }
 
-        public KkStringGetReply KkStringGet(RmContext context, KkStringGet param)
+        public KkSingleOfStringGetReply KkStringGet(RmContext context, KkSingleOfStringGet param)
         {
             try
             {
-                return new KkStringGetReply(true)
+                return new KkSingleOfStringGetReply(true)
                 {
-                    Value = _keyStoreServer.StringGet(param.StoreKey, param.ValueKey)
+                    Value = _keyStoreServer.GetValue<string>(param.StoreKey, param.ValueKey)
                 };
             }
             catch (Exception ex)
             {
-                return new KkStringGetReply(ex.GetBaseException());
+                return new KkSingleOfStringGetReply(ex.GetBaseException());
             }
         }
 
@@ -98,31 +100,31 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
 
         #region List.
 
-        public KkListAddReply KkListAdd(RmContext context, KkListAdd param)
+        public KkListOfStringAddReply KkListAdd(RmContext context, KkListOfStringAdd param)
         {
             try
             {
                 _keyStoreServer.ListAdd(param.StoreKey, param.ListKey, param.ListValue);
-                return new KkListAddReply(true);
+                return new KkListOfStringAddReply(true);
             }
             catch (Exception ex)
             {
-                return new KkListAddReply(ex.GetBaseException());
+                return new KkListOfStringAddReply(ex.GetBaseException());
             }
         }
 
-        public KkListGetReply KkListGet(RmContext context, KkListGet param)
+        public KkListOfStringGetReply KkListGet(RmContext context, KkListOfStringGet param)
         {
             try
             {
-                return new KkListGetReply(true)
+                return new KkListOfStringGetReply(true)
                 {
                     List = _keyStoreServer.ListGet(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)
             {
-                return new KkListGetReply(ex.GetBaseException());
+                return new KkListOfStringGetReply(ex.GetBaseException());
             }
         }
 

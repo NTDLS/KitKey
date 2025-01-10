@@ -253,7 +253,7 @@ namespace NTDLS.KitKey.Server
         /// Read here means that we will not modify the collection of key stores, but we are
         /// free to add/remove values as their concurrency is handled by the key-store itself.
         /// </summary>
-        private KeyStore GetKeyStore(string storeKey)
+        internal KeyStore GetKeyStore(string storeKey)
         {
             return _keyStores.Read(mqd =>
             {
@@ -341,109 +341,26 @@ namespace NTDLS.KitKey.Server
         /// Removes a value form the key-store.
         /// </summary>
         public void Delete(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.Delete(valueKey);
+            => GetKeyStore(storeKey).Delete(valueKey);
 
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
         public void StorePurge(string storeKey)
-            => GetKeyStore(storeKey)?.Purge();
+            => GetKeyStore(storeKey).Purge();
 
-        #region Get/Set String.
-
-        /// <summary>
-        /// Inserts/updates a value in the key-store.
-        /// </summary>
-        public void StringSet(string storeKey, string key, string value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
-
-        /// <summary>
-        /// Gets a value by its key form the key-store.
-        /// </summary>
-        public string? StringGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<string>(valueKey);
-
-        #endregion
-
-        #region Get/Set Int32.
 
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void Int32Set(string storeKey, string key, int value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
+        public void SetValue<T>(string storeKey, string key, T value)
+            => GetKeyStore(storeKey).SetValue<T>(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
-        public int? Int32Get(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<int>(valueKey);
-
-        #endregion
-
-        #region Get/Set Int64.
-
-        /// <summary>
-        /// Inserts/updates a value in the key-store.
-        /// </summary>
-        public void Int64Set(string storeKey, string key, long value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
-
-        /// <summary>
-        /// Gets a value by its key form the key-store.
-        /// </summary>
-        public long? Int64Get(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<long>(valueKey);
-
-        #endregion
-
-        #region Get/Set Float.
-
-        /// <summary>
-        /// Inserts/updates a value in the key-store.
-        /// </summary>
-        public void FloatSet(string storeKey, string key, float value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
-
-        /// <summary>
-        /// Gets a value by its key form the key-store.
-        /// </summary>
-        public float? FloatGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<float>(valueKey);
-
-        #endregion
-
-        #region Get/Set Double.
-
-        /// <summary>
-        /// Inserts/updates a value in the key-store.
-        /// </summary>
-        public void DoubleSet(string storeKey, string key, double value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
-
-        /// <summary>
-        /// Gets a value by its key form the key-store.
-        /// </summary>
-        public double? DoubleGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<double>(valueKey);
-
-        #endregion
-
-        #region Get/Set DateTime.
-
-        /// <summary>
-        /// Inserts/updates a value in the key-store.
-        /// </summary>
-        public void DateTimeSet(string storeKey, string key, DateTime value)
-            => GetKeyStore(storeKey)?.SetValue(key, value);
-
-        /// <summary>
-        /// Gets a value by its key form the key-store.
-        /// </summary>
-        public DateTime? DateTimeGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.GetValue<DateTime>(valueKey);
-
-        #endregion
+        public T? GetValue<T>(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).GetValue<T>(valueKey);
 
         #region Get/Set List.
 
@@ -451,13 +368,13 @@ namespace NTDLS.KitKey.Server
         /// Appends a value to a list key-store.
         /// </summary>
         public void ListAdd(string storeKey, string valueKey, string value)
-            => GetKeyStore(storeKey)?.ListAdd(valueKey, value);
+            => GetKeyStore(storeKey).ListAdd(valueKey, value);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
         public Dictionary<Guid, string>? ListGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.ListGet<string>(valueKey);
+            => GetKeyStore(storeKey).ListGet<string>(valueKey);
 
         #endregion
 

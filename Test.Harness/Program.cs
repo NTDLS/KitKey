@@ -35,8 +35,8 @@ namespace Test.Harness
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                client.StringSet("MyPersistentStore", randomKey, randomValue);
-                client.StringSet("MyEphemeralStore", randomKey, randomValue);
+                client.Set("MyPersistentStore", randomKey, randomValue);
+                client.Set("MyEphemeralStore", randomKey, randomValue);
             }
 
             Console.WriteLine("Press [enter] to stop.");

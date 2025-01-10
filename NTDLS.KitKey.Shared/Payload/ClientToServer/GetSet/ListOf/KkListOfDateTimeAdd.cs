@@ -1,36 +1,36 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ClientToServer
+namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
 {
     /// <summary>
     /// Appends a value to a string list key-store.
     /// </summary>
-    public class KkListAdd(string storeKey, string listKey, string listValue)
-        : IRmQuery<KkListAddReply>
+    public class KkListOfDateTimeAdd(string storeKey, string listKey, DateTime listValue)
+        : IRmQuery<KkListOfDateTimeAddReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;
-        public string ListValue { get; set; } = listValue;
+        public DateTime ListValue { get; set; } = listValue;
     }
 
-    public class KkListAddReply
+    public class KkListOfDateTimeAddReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkListAddReply(Exception exception)
+        public KkListOfDateTimeAddReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkListAddReply(bool isSuccess)
+        public KkListOfDateTimeAddReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkListAddReply()
+        public KkListOfDateTimeAddReply()
         {
         }
     }

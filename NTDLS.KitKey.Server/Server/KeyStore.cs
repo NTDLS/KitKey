@@ -122,13 +122,13 @@ namespace NTDLS.KitKey.Server.Server
                 }
                 return BitConverter.GetBytes(int64Value);
             }
-            else if (value is Single floatValue)
+            else if (value is Single singleValue)
             {
-                if (Configuration.ValueType != KkValueType.Float && Configuration.ValueType != KkValueType.FloatList)
+                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.SingleList)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
-                return BitConverter.GetBytes(floatValue);
+                return BitConverter.GetBytes(singleValue);
             }
             else if (value is Double doubleValue)
             {
@@ -180,7 +180,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(Single))
             {
-                if (Configuration.ValueType != KkValueType.Float && Configuration.ValueType != KkValueType.FloatList)
+                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.SingleList)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -209,8 +209,13 @@ namespace NTDLS.KitKey.Server.Server
 
         #endregion
 
-        public void SetValue<T>(string valueKey, T value) where T : notnull
+        public void SetValue<T>(string valueKey, T value)
         {
+            if (value == null)
+            {
+                return; //We do not allow null values.
+            }
+
             var valueBytes = GenericToBytes<T>(value);
 
             Statistics.SetCount++;
@@ -286,7 +291,7 @@ namespace NTDLS.KitKey.Server.Server
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.FloatList)
+            else if (Configuration.ValueType == KkValueType.SingleList)
             {
                 if (valueToAdd.GetType() != typeof(Single))
                 {
