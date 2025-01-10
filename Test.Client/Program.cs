@@ -33,9 +33,9 @@ namespace Test.Client
                 var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
                 var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);
 
-                var list = _client.ListGet<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
+                var list = _client.GetList<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
 
-                _client.ListAdd("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+                _client.AddToList("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
             }
 
             Console.WriteLine("Press [enter] to stop.");

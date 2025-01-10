@@ -387,7 +387,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void ListAdd<T>(string storeKey, string listKey, T listValue)
+        public void AddToList<T>(string storeKey, string listKey, T listValue)
         {
             if (listValue is string stringValue)
             {
@@ -446,7 +446,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, T>? ListGet<T>(string storeKey, string listKey)
+        public Dictionary<Guid, T>? GetList<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
 
