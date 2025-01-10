@@ -1,7 +1,6 @@
 ﻿using NTDLS.FastMemoryCache;
 using NTDLS.KitKey.Shared;
 using NTDLS.Semaphore;
-using ProtoBuf;
 using RocksDbSharp;
 using System.Text;
 
@@ -199,7 +198,7 @@ namespace NTDLS.KitKey.Server.Server
 
             if (value == null)
             {
-                return; //We do not allow null values.
+                throw new Exception("Key-value stores do not allow null values.");
             }
 
             EnsureProperType<T>(false);
@@ -274,7 +273,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = DeserializeToObject<Dictionary<Guid, byte[]>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<Dictionary<Guid, byte[]>>(valueListBytes);
                         }
                         else
                         {
@@ -290,28 +289,12 @@ namespace NTDLS.KitKey.Server.Server
                 list.Remove(listItemKey);
 
                 //Persist the serialized list.
-                var valueListBytes = SerializeToByteArray(list);
+                var valueListBytes = BinarySerialization.ToBytes(list);
                 _database?.Write(db => db.Put(listKeyBytes, listKeyBytes.Length, valueListBytes, valueListBytes.Length));
 
                 //Cache the list.
                 _memoryCache.Upsert(listKey, list, Configuration.CacheExpiration);
             });
-        }
-
-        public static byte[] SerializeToByteArray(object obj)
-        {
-            if (obj == null) return Array.Empty<byte>();
-            using var stream = new MemoryStream();
-            Serializer.Serialize(stream, obj);
-            return stream.ToArray();
-        }
-
-        public static T DeserializeToObject<T>(byte[] arrBytes)
-        {
-            using var stream = new MemoryStream();
-            stream.Write(arrBytes, 0, arrBytes.Length);
-            stream.Seek(0, SeekOrigin.Begin);
-            return Serializer.Deserialize<T>(stream);
         }
 
         public void AddListValue<T>(string listKey, T valueToAdd)
@@ -320,7 +303,7 @@ namespace NTDLS.KitKey.Server.Server
 
             if (valueToAdd == null)
             {
-                return; //We do not allow null values.
+                throw new Exception("Key-value stores do not allow null values.");
             }
 
             EnsureProperType<T>(true);
@@ -347,7 +330,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = DeserializeToObject<Dictionary<Guid, byte[]>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<Dictionary<Guid, byte[]>>(valueListBytes);
                         }
                         else
                         {
@@ -364,7 +347,7 @@ namespace NTDLS.KitKey.Server.Server
                 list.Add(Guid.NewGuid(), valueBytes);
 
                 //Persist the serialized list.
-                var valueListBytes = SerializeToByteArray(list);
+                var valueListBytes = BinarySerialization.ToBytes(list);
                 _database?.Write(db => db.Put(listKeyBytes, listKeyBytes.Length, valueListBytes, valueListBytes.Length));
 
                 //Cache the list.
@@ -399,7 +382,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = DeserializeToObject<Dictionary<Guid, byte[]>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<Dictionary<Guid, byte[]>>(valueListBytes);
                         }
                         else
                         {

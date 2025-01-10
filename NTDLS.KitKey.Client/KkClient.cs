@@ -3,6 +3,7 @@ using NTDLS.KitKey.Shared.Payload.ClientToServer;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf;
 using NTDLS.ReliableMessaging;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace NTDLS.KitKey.Client
@@ -237,10 +238,15 @@ namespace NTDLS.KitKey.Client
             => _rmClient.Query(new KkStorePurge(storeKey)).Result.EnsureSuccessful();
 
         /// <summary>
-        /// Inserts or updates a value in a key-store.
+        /// Inserts or updates a value in the given key-value store.
         /// </summary>
         public void Set<T>(string storeKey, string valueKey, T value)
         {
+            if (value == null)
+            {
+                throw new Exception("Key-value stores do not allow null values.");
+            }
+
             if (value is string stringValue)
                 _rmClient.Query(new KkSingleOfStringSet(storeKey, valueKey, stringValue)).Result.EnsureSuccessful();
             else if (value is Guid guidValue)
@@ -260,7 +266,7 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Gets a value from a key-store.
+        /// Gets a single value from the given key-value store.
         /// </summary>
         public T? Get<T>(string storeKey, string valueKey)
         {
@@ -285,10 +291,24 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Appends a value to a list key-store.
+        /// Gets a single value from the given key-value store, returns true if the key was found.
+        /// </summary>
+        public bool TryGet<T>(string storeKey, string valueKey, [NotNullWhen(true)] out T? outValue)
+        {
+            outValue = Get<T>(storeKey, valueKey);
+            return outValue != null;
+        }
+
+        /// <summary>
+        /// Appends a value to the list in the given key-value store.
         /// </summary>
         public void AddToList<T>(string storeKey, string listKey, T listValue)
         {
+            if (listValue == null)
+            {
+                throw new Exception("Key-value stores do not allow null values.");
+            }
+
             if (listValue is string stringValue)
                 _rmClient.Query(new KkListOfStringAdd(storeKey, listKey, stringValue)).Result.EnsureSuccessful();
             else if (listValue is Guid guidValue)
@@ -308,7 +328,7 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Gets a list from the key-store by its key.
+        /// Gets the list from the given key-value store.
         /// </summary>
         public Dictionary<Guid, T>? GetList<T>(string storeKey, string listKey)
         {
@@ -333,7 +353,16 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Deletes a value from a key-store.
+        /// Gets the list from the given key-value store, returns true if the key was found.
+        /// </summary>
+        public bool TryGetList<T>(string storeKey, string valueKey, [NotNullWhen(true)] out Dictionary<Guid, T>? outValue)
+        {
+            outValue = GetList<T>(storeKey, valueKey);
+            return outValue != null;
+        }
+
+        /// <summary>
+        /// Removes a key from a key-store of any type.
         /// </summary>
         public void Delete(string storeKey, string valueKey)
         {
@@ -345,7 +374,7 @@ namespace NTDLS.KitKey.Client
         }
 
         /// <summary>
-        /// Removes a list value from a list-of-values key-store by its id.
+        /// Removes a list value from a list-of-values key-store by the list value id.
         /// </summary>
         public void DeleteListItemByKey(string storeKey, string listKey, Guid listItemKey)
         {
