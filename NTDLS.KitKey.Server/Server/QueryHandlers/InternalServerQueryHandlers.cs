@@ -8,6 +8,21 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
     {
         private readonly KkServer _keyStoreServer = mqServer;
 
+        public KkDeleteReply KkDelete(RmContext context, KkDelete param)
+        {
+            try
+            {
+                _keyStoreServer.Delete(param.StoreKey, param.ValueKey);
+                return new KkDeleteReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkDeleteReply(ex.GetBaseException());
+            }
+        }
+
+        #region Key-Store.
+
         public KkStoreCreateReply KkStoreCreate(RmContext context, KkStoreCreate param)
         {
             try
@@ -47,18 +62,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkDeleteReply KkDelete(RmContext context, KkDelete param)
-        {
-            try
-            {
-                _keyStoreServer.Delete(param.StoreKey, param.ValueKey);
-                return new KkDeleteReply(true);
-            }
-            catch (Exception ex)
-            {
-                return new KkDeleteReply(ex.GetBaseException());
-            }
-        }
+        #endregion
 
         #region String.
 

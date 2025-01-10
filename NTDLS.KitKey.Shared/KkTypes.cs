@@ -25,6 +25,26 @@
         /// </summary>
         String,
         /// <summary>
+        /// Value is stored as a single int32.
+        /// </summary>
+        Int32,
+        /// <summary>
+        /// Value is stored as a single int64.
+        /// </summary>
+        Int64,
+        /// <summary>
+        /// Value is stored as a single double.
+        /// </summary>
+        Double,
+        /// <summary>
+        /// Value is stored as a single float.
+        /// </summary>
+        Float,
+        /// <summary>
+        /// Value is stored as a single DateTime.
+        /// </summary>
+        DateTime,
+        /// <summary>
         /// Value is stored as a list of values whose contents can be modified.
         /// </summary>
         StringList

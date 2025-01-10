@@ -337,23 +337,115 @@ namespace NTDLS.KitKey.Server
             }
         }
 
-        #region String.
+        /// <summary>
+        /// Removes a value form the key-store.
+        /// </summary>
+        public void Delete(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.Delete(valueKey);
+
+        /// <summary>
+        /// Removes all messages from the given key-store.
+        /// </summary>
+        public void StorePurge(string storeKey)
+            => GetKeyStore(storeKey)?.Purge();
+
+        #region Get/Set String.
 
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
         public void StringSet(string storeKey, string key, string value)
-            => GetKeyStore(storeKey)?.StringSet(key, value);
+            => GetKeyStore(storeKey)?.SetValue(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
         public string? StringGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.StringGet(valueKey);
+            => GetKeyStore(storeKey)?.GetValue<string>(valueKey);
 
         #endregion
 
-        #region List.
+        #region Get/Set Int32.
+
+        /// <summary>
+        /// Inserts/updates a value in the key-store.
+        /// </summary>
+        public void Int32Set(string storeKey, string key, int value)
+            => GetKeyStore(storeKey)?.SetValue(key, value);
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public int? Int32Get(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.GetValue<int>(valueKey);
+
+        #endregion
+
+        #region Get/Set Int64.
+
+        /// <summary>
+        /// Inserts/updates a value in the key-store.
+        /// </summary>
+        public void Int64Set(string storeKey, string key, long value)
+            => GetKeyStore(storeKey)?.SetValue(key, value);
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public long? Int64Get(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.GetValue<long>(valueKey);
+
+        #endregion
+
+        #region Get/Set Float.
+
+        /// <summary>
+        /// Inserts/updates a value in the key-store.
+        /// </summary>
+        public void FloatSet(string storeKey, string key, float value)
+            => GetKeyStore(storeKey)?.SetValue(key, value);
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public float? FloatGet(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.GetValue<float>(valueKey);
+
+        #endregion
+
+        #region Get/Set Double.
+
+        /// <summary>
+        /// Inserts/updates a value in the key-store.
+        /// </summary>
+        public void DoubleSet(string storeKey, string key, double value)
+            => GetKeyStore(storeKey)?.SetValue(key, value);
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public double? DoubleGet(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.GetValue<double>(valueKey);
+
+        #endregion
+
+        #region Get/Set DateTime.
+
+        /// <summary>
+        /// Inserts/updates a value in the key-store.
+        /// </summary>
+        public void DateTimeSet(string storeKey, string key, DateTime value)
+            => GetKeyStore(storeKey)?.SetValue(key, value);
+
+        /// <summary>
+        /// Gets a value by its key form the key-store.
+        /// </summary>
+        public DateTime? DateTimeGet(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.GetValue<DateTime>(valueKey);
+
+        #endregion
+
+        #region Get/Set List.
 
         /// <summary>
         /// Appends a value to a list key-store.
@@ -368,18 +460,6 @@ namespace NTDLS.KitKey.Server
             => GetKeyStore(storeKey)?.ListGet(valueKey);
 
         #endregion
-
-        /// <summary>
-        /// Removes a value form the key-store.
-        /// </summary>
-        public void Delete(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.Delete(valueKey);
-
-        /// <summary>
-        /// Removes all messages from the given key-store.
-        /// </summary>
-        public void StorePurge(string storeKey)
-            => GetKeyStore(storeKey)?.Purge();
 
         #endregion
     }

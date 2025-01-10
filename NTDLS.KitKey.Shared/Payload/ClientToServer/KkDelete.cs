@@ -2,6 +2,9 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
+    /// <summary>
+    /// Deletes a value of any type from a key-store. 
+    /// </summary>
     public class KkDelete(string storeKey, string valueKey)
         : IRmQuery<KkDeleteReply>
     {

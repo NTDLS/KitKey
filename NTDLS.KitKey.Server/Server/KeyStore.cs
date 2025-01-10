@@ -2,12 +2,13 @@
 using NTDLS.KitKey.Shared;
 using NTDLS.Semaphore;
 using RocksDbSharp;
+using System.Text;
 using System.Text.Json;
 
 namespace NTDLS.KitKey.Server.Server
 {
     /// <summary>
-    /// A named key store, its cache and persistence database.
+    /// A named key-store, its cache and persistence database.
     /// </summary>
     internal class KeyStore
     {
@@ -93,53 +94,165 @@ namespace NTDLS.KitKey.Server.Server
             throw new Exception("Undefined PersistenceScheme.");
         }
 
-        #region String.
+        #region Generic Conversion.
 
-        public void StringSet(string valueKey, string value)
+        private byte[] GenericToBytes<T>(T value) where T : notnull
         {
-            if (Configuration.ValueType != KkValueType.String)
+            if (value is string stringValue)
             {
-                throw new Exception($"StringSet is invalid for the key-store type: [{Configuration.ValueType}].");
+                if (Configuration.ValueType != KkValueType.String)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return Encoding.UTF8.GetBytes(stringValue);
             }
+            else if (value is int int32Value)
+            {
+                if (Configuration.ValueType != KkValueType.Int32)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return BitConverter.GetBytes(int32Value);
+            }
+            else if (value is Int64 int64Value)
+            {
+                if (Configuration.ValueType != KkValueType.Int64)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return BitConverter.GetBytes(int64Value);
+            }
+            else if (value is float floatValue)
+            {
+                if (Configuration.ValueType != KkValueType.Float)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return BitConverter.GetBytes(floatValue);
+            }
+            else if (value is double doubleValue)
+            {
+                if (Configuration.ValueType != KkValueType.Double)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return BitConverter.GetBytes(doubleValue);
+            }
+            else if (value is DateTime dateTimeValue)
+            {
+                if (Configuration.ValueType != KkValueType.DateTime)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return BitConverter.GetBytes(dateTimeValue.Ticks);
+            }
+
+            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+        }
+
+        private T? GenericFromBytes<T>(byte[] bytes)
+        {
+            var genericType = typeof(T);
+
+            if (genericType == typeof(string))
+            {
+                if (Configuration.ValueType != KkValueType.String)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return (T)(object)Encoding.UTF8.GetString(bytes);
+            }
+            else if (genericType == typeof(int))
+            {
+                if (Configuration.ValueType != KkValueType.Int32)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return (T)(object)BitConverter.ToInt32(bytes);
+            }
+            else if (genericType == typeof(Int64))
+            {
+                if (Configuration.ValueType != KkValueType.Int64)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return (T)(object)BitConverter.ToInt64(bytes);
+            }
+            else if (genericType == typeof(float))
+            {
+                if (Configuration.ValueType != KkValueType.Float)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return (T)(object)BitConverter.ToSingle(bytes);
+            }
+            else if (genericType == typeof(double))
+            {
+                if (Configuration.ValueType != KkValueType.Double)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                return (T)(object)BitConverter.ToDouble(bytes);
+            }
+            else if (genericType == typeof(DateTime))
+            {
+                if (Configuration.ValueType != KkValueType.DateTime)
+                {
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
+                }
+                long ticks = BitConverter.ToInt64(bytes);
+                return (T)(object)(new DateTime(ticks, DateTimeKind.Utc));
+            }
+
+            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+        }
+
+        #endregion
+
+        public void SetValue<T>(string valueKey, T value) where T : notnull
+        {
+            var valueBytes = GenericToBytes<T>(value);
 
             Statistics.SetCount++;
             _memoryCache.Upsert(valueKey, value, Configuration.CacheExpiration);
-            _database?.Write(db => db.Put(valueKey, value));
+            var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
+            _database?.Write(db => db.Put(valueKeyBytes, valueKeyBytes.Length, valueBytes, valueBytes.Length));
         }
 
-        public string? StringGet(string valueKey)
+        public T? GetValue<T>(string valueKey)
         {
-            if (Configuration.ValueType != KkValueType.String)
-            {
-                throw new Exception($"StringGet is invalid for the key-store type: [{Configuration.ValueType}].");
-            }
+            var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
 
             Statistics.GetCount++;
 
-            if (_memoryCache.TryGet(valueKey, out string? value) && value != null)
+            if (_memoryCache.TryGet(valueKey, out T? value) && value != null)
             {
                 Statistics.CacheHits++;
                 return value;
             }
             Statistics.CacheMisses++;
 
-            return _database?.Read(db =>
+            if (_database != null)
             {
-                var result = db.Get(valueKey);
-                if (result != null)
+                return _database.Read(db =>
                 {
-                    Statistics.DatabaseHits++;
-                }
-                else
-                {
-                    Statistics.DatabaseMisses++;
-                }
+                    var resultBytes = db.Get(valueKeyBytes, valueKeyBytes.Length);
+                    if (resultBytes != null)
+                    {
+                        Statistics.DatabaseHits++;
+                        return GenericFromBytes<T>(resultBytes);
+                    }
+                    else
+                    {
+                        Statistics.DatabaseMisses++;
+                        return default;
+                    }
 
-                return result;
-            });
+                });
+            }
+
+            return default;
         }
-
-        #endregion
 
         #region List.
 

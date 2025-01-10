@@ -7,17 +7,11 @@ namespace Test.Client
     {
         static void Main()
         {
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 8; i++)
             {
-                new Thread(ListTestsThreadProc).Start();
-            }
-
-            /*
-            for (int i = 0; i < 16; i++)
-            {
+                //new Thread(ListTestsThreadProc).Start();
                 new Thread(RandomInsertAndGetThreadProc).Start();
             }
-            */
         }
 
         private static void ListTestsThreadProc()
@@ -77,8 +71,8 @@ namespace Test.Client
                 _client.StringSet("MyEphemeralStore", randomKey, randomValue);
 
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                _ = _client.StringGet("MyPersistentStore", randomKey);
-                _ = _client.StringGet("MyEphemeralStore", randomKey);
+                var a = _client.StringGet("MyPersistentStore", randomKey);
+                var b = _client.StringGet("MyEphemeralStore", randomKey);
 
                 if (rand.Next(0, 100) > 75)
                 {
