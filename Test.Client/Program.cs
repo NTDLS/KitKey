@@ -23,7 +23,7 @@ namespace Test.Client
             _client.StoreCreate(new KkStoreConfiguration("MyPersistentListStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
-                ValueType = KkValueType.StringList
+                ValueType = KkValueType.ListOfString
             });
 
             var rand = new Random();

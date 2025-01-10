@@ -100,7 +100,7 @@ namespace NTDLS.KitKey.Server.Server
         {
             if (value is string stringValue)
             {
-                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.StringList)
+                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.ListOfString)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -108,7 +108,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (value is Int32 int32Value)
             {
-                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.Int32List)
+                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.ListOfInt32)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -116,7 +116,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (value is Int64 int64Value)
             {
-                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.Int64List)
+                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.ListOfInt64)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -124,7 +124,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (value is Single singleValue)
             {
-                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.SingleList)
+                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.ListOfSingle)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -132,7 +132,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (value is Double doubleValue)
             {
-                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.DoubleList)
+                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.ListOfDouble)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -140,7 +140,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (value is DateTime dateTimeValue)
             {
-                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.DateTimeList)
+                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.ListOfDateTime)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -156,7 +156,7 @@ namespace NTDLS.KitKey.Server.Server
 
             if (genericType == typeof(string))
             {
-                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.StringList)
+                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.ListOfString)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -164,7 +164,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(Int32))
             {
-                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.Int32List)
+                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.ListOfInt32)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -172,7 +172,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(Int64))
             {
-                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.Int64List)
+                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.ListOfInt64)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -180,7 +180,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(Single))
             {
-                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.SingleList)
+                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.ListOfSingle)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -188,7 +188,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(Double))
             {
-                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.DoubleList)
+                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.ListOfDouble)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -196,7 +196,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else if (genericType == typeof(DateTime))
             {
-                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.DateTimeList)
+                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.ListOfDateTime)
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
                 }
@@ -270,42 +270,42 @@ namespace NTDLS.KitKey.Server.Server
 
             #region Type Validation.
 
-            if (Configuration.ValueType == KkValueType.StringList)
+            if (Configuration.ValueType == KkValueType.ListOfString)
             {
                 if (valueToAdd.GetType() != typeof(string))
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.Int32List)
+            else if (Configuration.ValueType == KkValueType.ListOfInt32)
             {
                 if (valueToAdd.GetType() != typeof(Int32))
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.Int64List)
+            else if (Configuration.ValueType == KkValueType.ListOfInt64)
             {
                 if (valueToAdd.GetType() != typeof(Int64))
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.SingleList)
+            else if (Configuration.ValueType == KkValueType.ListOfSingle)
             {
                 if (valueToAdd.GetType() != typeof(Single))
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.DoubleList)
+            else if (Configuration.ValueType == KkValueType.ListOfDouble)
             {
                 if (valueToAdd.GetType() != typeof(Double))
                 {
                     throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
                 }
             }
-            else if (Configuration.ValueType == KkValueType.DateTimeList)
+            else if (Configuration.ValueType == KkValueType.ListOfDateTime)
             {
                 if (valueToAdd.GetType() != typeof(DateTime))
                 {
@@ -368,7 +368,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public Dictionary<Guid, T>? GetList<T>(string listKey)
         {
-            if (Configuration.ValueType != KkValueType.StringList)
+            if (Configuration.ValueType != KkValueType.ListOfString)
             {
                 throw new Exception($"ListGet is invalid for the key-store type: [{Configuration.ValueType}].");
             }

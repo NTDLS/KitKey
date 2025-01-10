@@ -47,27 +47,27 @@
         /// <summary>
         /// Value is stored as a list of strings.
         /// </summary>
-        StringList,
+        ListOfString,
         /// <summary>
         /// Value is stored as a list of int32s.
         /// </summary>
-        Int32List,
+        ListOfInt32,
         /// <summary>
         /// Value is stored as a list of Int64s.
         /// </summary>
-        Int64List,
+        ListOfInt64,
         /// <summary>
         /// Value is stored as a list of Doubles.
         /// </summary>
-        SingleList,
+        ListOfSingle,
         /// <summary>
         /// Value is stored as a list of Doubles.
         /// </summary>
-        DoubleList,
+        ListOfDouble,
         /// <summary>
         /// Value is stored as a list of DateTimes.
         /// </summary>
-        DateTimeList
+        ListOfDateTime
     }
 
     /// <summary>
