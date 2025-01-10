@@ -9,8 +9,8 @@ namespace Test.Client
         {
             for (int i = 0; i < 8; i++)
             {
-                //new Thread(ListTestsThreadProc).Start();
-                new Thread(RandomInsertAndGetThreadProc).Start();
+                new Thread(ListTestsThreadProc).Start();
+                //new Thread(RandomInsertAndGetThreadProc).Start();
             }
         }
 
@@ -33,7 +33,7 @@ namespace Test.Client
                 var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
                 var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);
 
-                var list = _client.ListGet("MyPersistentListStore", $"MyKey:{randomKey1}");
+                var list = _client.ListGet<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
 
                 _client.ListAdd("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
             }

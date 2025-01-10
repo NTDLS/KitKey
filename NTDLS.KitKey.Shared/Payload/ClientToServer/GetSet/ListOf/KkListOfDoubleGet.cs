@@ -2,32 +2,32 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
 {
-    public class KkLisOfDoubleGet(string storeKey, string listKey)
-        : IRmQuery<KkLisOfDoubleGetReply>
+    public class KkListOfDoubleGet(string storeKey, string listKey)
+        : IRmQuery<KkListOfDoubleGetReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;
     }
 
-    public class KkLisOfDoubleGetReply
+    public class KkListOfDoubleGetReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
         public Dictionary<Guid, string>? List { get; set; }
 
-        public KkLisOfDoubleGetReply(Exception exception)
+        public KkListOfDoubleGetReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkLisOfDoubleGetReply(bool isSuccess)
+        public KkListOfDoubleGetReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkLisOfDoubleGetReply()
+        public KkListOfDoubleGetReply()
         {
         }
     }

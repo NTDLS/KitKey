@@ -1,4 +1,5 @@
-﻿using NTDLS.KitKey.Shared;
+﻿using Newtonsoft.Json.Linq;
+using NTDLS.KitKey.Shared;
 using NTDLS.KitKey.Shared.Payload.ClientToServer;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf;
@@ -313,8 +314,10 @@ namespace NTDLS.KitKey.Client
                     throw new Exception(result.ErrorMessage);
                 }
             }
-
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            else
+            {
+                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            }
         }
 
         /// <summary>
@@ -385,26 +388,125 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void ListAdd(string storeKey, string listKey, string listValue)
+        public void ListAdd<T>(string storeKey, string listKey, T listValue)
         {
-            var result = _rmClient.Query(new KkListOfStringAdd(storeKey, listKey, listValue)).Result;
-            if (result.IsSuccess == false)
+            if (listValue is string stringValue)
             {
-                throw new Exception(result.ErrorMessage);
+                var result = _rmClient.Query(new KkListOfStringAdd(storeKey, listKey, stringValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (listValue is Int32 int32Value)
+            {
+                var result = _rmClient.Query(new KkListOfInt32Add(storeKey, listKey, int32Value)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (listValue is Int64 int64Value)
+            {
+                var result = _rmClient.Query(new KkListOfInt64Add(storeKey, listKey, int64Value)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (listValue is Single singleValue)
+            {
+                var result = _rmClient.Query(new KkListOfSingleAdd(storeKey, listKey, singleValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (listValue is Double doubleValue)
+            {
+                var result = _rmClient.Query(new KkListOfDoubleAdd(storeKey, listKey, doubleValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else if (listValue is DateTime dateTimeValue)
+            {
+                var result = _rmClient.Query(new KkListOfDateTimeAdd(storeKey, listKey, dateTimeValue)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+            }
+            else
+            {
+                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
             }
         }
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, string>? ListGet(string storeKey, string listKey)
+        public Dictionary<Guid, T>? ListGet<T>(string storeKey, string listKey)
         {
-            var result = _rmClient.Query(new KkListOfStringGet(storeKey, listKey)).Result;
-            if (result.IsSuccess == false)
+            var genericType = typeof(T);
+
+            if (genericType == typeof(string))
             {
-                throw new Exception(result.ErrorMessage);
+                var result = _rmClient.Query(new KkListOfStringGet(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
             }
-            return result.List;
+            else if (genericType == typeof(Int32))
+            {
+                var result = _rmClient.Query(new KkListOfInt32Get(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
+            }
+            else if (genericType == typeof(Int64))
+            {
+                var result = _rmClient.Query(new KkListOfInt64Get(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
+            }
+            else if (genericType == typeof(Single))
+            {
+                var result = _rmClient.Query(new KkListOfSingleGet(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
+            }
+            else if (genericType == typeof(Double))
+            {
+                var result = _rmClient.Query(new KkListOfDoubleGet(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
+            }
+            else if (genericType == typeof(DateTime))
+            {
+                var result = _rmClient.Query(new KkListOfDateTimeGet(storeKey, listKey)).Result;
+                if (result.IsSuccess == false)
+                {
+                    throw new Exception(result.ErrorMessage);
+                }
+                return result.List == null ? null : (Dictionary<Guid, T>?)(object)result.List;
+            }
+
+            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
 
         /// <summary>
