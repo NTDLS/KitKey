@@ -10,7 +10,7 @@ namespace NTDLS.KitKey.Server.Management
         /// <summary>
         /// The name of the key-store.
         /// </summary>
-        public string StoreName { get; internal set; } = string.Empty;
+        public string StoreKey { get; internal set; } = string.Empty;
 
         /// <summary>
         /// Whether the key-store is persisted or ephemeral.

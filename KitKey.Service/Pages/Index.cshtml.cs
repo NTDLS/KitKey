@@ -23,7 +23,7 @@ namespace KitKey.Service.Pages
             try
             {
                 ServerConfig = mqServer.GetConfiguration();
-                Stores = mqServer.GetStores()?.OrderBy(o => o.StoreName)?.ToList() ?? new();
+                Stores = mqServer.GetStores()?.OrderBy(o => o.StoreKey)?.ToList() ?? new();
             }
             catch (Exception ex)
             {

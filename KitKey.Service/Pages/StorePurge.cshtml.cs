@@ -14,20 +14,20 @@ namespace KitKey.Service.Pages
         public string? RedirectURL { get; set; }
 
         [BindProperty]
-        public string StoreName { get; set; } = string.Empty;
+        public string StoreKey { get; set; } = string.Empty;
 
         [BindProperty]
         public string? UserSelection { get; set; }
 
         public IActionResult OnPost()
         {
-            RedirectURL = $"/Store/{StoreName}";
+            RedirectURL = $"/Store/{StoreKey}";
 
             try
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.StorePurge(StoreName);
+                    mqServer.StorePurge(StoreKey);
                 }
                 else
                 {

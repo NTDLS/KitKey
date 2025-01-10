@@ -2,11 +2,11 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkListGet(string storeName, string key)
+    public class KkListGet(string storeKey, string listKey)
         : IRmQuery<KkListGetReply>
     {
-        public string StoreName { get; set; } = storeName;
-        public string Key { get; set; } = key;
+        public string StoreKey { get; set; } = storeKey;
+        public string ListKey { get; set; } = listKey;
     }
 
     public class KkListGetReply

@@ -128,7 +128,7 @@ namespace NTDLS.KitKey.Server
                         PersistenceScheme = ksKPV.Value.Configuration.PersistenceScheme,
                         CacheExpiration = ksKPV.Value.Configuration.CacheExpiration,
                         SetCount = ksKPV.Value.Statistics.SetCount,
-                        StoreName = ksKPV.Value.Configuration.StoreName,
+                        StoreKey = ksKPV.Value.Configuration.StoreKey,
                     });
                 }
             });
@@ -182,7 +182,7 @@ namespace NTDLS.KitKey.Server
                                     Statistics = storeMeta.Statistics
                                 };
                                 storesToStart.Add(keyStore);
-                                mqd.Add(storeMeta.Configuration.StoreName.ToLowerInvariant(), keyStore);
+                                mqd.Add(storeMeta.Configuration.StoreKey, keyStore);
                             }
                         });
                     }
@@ -234,7 +234,7 @@ namespace NTDLS.KitKey.Server
                 //Stop all key stores.
                 foreach (var mqKVP in mqd)
                 {
-                    OnLog?.Invoke(this, KkErrorLevel.Information, $"Stopping key-store [{mqKVP.Value.Configuration.StoreName}].");
+                    OnLog?.Invoke(this, KkErrorLevel.Information, $"Stopping key-store [{mqKVP.Value.Configuration.StoreKey}].");
                     mqKVP.Value.Stop();
                     keyStores.Add(mqKVP.Value);
                 }
@@ -253,17 +253,15 @@ namespace NTDLS.KitKey.Server
         /// Read here means that we will not modify the collection of key stores, but we are
         /// free to add/remove values as their concurrency is handled by the key-store itself.
         /// </summary>
-        private KeyStore GetKeyStore(string storeName)
+        private KeyStore GetKeyStore(string storeKey)
         {
-            var storeKey = storeName.ToLowerInvariant();
-
             return _keyStores.Read(mqd =>
             {
                 if (mqd.TryGetValue(storeKey, out var store))
                 {
                     return store;
                 }
-                throw new Exception($"Key-store not found: [{storeName}].");
+                throw new Exception($"Key-store not found: [{storeKey}].");
             });
         }
 
@@ -274,14 +272,14 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public void StoreCreate(KkStoreConfiguration storeConfiguration)
         {
-            if (string.IsNullOrEmpty(storeConfiguration.StoreName))
+            if (string.IsNullOrEmpty(storeConfiguration.StoreKey))
             {
                 throw new Exception("A key-store name is required.");
             }
 
             _keyStores.Write(mqd =>
             {
-                string storeKey = storeConfiguration.StoreName.ToLowerInvariant();
+                string storeKey = storeConfiguration.StoreKey;
                 if (mqd.ContainsKey(storeKey) == false)
                 {
                     var keyStore = new KeyStore(this, storeConfiguration);
@@ -307,28 +305,24 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Deletes an existing key-store.
         /// </summary>
-        public void StoreDelete(string storeName)
+        public void StoreDelete(string storeKey)
         {
-            string storeKey = storeName.ToLowerInvariant();
-
             while (_keepRunning)
             {
-                KeyStore? keyStore = null;
-
-                _keyStores.Write(mqd =>
+                var keyStore = _keyStores.Write(mqd =>
                 {
-                    if (mqd.TryGetValue(storeKey, out var store))
+                    if (mqd.TryGetValue(storeKey, out var keyStore))
                     {
-                        keyStore = store;
-                        store.Stop();
+                        keyStore.Stop();
                         mqd.Remove(storeKey);
                         CheckpointPersistentStores(mqd);
                     }
+                    return keyStore;
                 });
 
                 if (keyStore != null)
                 {
-                    var databasePath = Path.Join(Configuration.PersistencePath, "store", keyStore.Configuration.StoreName);
+                    var databasePath = Path.Join(Configuration.PersistencePath, "store", keyStore.Configuration.StoreKey);
 
                     try
                     {
@@ -336,7 +330,7 @@ namespace NTDLS.KitKey.Server
                     }
                     catch (Exception ex)
                     {
-                        OnLog?.Invoke(this, KkErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeName}].", ex);
+                        OnLog?.Invoke(this, KkErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeKey}].", ex);
                     }
                 }
                 return;
@@ -348,14 +342,14 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void StringSet(string storeName, string key, string value)
-            => GetKeyStore(storeName)?.StringSet(key, value);
+        public void StringSet(string storeKey, string key, string value)
+            => GetKeyStore(storeKey)?.StringSet(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
-        public string? StringGet(string storeName, string key)
-            => GetKeyStore(storeName)?.StringGet(key);
+        public string? StringGet(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.StringGet(valueKey);
 
         #endregion
 
@@ -364,28 +358,28 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void ListAdd(string storeName, string key, string value)
-            => GetKeyStore(storeName)?.ListAdd(key, value);
+        public void ListAdd(string storeKey, string valueKey, string value)
+            => GetKeyStore(storeKey)?.ListAdd(valueKey, value);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, string>? ListGet(string storeName, string key)
-            => GetKeyStore(storeName)?.ListGet(key);
+        public Dictionary<Guid, string>? ListGet(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.ListGet(valueKey);
 
         #endregion
 
         /// <summary>
         /// Removes a value form the key-store.
         /// </summary>
-        public void Delete(string storeName, string key)
-            => GetKeyStore(storeName)?.Delete(key);
+        public void Delete(string storeKey, string valueKey)
+            => GetKeyStore(storeKey)?.Delete(valueKey);
 
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
-        public void StorePurge(string storeName)
-            => GetKeyStore(storeName)?.Purge();
+        public void StorePurge(string storeKey)
+            => GetKeyStore(storeKey)?.Purge();
 
         #endregion
     }

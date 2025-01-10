@@ -45,12 +45,12 @@ namespace NTDLS.KitKey.Server.Server
                 return;
             }
 
-            _keyServer.InvokeOnLog(KkErrorLevel.Verbose, $"Creating persistent path for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Verbose, $"Creating persistent path for [{Configuration.StoreKey}].");
 
-            var databasePath = Path.Join(_keyServer.Configuration.PersistencePath, "store", Configuration.StoreName);
+            var databasePath = Path.Join(_keyServer.Configuration.PersistencePath, "store", Configuration.StoreKey);
             Directory.CreateDirectory(databasePath);
 
-            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Instantiating persistent key-store for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Instantiating persistent key-store for [{Configuration.StoreKey}].");
             var options = new DbOptions().SetCreateIfMissing(true);
             var persistenceDatabase = RocksDb.Open(options, databasePath);
 
@@ -59,7 +59,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public void Stop()
         {
-            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Signaling shutdown for [{Configuration.StoreName}].");
+            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Signaling shutdown for [{Configuration.StoreKey}].");
 
             _database?.Write(o =>
             {
@@ -95,7 +95,7 @@ namespace NTDLS.KitKey.Server.Server
 
         #region String.
 
-        public void StringSet(string key, string value)
+        public void StringSet(string valueKey, string value)
         {
             if (Configuration.ValueType != KkValueType.String)
             {
@@ -103,11 +103,11 @@ namespace NTDLS.KitKey.Server.Server
             }
 
             Statistics.SetCount++;
-            _memoryCache.Upsert(key, value, Configuration.CacheExpiration);
-            _database?.Write(db => db.Put(key, value));
+            _memoryCache.Upsert(valueKey, value, Configuration.CacheExpiration);
+            _database?.Write(db => db.Put(valueKey, value));
         }
 
-        public string? StringGet(string key)
+        public string? StringGet(string valueKey)
         {
             if (Configuration.ValueType != KkValueType.String)
             {
@@ -116,7 +116,7 @@ namespace NTDLS.KitKey.Server.Server
 
             Statistics.GetCount++;
 
-            if (_memoryCache.TryGet(key, out string? value) && value != null)
+            if (_memoryCache.TryGet(valueKey, out string? value) && value != null)
             {
                 Statistics.CacheHits++;
                 return value;
@@ -125,7 +125,7 @@ namespace NTDLS.KitKey.Server.Server
 
             return _database?.Read(db =>
             {
-                var result = db.Get(key);
+                var result = db.Get(valueKey);
                 if (result != null)
                 {
                     Statistics.DatabaseHits++;
@@ -143,7 +143,7 @@ namespace NTDLS.KitKey.Server.Server
 
         #region List.
 
-        public void ListAdd(string key, string valueToAdd)
+        public void ListAdd(string listKey, string valueToAdd)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {
@@ -152,10 +152,10 @@ namespace NTDLS.KitKey.Server.Server
 
             Statistics.SetCount++;
 
-            _concurrentKeyOperation.Execute(key, () =>
+            _concurrentKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(key, out Dictionary<Guid, string>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out Dictionary<Guid, string>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -170,7 +170,7 @@ namespace NTDLS.KitKey.Server.Server
                     {
                         //Looks like we did not have the list in memory, so we need to
                         //check the database for the serialized list and deserialize it.
-                        var listJson = db.Get(key);
+                        var listJson = db.Get(listKey);
                         if (listJson != null)
                         {
                             Statistics.DatabaseHits++;
@@ -189,14 +189,14 @@ namespace NTDLS.KitKey.Server.Server
                 list.Add(Guid.NewGuid(), valueToAdd);
 
                 //Persist the serialized list.
-                _database?.Write(db => db.Put(key, JsonSerializer.Serialize(list)));
+                _database?.Write(db => db.Put(listKey, JsonSerializer.Serialize(list)));
 
                 //Recache the list.
-                _memoryCache.Upsert(key, list, Configuration.CacheExpiration);
+                _memoryCache.Upsert(listKey, list, Configuration.CacheExpiration);
             });
         }
 
-        public Dictionary<Guid, string>? ListGet(string key)
+        public Dictionary<Guid, string>? ListGet(string listKey)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {
@@ -207,10 +207,10 @@ namespace NTDLS.KitKey.Server.Server
 
             Dictionary<Guid, string>? result = null;
 
-            _concurrentKeyOperation.Execute(key, () =>
+            _concurrentKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(key, out Dictionary<Guid, string>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out Dictionary<Guid, string>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -225,7 +225,7 @@ namespace NTDLS.KitKey.Server.Server
                     {
                         //Looks like we did not have the list in memory, so we need to
                         //check the database for the serialized list and deserialize it.
-                        var listJson = db.Get(key);
+                        var listJson = db.Get(listKey);
                         if (listJson != null)
                         {
                             Statistics.DatabaseHits++;
@@ -246,11 +246,11 @@ namespace NTDLS.KitKey.Server.Server
 
         #endregion
 
-        public void Delete(string key)
+        public void Delete(string valueKey)
         {
             Statistics.DeleteCount++;
-            _memoryCache.Remove(key);
-            _database?.Write(db => db.Remove(key));
+            _memoryCache.Remove(valueKey);
+            _database?.Write(db => db.Remove(valueKey));
         }
 
         public void Purge()

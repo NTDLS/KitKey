@@ -2,11 +2,11 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkDelete(string storeName, string key)
+    public class KkDelete(string storeKey, string valueKey)
         : IRmQuery<KkDeleteReply>
     {
-        public string StoreName { get; set; } = storeName;
-        public string Key { get; set; } = key;
+        public string StoreKey { get; set; } = storeKey;
+        public string ValueKey { get; set; } = valueKey;
     }
 
     public class KkDeleteReply

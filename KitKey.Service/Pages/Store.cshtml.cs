@@ -11,7 +11,7 @@ namespace KitKey.Service.Pages
     public class StoreModel(ILogger<StoreModel> logger, KkServer mqServer) : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
-        public string StoreName { get; set; } = string.Empty;
+        public string StoreKey { get; set; } = string.Empty;
 
         private readonly ILogger<StoreModel> _logger = logger;
         public KkStoreDescriptor Store { get; private set; } = new();
@@ -20,7 +20,7 @@ namespace KitKey.Service.Pages
         {
             try
             {
-                Store = mqServer.GetStores()?.Where(o => o.StoreName.Equals(StoreName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault() ?? new();
+                Store = mqServer.GetStores()?.Where(o => o.StoreKey.Equals(StoreKey, StringComparison.OrdinalIgnoreCase)).FirstOrDefault() ?? new();
             }
             catch (Exception ex)
             {

@@ -25,7 +25,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.StoreDelete(param.StoreName);
+                _keyStoreServer.StoreDelete(param.StoreKey);
                 return new KkStoreDeleteReply(true);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.StorePurge(param.StoreName);
+                _keyStoreServer.StorePurge(param.StoreKey);
                 return new KkStorePurgeReply(true);
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.Delete(param.StoreName, param.Key);
+                _keyStoreServer.Delete(param.StoreKey, param.ValueKey);
                 return new KkDeleteReply(true);
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.StringSet(param.StoreName, param.Key, param.Value);
+                _keyStoreServer.StringSet(param.StoreKey, param.ValueKey, param.Value);
                 return new KkStringSetReply(true);
             }
             catch (Exception ex)
@@ -81,7 +81,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             {
                 return new KkStringGetReply(true)
                 {
-                    Value = _keyStoreServer.StringGet(param.StoreName, param.Key)
+                    Value = _keyStoreServer.StringGet(param.StoreKey, param.ValueKey)
                 };
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.ListAdd(param.StoreName, param.Key, param.Value);
+                _keyStoreServer.ListAdd(param.StoreKey, param.ListKey, param.ListValue);
                 return new KkListAddReply(true);
             }
             catch (Exception ex)
@@ -113,7 +113,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             {
                 return new KkListGetReply(true)
                 {
-                    List = _keyStoreServer.ListGet(param.StoreName, param.Key)
+                    List = _keyStoreServer.ListGet(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)

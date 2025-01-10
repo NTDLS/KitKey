@@ -16,14 +16,14 @@ namespace KitKey.Service.Controllers
             _keyServer = keyServer;
         }
 
-        [HttpPost("Set/{storeName}/{key}")]
-        public async Task<IActionResult> Set(string storeName, string key)
+        [HttpPost("Set/{storeKey}/{key}")]
+        public async Task<IActionResult> Set(string storeKey, string key)
         {
             try
             {
                 using var reader = new StreamReader(Request.Body, Encoding.UTF8);
                 var bodyValue = await reader.ReadToEndAsync();
-                _keyServer.StringSet(storeName, key, bodyValue);
+                _keyServer.StringSet(storeKey, key, bodyValue);
                 return Ok("value stored");
             }
             catch (Exception ex)
@@ -33,12 +33,12 @@ namespace KitKey.Service.Controllers
             }
         }
 
-        [HttpDelete("Delete/{storeName}/{key}")]
-        public IActionResult Upsert(string storeName, string key)
+        [HttpDelete("Delete/{storeKey}/{key}")]
+        public IActionResult Upsert(string storeKey, string key)
         {
             try
             {
-                _keyServer.Delete(storeName, key);
+                _keyServer.Delete(storeKey, key);
                 return Ok("value deleted");
             }
             catch (Exception ex)
@@ -48,12 +48,12 @@ namespace KitKey.Service.Controllers
             }
         }
 
-        [HttpGet("Get/{storeName}/{key}")]
-        public IActionResult Get(string storeName, string key)
+        [HttpGet("Get/{storeKey}/{key}")]
+        public IActionResult Get(string storeKey, string key)
         {
             try
             {
-                var value = _keyServer.StringGet(storeName, key);
+                var value = _keyServer.StringGet(storeKey, key);
                 if (value == null)
                 {
                     return NoContent();
@@ -70,16 +70,16 @@ namespace KitKey.Service.Controllers
         /// <summary>
         /// Creates a key-value store with the default configuration.
         /// </summary>
-        /// <param name="storeName"></param>
+        /// <param name="storeKey"></param>
         /// <returns></returns>
-        [HttpPost("StoreCreate/{storeName}")]
-        public IActionResult StoreCreate(string storeName)
+        [HttpPost("StoreCreate/{storeKey}")]
+        public IActionResult StoreCreate(string storeKey)
         {
             try
             {
                 _keyServer.StoreCreate(new KkStoreConfiguration
                 {
-                    StoreName = storeName
+                    StoreKey = storeKey
                 });
                 return Ok("store created");
             }
@@ -100,9 +100,9 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                if (config == null || string.IsNullOrEmpty(config.StoreName))
+                if (config == null || string.IsNullOrEmpty(config.StoreKey))
                 {
-                    return BadRequest("StoreName is required.");
+                    return BadRequest("StoreKey is required.");
                 }
 
                 _keyServer.StoreCreate(config);
@@ -116,12 +116,12 @@ namespace KitKey.Service.Controllers
             }
         }
 
-        [HttpDelete("StorePurge/{storeName}")]
-        public IActionResult Purge(string storeName)
+        [HttpDelete("StorePurge/{storeKey}")]
+        public IActionResult Purge(string storeKey)
         {
             try
             {
-                _keyServer.StorePurge(storeName);
+                _keyServer.StorePurge(storeKey);
                 return Ok("store purged");
             }
             catch (Exception ex)
@@ -132,12 +132,12 @@ namespace KitKey.Service.Controllers
         }
 
 
-        [HttpDelete("StoreDelete/{storeName}")]
-        public IActionResult StoreDelete(string storeName)
+        [HttpDelete("StoreDelete/{storeKey}")]
+        public IActionResult StoreDelete(string storeKey)
         {
             try
             {
-                _keyServer.StoreDelete(storeName);
+                _keyServer.StoreDelete(storeKey);
                 return Ok("store deleted");
             }
             catch (Exception ex)

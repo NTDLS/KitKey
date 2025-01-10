@@ -14,7 +14,7 @@ namespace KitKey.Service.Pages
         public string? RedirectURL { get; set; }
 
         [BindProperty]
-        public string StoreName { get; set; } = string.Empty;
+        public string StoreKey { get; set; } = string.Empty;
 
         [BindProperty]
         public string? UserSelection { get; set; }
@@ -27,7 +27,7 @@ namespace KitKey.Service.Pages
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.StoreDelete(StoreName);
+                    mqServer.StoreDelete(StoreKey);
                 }
                 else
                 {

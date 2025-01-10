@@ -5,12 +5,12 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer
     /// <summary>
     /// Appends a value to a string list key-store.
     /// </summary>
-    public class KkListAdd(string storeName, string key, string value)
+    public class KkListAdd(string storeKey, string listKey, string listValue)
         : IRmQuery<KkListAddReply>
     {
-        public string StoreName { get; set; } = storeName;
-        public string Key { get; set; } = key;
-        public string Value { get; set; } = value;
+        public string StoreKey { get; set; } = storeKey;
+        public string ListKey { get; set; } = listKey;
+        public string ListValue { get; set; } = listValue;
     }
 
     public class KkListAddReply

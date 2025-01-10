@@ -2,10 +2,10 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkStorePurge(string storeName)
+    public class KkStorePurge(string storeKey)
         : IRmQuery<KkStorePurgeReply>
     {
-        public string StoreName { get; set; } = storeName;
+        public string StoreKey { get; set; } = storeKey;
     }
 
     public class KkStorePurgeReply

@@ -12,7 +12,7 @@ namespace NTDLS.KitKey.Shared
         /// <summary>
         /// The name of the key-store.
         /// </summary>
-        public string StoreName
+        public string StoreKey
         {
             get => _storeName.EnsureNotNull();
             set => _storeName = value;
@@ -48,9 +48,9 @@ namespace NTDLS.KitKey.Shared
         /// <summary>
         /// Instantiates a new instance of KkStoreConfiguration.
         /// </summary>
-        public KkStoreConfiguration(string storeName)
+        public KkStoreConfiguration(string storeKey)
         {
-            StoreName = storeName;
+            StoreKey = storeKey;
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
-    public class KkStringSet(string storeName, string key, string value)
+    public class KkStringSet(string storeKey, string valueKey, string value)
         : IRmQuery<KkStringSetReply>
     {
-        public string StoreName { get; set; } = storeName;
-        public string Key { get; set; } = key;
+        public string StoreKey { get; set; } = storeKey;
+        public string ValueKey { get; set; } = valueKey;
         public string Value { get; set; } = value;
     }
 
