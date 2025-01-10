@@ -209,7 +209,7 @@ namespace NTDLS.KitKey.Server.Server
 
         #endregion
 
-        public void SetValue<T>(string valueKey, T value)
+        public void SetSingleValue<T>(string valueKey, T value)
         {
             if (value == null)
             {
@@ -224,7 +224,7 @@ namespace NTDLS.KitKey.Server.Server
             _database?.Write(db => db.Put(valueKeyBytes, valueKeyBytes.Length, valueBytes, valueBytes.Length));
         }
 
-        public T? GetValue<T>(string valueKey)
+        public T? GetSingleValue<T>(string valueKey)
         {
             var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
 
@@ -261,7 +261,7 @@ namespace NTDLS.KitKey.Server.Server
 
         #region List.
 
-        public void ListAdd<T>(string listKey, T valueToAdd)
+        public void AddListValue<T>(string listKey, T valueToAdd)
         {
             if (valueToAdd == null)
             {
@@ -366,7 +366,7 @@ namespace NTDLS.KitKey.Server.Server
             });
         }
 
-        public Dictionary<Guid, T>? ListGet<T>(string listKey)
+        public Dictionary<Guid, T>? GetList<T>(string listKey)
         {
             if (Configuration.ValueType != KkValueType.StringList)
             {

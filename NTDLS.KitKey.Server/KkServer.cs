@@ -349,32 +349,31 @@ namespace NTDLS.KitKey.Server
         public void StorePurge(string storeKey)
             => GetKeyStore(storeKey).Purge();
 
-
         /// <summary>
         /// Inserts/updates a value in the key-store.
         /// </summary>
-        public void SetValue<T>(string storeKey, string key, T value)
-            => GetKeyStore(storeKey).SetValue<T>(key, value);
+        public void SetSingleValue<T>(string storeKey, string key, T value)
+            => GetKeyStore(storeKey).SetSingleValue<T>(key, value);
 
         /// <summary>
         /// Gets a value by its key form the key-store.
         /// </summary>
-        public T? GetValue<T>(string storeKey, string valueKey)
-            => GetKeyStore(storeKey).GetValue<T>(valueKey);
+        public T? GetSingleValue<T>(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).GetSingleValue<T>(valueKey);
 
         #region Get/Set List.
 
         /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void ListAdd(string storeKey, string valueKey, string value)
-            => GetKeyStore(storeKey).ListAdd(valueKey, value);
+        public void AddListValue<T>(string storeKey, string valueKey, T value)
+            => GetKeyStore(storeKey).AddListValue(valueKey, value);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, string>? ListGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey).ListGet<string>(valueKey);
+        public Dictionary<Guid, T>? GetList<T>(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).GetList<T>(valueKey);
 
         #endregion
 

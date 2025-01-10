@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using NTDLS.KitKey.Shared;
+﻿using NTDLS.KitKey.Shared;
 using NTDLS.KitKey.Shared.Payload.ClientToServer;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf;
 using NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf;
