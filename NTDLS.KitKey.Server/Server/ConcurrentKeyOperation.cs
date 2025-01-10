@@ -5,10 +5,10 @@
     /// </summary>
     internal class ConcurrentKeyOperation
     {
-        public delegate void ExecuteProc();
-        private readonly Dictionary<string, LockReference> _locks = new();
+        public delegate void ConcurrentOperationFunction();
+        private readonly Dictionary<string, VolatileReferenceCounter> _locks = new();
 
-        private class LockReference
+        private class VolatileReferenceCounter
         {
             private int _count = 0;
 
@@ -22,30 +22,30 @@
                 => Interlocked.Decrement(ref _count);
         }
 
-        public void Execute(string key, ExecuteProc proc)
+        public void Execute(string key, ConcurrentOperationFunction function)
         {
-            LockReference? lockKey;
+            VolatileReferenceCounter? referenceCounter;
 
             lock (_locks)
             {
-                if (!_locks.TryGetValue(key, out lockKey))
+                if (!_locks.TryGetValue(key, out referenceCounter))
                 {
-                    lockKey = new LockReference();
-                    _locks.Add(key, lockKey);
+                    referenceCounter = new VolatileReferenceCounter();
+                    _locks.Add(key, referenceCounter);
                 }
 
-                lockKey.Increment();
+                referenceCounter.Increment();
             }
 
-            lock (lockKey)
+            lock (referenceCounter)
             {
-                proc();
+                function();
             }
 
             lock (_locks)
             {
-                lockKey.Decrement();
-                if (lockKey.Count == 0)
+                referenceCounter.Decrement();
+                if (referenceCounter.Count == 0)
                 {
                     _locks.Remove(key);
                 }
