@@ -7,7 +7,7 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class StoreDeleteModel(ILogger<StoreDeleteModel> logger, KkServer mqServer) : BasePageModel
+    public class StoreDeleteModel(ILogger<StoreDeleteModel> logger, KkClient mqServer) : BasePageModel
     {
         private readonly ILogger<StoreDeleteModel> _logger = logger;
 

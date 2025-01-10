@@ -1,22 +1,20 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfGuid
+namespace NTDLS.KitKey.Shared.Payload.Stores
 {
-    public class KkSingleOfGuidGet(string storeKey, string valueKey)
-        : IRmQuery<KkSingleOfGuidGetReply>
+    public class KkStoreFlushCache(string storeKey)
+        : IRmQuery<KkStoreFlushCacheReply>
     {
         public string StoreKey { get; set; } = storeKey;
-        public string ValueKey { get; set; } = valueKey;
     }
 
-    public class KkSingleOfGuidGetReply
+    public class KkStoreFlushCacheReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Guid? Value { get; set; }
 
-        public KkSingleOfGuidGetReply EnsureSuccessful()
+        public KkStoreFlushCacheReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -25,18 +23,18 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfGuid
             return this;
         }
 
-        public KkSingleOfGuidGetReply(Exception exception)
+        public KkStoreFlushCacheReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkSingleOfGuidGetReply(bool isSuccess)
+        public KkStoreFlushCacheReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkSingleOfGuidGetReply()
+        public KkStoreFlushCacheReply()
         {
         }
     }

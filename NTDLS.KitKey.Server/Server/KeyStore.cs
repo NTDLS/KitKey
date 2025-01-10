@@ -12,14 +12,14 @@ namespace NTDLS.KitKey.Server.Server
     internal class KeyStore
     {
         private readonly AtomicKeyOperation _atomicKeyOperation = new();
-        private readonly KkServer _keyServer;
+        private readonly KkClient _keyServer;
         private OptimisticCriticalResource<RocksDb>? _database;
         private readonly PartitionedMemoryCache _memoryCache;
 
         internal KkStoreConfiguration Configuration { get; private set; }
         internal KeyStoreStatistics Statistics { get; set; } = new();
 
-        public KeyStore(KkServer keyServer, KkStoreConfiguration storeConfiguration)
+        public KeyStore(KkClient keyServer, KkStoreConfiguration storeConfiguration)
         {
             _keyServer = keyServer;
             Configuration = storeConfiguration;
@@ -55,6 +55,12 @@ namespace NTDLS.KitKey.Server.Server
             var persistenceDatabase = RocksDb.Open(options, databasePath);
 
             _database = new(persistenceDatabase);
+        }
+
+        public void FlushCache()
+        {
+            _keyServer.InvokeOnLog(KkErrorLevel.Information, $"Clearing the cache for [{Configuration.StoreKey}].");
+            _memoryCache.Clear();
         }
 
         public void Stop()

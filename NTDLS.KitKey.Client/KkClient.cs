@@ -493,5 +493,29 @@ namespace NTDLS.KitKey.Client
                 throw new Exception(result.ErrorMessage);
             }
         }
+
+        /// <summary>
+        /// Clears the cache for a single key-store.
+        /// </summary>
+        public void FlushCache(string storeKey)
+        {
+            var result = _rmClient.Query(new KkStoreFlushCache(storeKey)).Result;
+            if (result.IsSuccess == false)
+            {
+                throw new Exception(result.ErrorMessage);
+            }
+        }
+
+        /// <summary>
+        /// Clears the cache for a all key-stores.
+        /// </summary>
+        public void FlushCache()
+        {
+            var result = _rmClient.Query(new KkStoreFlushAllCaches()).Result;
+            if (result.IsSuccess == false)
+            {
+                throw new Exception(result.ErrorMessage);
+            }
+        }
     }
 }

@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class QueryHandlerForStores(KkServer mqServer)
+    internal class QueryHandlerForStores(KkClient mqServer)
         : IRmMessageHandler
     {
-        private readonly KkServer _keyStoreServer = mqServer;
+        private readonly KkClient _keyStoreServer = mqServer;
 
         public KkStoreCreateReply KkStoreCreate(RmContext context, KkStoreCreate param)
         {
@@ -44,6 +44,32 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             catch (Exception ex)
             {
                 return new KkStorePurgeReply(ex.GetBaseException());
+            }
+        }
+
+        public KkStoreFlushAllCachesReply KkStoreFlushAllCaches(RmContext context, KkStoreFlushAllCaches param)
+        {
+            try
+            {
+                _keyStoreServer.FlushCache();
+                return new KkStoreFlushAllCachesReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkStoreFlushAllCachesReply(ex.GetBaseException());
+            }
+        }
+
+        public KkStoreFlushCacheReply KkStoreFlushCache(RmContext context, KkStoreFlushCache param)
+        {
+            try
+            {
+                _keyStoreServer.FlushCache(param.StoreKey);
+                return new KkStoreFlushCacheReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkStoreFlushCacheReply(ex.GetBaseException());
             }
         }
     }

@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
 {
-    internal class QueryHandlerForListOfDouble(KkServer mqServer)
+    internal class QueryHandlerForListOfDouble(KkClient mqServer)
         : IRmMessageHandler
     {
-        private readonly KkServer _keyStoreServer = mqServer;
+        private readonly KkClient _keyStoreServer = mqServer;
 
         public KkListOfDoublePushLastReply KkListOfDoublePushLast(RmContext context, KkListOfDoublePushLast param)
         {

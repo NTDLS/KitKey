@@ -8,7 +8,7 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class StoreModel(ILogger<StoreModel> logger, KkServer mqServer) : BasePageModel
+    public class StoreModel(ILogger<StoreModel> logger, KkClient mqServer) : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
         public string StoreKey { get; set; } = string.Empty;

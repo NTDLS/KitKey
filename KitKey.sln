@@ -16,11 +16,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installers", "Installers", 
 		Installers\Installer.iss = Installers\Installer.iss
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{6CA5DE4C-72FD-466D-9433-38DB6979C405}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApps", "TestApps", "{6CA5DE4C-72FD-466D-9433-38DB6979C405}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Harness", "Test.Harness\Test.Harness.csproj", "{4CD234C6-B75D-4D59-9120-7C2EA49DF803}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Client", "Test.Client\Test.Client.csproj", "{7B57FA5E-00BF-4798-B539-0A0B23882E1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitKey.Tests", "KitKey.Tests\KitKey.Tests.csproj", "{CAFE8599-9DC6-429F-B733-AFF241FAE451}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +106,18 @@ Global
 		{7B57FA5E-00BF-4798-B539-0A0B23882E1C}.Release|x64.Build.0 = Release|Any CPU
 		{7B57FA5E-00BF-4798-B539-0A0B23882E1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B57FA5E-00BF-4798-B539-0A0B23882E1C}.Release|x86.Build.0 = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|x64.Build.0 = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Debug|x86.Build.0 = Debug|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|x64.ActiveCfg = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|x64.Build.0 = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|x86.ActiveCfg = Release|Any CPU
+		{CAFE8599-9DC6-429F-B733-AFF241FAE451}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,9 +9,9 @@ namespace KitKey.Service.Controllers
     [Route("api")]
     public class ApiController : Controller
     {
-        private readonly KkServer _keyServer;
+        private readonly KkClient _keyServer;
 
-        public ApiController(KkServer keyServer)
+        public ApiController(KkClient keyServer)
         {
             _keyServer = keyServer;
         }

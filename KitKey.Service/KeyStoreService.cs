@@ -7,13 +7,13 @@ namespace KitKey.Service
 {
     public class KeyStoreService
     {
-        private KkServer? _keyServer;
+        private KkClient? _keyServer;
 
         public void Start()
         {
             var serviceConfiguration = Configs.GetServiceConfig();
 
-            _keyServer = new KkServer(new KkServerConfiguration
+            _keyServer = new KkClient(new KkServerConfiguration
             {
                 PersistencePath = serviceConfiguration.DataPath,
                 AsynchronousAcknowledgment = serviceConfiguration.AsynchronousAcknowledgment,
@@ -100,7 +100,7 @@ namespace KitKey.Service
             }
         }
 
-        private void MqServer_OnLog(KkServer server, KkErrorLevel errorLevel, string message, Exception? ex = null)
+        private void MqServer_OnLog(KkClient server, KkErrorLevel errorLevel, string message, Exception? ex = null)
         {
             switch (errorLevel)
             {

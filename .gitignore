@@ -92,3 +92,7 @@ Test.Harness/bin/
 Test.Client/bin/
 
 Test.Client/obj/
+
+KitKey.Tests/bin/
+
+KitKey.Tests/obj/

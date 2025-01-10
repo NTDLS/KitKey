@@ -13,7 +13,7 @@ namespace NTDLS.KitKey.Server
     /// <summary>
     /// Listens for connections from MessageClients and processes the incoming notifications/queries.
     /// </summary>
-    public class KkServer
+    public class KkClient
     {
         private bool _keepRunning = false;
         private readonly KkServerConfiguration _configuration;
@@ -26,7 +26,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Delegate used to notify of key-store server exceptions.
         /// </summary>
-        public delegate void OnLogEvent(KkServer server, KkErrorLevel errorLevel, string message, Exception? ex = null);
+        public delegate void OnLogEvent(KkClient server, KkErrorLevel errorLevel, string message, Exception? ex = null);
 
         /// <summary>
         /// Event used to notify of key-store server exceptions.
@@ -36,7 +36,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the key-store service.
         /// </summary>
-        public KkServer(KkServerConfiguration configuration)
+        public KkClient(KkServerConfiguration configuration)
         {
             _configuration = configuration;
 
@@ -73,7 +73,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the key-store service.
         /// </summary>
-        public KkServer()
+        public KkClient()
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
@@ -322,37 +322,61 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
+        /// Clears the cache for a single key-store.
+        /// </summary>
+        public void FlushCache(string storeKey)
+        {
+            _keyStores.Read(mqd =>
+             {
+                 if (mqd.TryGetValue(storeKey, out var keyStore))
+                 {
+                     keyStore.FlushCache();
+                 }
+             });
+        }
+
+        /// <summary>
+        /// Clears the cache for a all key-stores.
+        /// </summary>
+        public void FlushCache()
+        {
+            _keyStores.Read(mqd =>
+            {
+                foreach (var keystore in mqd.Values)
+                {
+                    keystore.FlushCache();
+                }
+            });
+        }
+
+        /// <summary>
         /// Deletes an existing key-store.
         /// </summary>
         public void StoreDelete(string storeKey)
         {
-            while (_keepRunning)
+            var keyStore = _keyStores.Write(mqd =>
             {
-                var keyStore = _keyStores.Write(mqd =>
+                if (mqd.TryGetValue(storeKey, out var keyStore))
                 {
-                    if (mqd.TryGetValue(storeKey, out var keyStore))
-                    {
-                        keyStore.Stop();
-                        mqd.Remove(storeKey);
-                        CheckpointPersistentStores(mqd);
-                    }
-                    return keyStore;
-                });
-
-                if (keyStore != null)
-                {
-                    var databasePath = Path.Join(Configuration.PersistencePath, "store", keyStore.Configuration.StoreKey);
-
-                    try
-                    {
-                        Directory.Delete(databasePath, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        OnLog?.Invoke(this, KkErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeKey}].", ex);
-                    }
+                    keyStore.Stop();
+                    mqd.Remove(storeKey);
+                    CheckpointPersistentStores(mqd);
                 }
-                return;
+                return keyStore;
+            });
+
+            if (keyStore != null)
+            {
+                var databasePath = Path.Join(Configuration.PersistencePath, "store", keyStore.Configuration.StoreKey);
+
+                try
+                {
+                    Directory.Delete(databasePath, true);
+                }
+                catch (Exception ex)
+                {
+                    OnLog?.Invoke(this, KkErrorLevel.Verbose, $"Failed to delete persisted key-store values for [{storeKey}].", ex);
+                }
             }
         }
 

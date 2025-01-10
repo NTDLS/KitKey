@@ -1,10 +1,9 @@
-﻿using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfString;
-using NTDLS.ReliableMessaging;
+﻿using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfGuid
 {
     public class KkSingleOfGuidSet(string storeKey, string valueKey, Guid value)
-        : IRmQuery<KkSingleOfStringSetReply>
+        : IRmQuery<KkSingleOfGuidSetReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ValueKey { get; set; } = valueKey;
