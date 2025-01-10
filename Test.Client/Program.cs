@@ -7,10 +7,16 @@ namespace Test.Client
     {
         static void Main()
         {
+            float aaa = 0;
+            double bbb = 0;
+
+            var ccc = aaa.GetType().Name;
+            var ddd = bbb.GetType().Name;
+
             for (int i = 0; i < 8; i++)
             {
                 //new Thread(ListTestsThreadProc).Start();
-                new Thread(RandomInsertAndGetThreadProc).Start();
+                //new Thread(RandomInsertAndGetThreadProc).Start();
             }
         }
 

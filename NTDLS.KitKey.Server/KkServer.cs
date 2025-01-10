@@ -457,7 +457,7 @@ namespace NTDLS.KitKey.Server
         /// Gets a list from the key-store by its key.
         /// </summary>
         public Dictionary<Guid, string>? ListGet(string storeKey, string valueKey)
-            => GetKeyStore(storeKey)?.ListGet(valueKey);
+            => GetKeyStore(storeKey)?.ListGet<string>(valueKey);
 
         #endregion
 

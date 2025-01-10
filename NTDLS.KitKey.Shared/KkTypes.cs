@@ -45,9 +45,29 @@
         /// </summary>
         DateTime,
         /// <summary>
-        /// Value is stored as a list of values whose contents can be modified.
+        /// Value is stored as a list of strings.
         /// </summary>
-        StringList
+        StringList,
+        /// <summary>
+        /// Value is stored as a list of int32s.
+        /// </summary>
+        Int32List,
+        /// <summary>
+        /// Value is stored as a list of Int64s.
+        /// </summary>
+        Int64List,
+        /// <summary>
+        /// Value is stored as a list of Floats.
+        /// </summary>
+        FloatList,
+        /// <summary>
+        /// Value is stored as a list of Doubles.
+        /// </summary>
+        DoubleList,
+        /// <summary>
+        /// Value is stored as a list of DateTimes.
+        /// </summary>
+        DateTimeList
     }
 
     /// <summary>
