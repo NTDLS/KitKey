@@ -1,9 +1,9 @@
 ﻿namespace NTDLS.KitKey.Server.Server
 {
     /// <summary>
-    /// ConcurrentOperation allows us to get exclusive thread access for a given string value.
+    /// Allows us to get exclusive thread access for a given string value.
     /// </summary>
-    internal class ConcurrentKeyOperation
+    internal class AtomicKeyOperation
     {
         public delegate void ConcurrentOperationFunction();
         public delegate T ConcurrentOperationFunction<T>();

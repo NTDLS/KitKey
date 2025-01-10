@@ -11,7 +11,7 @@ namespace NTDLS.KitKey.Server.Server
     /// </summary>
     internal class KeyStore
     {
-        private readonly ConcurrentKeyOperation _concurrentKeyOperation = new();
+        private readonly AtomicKeyOperation _atomicKeyOperation = new();
         private readonly KkServer _keyServer;
         private OptimisticCriticalResource<RocksDb>? _database;
         private readonly PartitionedMemoryCache _memoryCache;
@@ -253,7 +253,7 @@ namespace NTDLS.KitKey.Server.Server
 
             var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
 
-            _concurrentKeyOperation.Execute(listKey, () =>
+            _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
                 if (_memoryCache.TryGet(listKey, out Dictionary<Guid, byte[]>? list) && list != null)
@@ -310,7 +310,7 @@ namespace NTDLS.KitKey.Server.Server
 
             var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
 
-            _concurrentKeyOperation.Execute(listKey, () =>
+            _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
                 if (_memoryCache.TryGet(listKey, out Dictionary<Guid, byte[]>? list) && list != null)
@@ -361,7 +361,7 @@ namespace NTDLS.KitKey.Server.Server
 
             EnsureProperType<T>(true);
 
-            return _concurrentKeyOperation.Execute(listKey, () =>
+            return _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
                 if (_memoryCache.TryGet(listKey, out Dictionary<Guid, byte[]>? list) && list != null)

@@ -335,19 +335,19 @@ namespace NTDLS.KitKey.Client
             var genericType = typeof(T);
 
             if (genericType == typeof(string))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfStringGet(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfStringGet(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Guid))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfGuidGet(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfGuidGet(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Int32))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfInt32Get(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt32Get(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Int64))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfInt64Get(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt64Get(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Single))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfSingleGet(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfSingleGet(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Double))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfDoubleGet(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfDoubleGet(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(DateTime))
-                return (Dictionary<Guid, T>?)(object)_rmClient.Query(new KkListOfDateTimeGet(storeKey, listKey)).Result.EnsureSuccessful() ?? new();
+                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfDateTimeGet(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
 
             throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
