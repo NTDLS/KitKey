@@ -68,6 +68,34 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
 
         #region Single Value.
 
+        public KkSingleOfGuidSetReply KkSingleOfGuidSet(RmContext context, KkSingleOfGuidSet param)
+        {
+            try
+            {
+                _keyStoreServer.SetSingleValue(param.StoreKey, param.ValueKey, param.Value);
+                return new KkSingleOfGuidSetReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkSingleOfGuidSetReply(ex.GetBaseException());
+            }
+        }
+
+        public KkSingleOfGuidGetReply KkSingleOfGuidGet(RmContext context, KkSingleOfGuidGet param)
+        {
+            try
+            {
+                return new KkSingleOfGuidGetReply(true)
+                {
+                    Value = _keyStoreServer.GetSingleValue<Guid>(param.StoreKey, param.ValueKey)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new KkSingleOfGuidGetReply(ex.GetBaseException());
+            }
+        }
+
         public KkSingleOfStringSetReply KkSingleOfStringSet(RmContext context, KkSingleOfStringSet param)
         {
             try
@@ -239,6 +267,34 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         #endregion
 
         #region List Values.
+
+        public KkListOfGuidAddReply KkListOfGuidAdd(RmContext context, KkListOfGuidAdd param)
+        {
+            try
+            {
+                _keyStoreServer.AddListValue(param.StoreKey, param.ListKey, param.ListValue);
+                return new KkListOfGuidAddReply(true);
+            }
+            catch (Exception ex)
+            {
+                return new KkListOfGuidAddReply(ex.GetBaseException());
+            }
+        }
+
+        public KkListOfGuidGetReply KkListOfGuidGet(RmContext context, KkListOfGuidGet param)
+        {
+            try
+            {
+                return new KkListOfGuidGetReply(true)
+                {
+                    List = _keyStoreServer.GetList<Guid>(param.StoreKey, param.ListKey)
+                };
+            }
+            catch (Exception ex)
+            {
+                return new KkListOfGuidGetReply(ex.GetBaseException());
+            }
+        }
 
         public KkListOfStringAddReply KkListOfStringAdd(RmContext context, KkListOfStringAdd param)
         {

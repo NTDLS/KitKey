@@ -1,9 +1,10 @@
 ﻿using NTDLS.FastMemoryCache;
 using NTDLS.KitKey.Shared;
 using NTDLS.Semaphore;
+using ProtoBuf;
 using RocksDbSharp;
+using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
 
 namespace NTDLS.KitKey.Server.Server
 {
@@ -96,129 +97,115 @@ namespace NTDLS.KitKey.Server.Server
 
         #region Generic Conversion.
 
-        private byte[] GenericToBytes<T>(T value)
+        private Type EnsureProperType<T>(bool isList)
         {
-            if (value is string stringValue)
+            var typeOf = typeof(T);
+
+            #region Type Validation.
+
+            if ((isList && Configuration.ValueType == KkValueType.ListOfStrings) || (!isList && Configuration.ValueType == KkValueType.String))
             {
-                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.ListOfStrings)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return Encoding.UTF8.GetBytes(stringValue);
+                if (typeOf != typeof(string))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
             }
-            else if (value is Int32 int32Value)
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfGuids) || (!isList && Configuration.ValueType == KkValueType.Guid))
             {
-                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.ListOfInt32s)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return BitConverter.GetBytes(int32Value);
+                if (typeOf != typeof(Guid))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
             }
-            else if (value is Int64 int64Value)
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfInt32s) || (!isList && Configuration.ValueType == KkValueType.Int32))
             {
-                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.ListOfInt64s)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return BitConverter.GetBytes(int64Value);
+                if (typeOf != typeof(Int32))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
             }
-            else if (value is Single singleValue)
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfInt64s) || (!isList && Configuration.ValueType == KkValueType.Int64))
             {
-                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.ListOfSingles)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return BitConverter.GetBytes(singleValue);
+                if (typeOf != typeof(Int64))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
             }
-            else if (value is Double doubleValue)
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfSingles) || (!isList && Configuration.ValueType == KkValueType.Single))
             {
-                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.ListOfDoubles)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return BitConverter.GetBytes(doubleValue);
+                if (typeOf != typeof(Single))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
             }
-            else if (value is DateTime dateTimeValue)
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfDoubles) || (!isList && Configuration.ValueType == KkValueType.Double))
             {
-                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.ListOfDateTimes)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                return BitConverter.GetBytes(dateTimeValue.Ticks);
+                if (typeOf != typeof(Double))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
+            }
+            else if ((isList && Configuration.ValueType == KkValueType.ListOfDateTimes) || (!isList && Configuration.ValueType == KkValueType.DateTime))
+            {
+                if (typeOf != typeof(DateTime))
+                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
+            }
+            else
+            {
+                throw new Exception($"Key-store value of [{typeOf.Name}] is not implemented.");
             }
 
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            #endregion
+
+            return typeOf;
         }
 
-        private T GenericFromBytes<T>(byte[] bytes)
+        private byte[] GenericToBytes<T>(T value, bool isList)
         {
-            var genericType = typeof(T);
+            EnsureProperType<T>(isList);
 
-            if (genericType == typeof(string))
-            {
-                if (Configuration.ValueType != KkValueType.String && Configuration.ValueType != KkValueType.ListOfStrings)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
+            if (value is string stringValue)
+                return Encoding.UTF8.GetBytes(stringValue);
+            else if (value is Guid guidValue)
+                return guidValue.ToByteArray();
+            else if (value is Int32 int32Value)
+                return BitConverter.GetBytes(int32Value);
+            else if (value is Int64 int64Value)
+                return BitConverter.GetBytes(int64Value);
+            else if (value is Single singleValue)
+                return BitConverter.GetBytes(singleValue);
+            else if (value is Double doubleValue)
+                return BitConverter.GetBytes(doubleValue);
+            else if (value is DateTime dateTimeValue)
+                return BitConverter.GetBytes(dateTimeValue.Ticks);
+
+            throw new Exception($"Key-store value of [{typeof(T).Name}] is not implemented.");
+        }
+
+        private T GenericFromBytes<T>(byte[] bytes, bool isList)
+        {
+            var typeOf = EnsureProperType<T>(isList);
+
+            if (typeOf == typeof(string))
                 return (T)(object)Encoding.UTF8.GetString(bytes);
-            }
-            else if (genericType == typeof(Int32))
-            {
-                if (Configuration.ValueType != KkValueType.Int32 && Configuration.ValueType != KkValueType.ListOfInt32s)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
+            else if (typeOf == typeof(Guid))
+                return (T)(object)new Guid(bytes);
+            else if (typeOf == typeof(Int32))
                 return (T)(object)BitConverter.ToInt32(bytes);
-            }
-            else if (genericType == typeof(Int64))
-            {
-                if (Configuration.ValueType != KkValueType.Int64 && Configuration.ValueType != KkValueType.ListOfInt64s)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
+            else if (typeOf == typeof(Int64))
                 return (T)(object)BitConverter.ToInt64(bytes);
-            }
-            else if (genericType == typeof(Single))
-            {
-                if (Configuration.ValueType != KkValueType.Single && Configuration.ValueType != KkValueType.ListOfSingles)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
+            else if (typeOf == typeof(Single))
                 return (T)(object)BitConverter.ToSingle(bytes);
-            }
-            else if (genericType == typeof(Double))
-            {
-                if (Configuration.ValueType != KkValueType.Double && Configuration.ValueType != KkValueType.ListOfDoubles)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
+            else if (typeOf == typeof(Double))
                 return (T)(object)BitConverter.ToDouble(bytes);
-            }
-            else if (genericType == typeof(DateTime))
-            {
-                if (Configuration.ValueType != KkValueType.DateTime && Configuration.ValueType != KkValueType.ListOfDateTimes)
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain values of type: [{Configuration.ValueType}].");
-                }
-                long ticks = BitConverter.ToInt64(bytes);
-                return (T)(object)(new DateTime(ticks, DateTimeKind.Utc));
-            }
+            else if (typeOf == typeof(DateTime))
+                return (T)(object)(new DateTime(BitConverter.ToInt64(bytes), DateTimeKind.Utc));
 
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            throw new Exception($"Key-store value of [{typeOf.Name}] is not implemented.");
         }
 
         #endregion
 
         public void SetSingleValue<T>(string valueKey, T value)
         {
+            Statistics.SetCount++;
+
             if (value == null)
             {
                 return; //We do not allow null values.
             }
 
-            var valueBytes = GenericToBytes<T>(value);
+            EnsureProperType<T>(false);
 
-            Statistics.SetCount++;
+            var valueBytes = GenericToBytes<T>(value, false);
             _memoryCache.Upsert(valueKey, value, Configuration.CacheExpiration);
             var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
             _database?.Write(db => db.Put(valueKeyBytes, valueKeyBytes.Length, valueBytes, valueBytes.Length));
@@ -226,9 +213,11 @@ namespace NTDLS.KitKey.Server.Server
 
         public T? GetSingleValue<T>(string valueKey)
         {
-            var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
-
             Statistics.GetCount++;
+
+            EnsureProperType<T>(false);
+
+            var valueKeyBytes = Encoding.UTF8.GetBytes(valueKey);
 
             if (_memoryCache.TryGet(valueKey, out T? value) && value != null)
             {
@@ -245,14 +234,13 @@ namespace NTDLS.KitKey.Server.Server
                     if (resultBytes != null)
                     {
                         Statistics.DatabaseHits++;
-                        return GenericFromBytes<T>(resultBytes);
+                        return GenericFromBytes<T>(resultBytes, false);
                     }
                     else
                     {
                         Statistics.DatabaseMisses++;
                         return default;
                     }
-
                 });
             }
 
@@ -261,65 +249,34 @@ namespace NTDLS.KitKey.Server.Server
 
         #region List.
 
+        public static byte[] SerializeToByteArray(object obj)
+        {
+            if (obj == null) return Array.Empty<byte>();
+            using var stream = new MemoryStream();
+            Serializer.Serialize(stream, obj);
+            return stream.ToArray();
+        }
+
+        public static T DeserializeToObject<T>(byte[] arrBytes)
+        {
+            using var stream = new MemoryStream();
+            stream.Write(arrBytes, 0, arrBytes.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            return Serializer.Deserialize<T>(stream);
+        }
+
         public void AddListValue<T>(string listKey, T valueToAdd)
         {
+            Statistics.SetCount++;
+
             if (valueToAdd == null)
             {
                 return; //We do not allow null values.
             }
 
-            #region Type Validation.
+            EnsureProperType<T>(true);
 
-            if (Configuration.ValueType == KkValueType.ListOfStrings)
-            {
-                if (valueToAdd.GetType() != typeof(string))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else if (Configuration.ValueType == KkValueType.ListOfInt32s)
-            {
-                if (valueToAdd.GetType() != typeof(Int32))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else if (Configuration.ValueType == KkValueType.ListOfInt64s)
-            {
-                if (valueToAdd.GetType() != typeof(Int64))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else if (Configuration.ValueType == KkValueType.ListOfSingles)
-            {
-                if (valueToAdd.GetType() != typeof(Single))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else if (Configuration.ValueType == KkValueType.ListOfDoubles)
-            {
-                if (valueToAdd.GetType() != typeof(Double))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else if (Configuration.ValueType == KkValueType.ListOfDateTimes)
-            {
-                if (valueToAdd.GetType() != typeof(DateTime))
-                {
-                    throw new Exception($"Key-store [{Configuration.StoreKey}] can only contain list values of type: [{Configuration.ValueType}].");
-                }
-            }
-            else
-            {
-                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
-            }
-
-            #endregion
-
-            Statistics.SetCount++;
+            var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
 
             _concurrentKeyOperation.Execute(listKey, () =>
             {
@@ -333,54 +290,49 @@ namespace NTDLS.KitKey.Server.Server
                     Statistics.CacheMisses++;
                 }
 
-                _database?.Read(db =>
+                if (list == null) //didn't get a value from cache, so let's try the database.
                 {
-                    if (list == null)
+                    _database?.Read(db =>
                     {
-                        //Looks like we did not have the list in memory, so we need to
-                        //check the database for the serialized list and deserialize it.
-                        var listJson = db.Get(listKey);
-                        if (listJson != null)
+                        var valueListBytes = db.Get(listKeyBytes, listKeyBytes.Length);
+                        if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = JsonSerializer.Deserialize<Dictionary<Guid, byte[]>>(listJson);
+                            list = DeserializeToObject<Dictionary<Guid, byte[]>>(valueListBytes);
                         }
                         else
                         {
                             Statistics.DatabaseHits++;
                         }
-                    }
-                });
+                    });
+                }
 
                 //If the list does not exist. We need to create it.
                 list ??= new Dictionary<Guid, byte[]>();
 
-                var valueBytes = GenericToBytes<T>(valueToAdd);
+                //Add item to the list.
+                var valueBytes = GenericToBytes<T>(valueToAdd, true);
                 list.Add(Guid.NewGuid(), valueBytes);
 
                 //Persist the serialized list.
-                _database?.Write(db => db.Put(listKey, JsonSerializer.Serialize(list)));
+                var valueListBytes = SerializeToByteArray(list);
+                _database?.Write(db => db.Put(listKeyBytes, listKeyBytes.Length, valueListBytes, valueListBytes.Length));
 
-                //Recache the list.
+                //Cache the list.
                 _memoryCache.Upsert(listKey, list, Configuration.CacheExpiration);
             });
         }
 
         public Dictionary<Guid, T>? GetList<T>(string listKey)
         {
-            if (Configuration.ValueType != KkValueType.ListOfStrings)
-            {
-                throw new Exception($"ListGet is invalid for the key-store type: [{Configuration.ValueType}].");
-            }
-
             Statistics.SetCount++;
 
-            Dictionary<Guid, byte[]>? byteList = null;
+            EnsureProperType<T>(true);
 
-            _concurrentKeyOperation.Execute(listKey, () =>
+            return _concurrentKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out byteList) && byteList != null)
+                if (_memoryCache.TryGet(listKey, out Dictionary<Guid, byte[]>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -389,17 +341,16 @@ namespace NTDLS.KitKey.Server.Server
                     Statistics.CacheMisses++;
                 }
 
-                if (byteList != null)
+                if (list == null) //didn't get a value from cache, so let's try the database.
                 {
                     _database?.Read(db =>
                     {
-                        //Looks like we did not have the list in memory, so we need to
-                        //check the database for the serialized list and deserialize it.
-                        var listJson = db.Get(listKey);
-                        if (listJson != null)
+                        var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
+                        var valueListBytes = db.Get(listKeyBytes, listKeyBytes.Length);
+                        if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            byteList = JsonSerializer.Deserialize<Dictionary<Guid, byte[]>>(listJson);
+                            list = DeserializeToObject<Dictionary<Guid, byte[]>>(valueListBytes);
                         }
                         else
                         {
@@ -407,14 +358,8 @@ namespace NTDLS.KitKey.Server.Server
                         }
                     });
                 }
+                return list?.ToDictionary(o => o.Key, o => GenericFromBytes<T>(o.Value, true));
             });
-
-            if (byteList != null)
-            {
-                return byteList.ToDictionary(o => o.Key, o => GenericFromBytes<T>(o.Value));
-            }
-
-            return null;
         }
 
         #endregion

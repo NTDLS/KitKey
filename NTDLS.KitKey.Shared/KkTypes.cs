@@ -25,6 +25,10 @@
         /// </summary>
         String,
         /// <summary>
+        /// Value is stored as a single Guid value.
+        /// </summary>
+        Guid,
+        /// <summary>
         /// Value is stored as a single Int32 value.
         /// </summary>
         Int32,
@@ -45,11 +49,15 @@
         /// </summary>
         DateTime,
         /// <summary>
-        /// Value is stored as a list of strings.
+        /// Value is stored as a list of Strings.
         /// </summary>
         ListOfStrings,
         /// <summary>
-        /// Value is stored as a list of int32s.
+        /// Value is stored as a list of Guids.
+        /// </summary>
+        ListOfGuids,
+        /// <summary>
+        /// Value is stored as a list of Int32s.
         /// </summary>
         ListOfInt32s,
         /// <summary>
