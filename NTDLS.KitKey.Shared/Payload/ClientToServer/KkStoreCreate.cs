@@ -14,6 +14,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
+        public KkStoreCreateReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkStoreCreateReply(Exception exception)
         {
             IsSuccess = false;

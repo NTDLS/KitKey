@@ -3,7 +3,7 @@
 namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
     /// <summary>
-    /// Deletes a value of any type from a key-store. 
+    /// Removes a key from a key-store of any type.
     /// </summary>
     public class KkDeleteKey(string storeKey, string valueKey)
         : IRmQuery<KkDeleteKeyReply>
@@ -17,6 +17,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
+
+        public KkDeleteKeyReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
 
         public KkDeleteKeyReply(Exception exception)
         {

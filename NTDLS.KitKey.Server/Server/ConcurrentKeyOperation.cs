@@ -43,7 +43,7 @@
 
             lock (referenceCounter)
             {
-                result= function();
+                result = function();
             }
 
             lock (_locks)

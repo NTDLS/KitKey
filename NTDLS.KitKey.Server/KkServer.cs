@@ -126,6 +126,7 @@ namespace NTDLS.KitKey.Server
                         DeleteCount = ksKPV.Value.Statistics.DeleteCount,
                         GetCount = ksKPV.Value.Statistics.GetCount,
                         PersistenceScheme = ksKPV.Value.Configuration.PersistenceScheme,
+                        ValueType = ksKPV.Value.Configuration.ValueType,
                         CacheExpiration = ksKPV.Value.Configuration.CacheExpiration,
                         SetCount = ksKPV.Value.Statistics.SetCount,
                         StoreKey = ksKPV.Value.Configuration.StoreKey,
@@ -338,16 +339,22 @@ namespace NTDLS.KitKey.Server
         }
 
         /// <summary>
-        /// Removes a value form the key-store.
+        /// Removes a key from a key-store of any type.
         /// </summary>
-        public void Delete(string storeKey, string valueKey)
-            => GetKeyStore(storeKey).Delete(valueKey);
+        public void DeleteKey(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).DeleteKey(valueKey);
+
+        /// <summary>
+        /// Removes a key from a key-store of any type.
+        /// </summary>
+        public void DeleteListItemByKey(string storeKey, string valueKey, Guid listItemKey)
+            => GetKeyStore(storeKey).DeleteListItemByKey(valueKey, listItemKey);
 
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
         public void StorePurge(string storeKey)
-            => GetKeyStore(storeKey).Purge();
+            => GetKeyStore(storeKey).StorePurge();
 
         /// <summary>
         /// Inserts/updates a value in the key-store.

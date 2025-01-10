@@ -25,7 +25,7 @@ namespace NTDLS.KitKey.Shared
         public KkPersistenceScheme PersistenceScheme { get; set; } = KkPersistenceScheme.Ephemeral;
 
         /// <summary>
-        /// Specifies the format in which the value is to managed.
+        /// Specifies the type of values or values that the store will contain.
         /// </summary>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public KkValueType ValueType { get; set; } = KkValueType.String;

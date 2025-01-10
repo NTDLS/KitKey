@@ -17,13 +17,15 @@
             <thead class="table-light">
                 <tr>
                     <th>Persistence</th>
+                    <th>Value Type</th>
                     <th>Cache Expiration</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>@Model.Store.PersistenceScheme</td>
+                    <td>Model.Store.PersistenceScheme</td>
+                    <td>@NTDLS.Helpers.Text.SeperateCamelCase(Model.Store.ValueType.ToString())</td>
                     <td>@Model.Store.CacheExpiration</td>
                     <td>
                         @Html.Raw(ConfirmActionHelper.GenerateDangerLink(

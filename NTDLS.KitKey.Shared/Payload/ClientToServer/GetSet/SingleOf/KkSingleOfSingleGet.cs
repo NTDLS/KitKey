@@ -16,6 +16,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf
         public string? ErrorMessage { get; set; }
         public Single? Value { get; set; }
 
+        public KkSingleOfSingleGetReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkSingleOfSingleGetReply(Exception exception)
         {
             IsSuccess = false;

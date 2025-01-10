@@ -19,6 +19,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
+        public KkListOfStringAddReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkListOfStringAddReply(Exception exception)
         {
             IsSuccess = false;

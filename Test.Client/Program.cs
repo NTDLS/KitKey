@@ -10,7 +10,7 @@ namespace Test.Client
             for (int i = 0; i < 8; i++)
             {
                 new Thread(ListTestsThreadProc).Start();
-                //new Thread(RandomInsertAndGetThreadProc).Start();
+                new Thread(RandomInsertAndGetThreadProc).Start();
             }
         }
 

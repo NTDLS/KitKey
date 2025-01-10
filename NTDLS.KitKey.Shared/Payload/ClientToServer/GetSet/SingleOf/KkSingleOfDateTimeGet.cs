@@ -16,6 +16,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf
         public string? ErrorMessage { get; set; }
         public DateTime? Value { get; set; }
 
+        public KkSingleOfDateTimeGetReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkSingleOfDateTimeGetReply(Exception exception)
         {
             IsSuccess = false;

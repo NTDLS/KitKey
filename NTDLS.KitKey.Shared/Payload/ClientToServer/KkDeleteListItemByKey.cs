@@ -1,25 +1,25 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
+namespace NTDLS.KitKey.Shared.Payload.ClientToServer
 {
     /// <summary>
-    /// Appends a value to a string list key-store.
+    /// Removes a list value from a list-of-values key-store by its id.
     /// </summary>
-    public class KkListOfDateTimeAdd(string storeKey, string listKey, DateTime listValue)
-        : IRmQuery<KkListOfDateTimeAddReply>
+    public class KkDeleteListItemByKey(string storeKey, string listKey, Guid listItemKey)
+        : IRmQuery<KkDeleteListItemByKeyReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;
-        public DateTime ListValue { get; set; } = listValue;
+        public Guid ListItemKey { get; set; } = listItemKey;
     }
 
-    public class KkListOfDateTimeAddReply
+    public class KkDeleteListItemByKeyReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkListOfDateTimeAddReply EnsureSuccessful()
+        public KkDeleteListItemByKeyReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -28,18 +28,18 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
             return this;
         }
 
-        public KkListOfDateTimeAddReply(Exception exception)
+        public KkDeleteListItemByKeyReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkListOfDateTimeAddReply(bool isSuccess)
+        public KkDeleteListItemByKeyReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkListOfDateTimeAddReply()
+        public KkDeleteListItemByKeyReply()
         {
         }
     }

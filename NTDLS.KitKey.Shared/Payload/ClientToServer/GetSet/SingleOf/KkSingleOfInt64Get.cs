@@ -16,6 +16,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.SingleOf
         public string? ErrorMessage { get; set; }
         public long? Value { get; set; }
 
+        public KkSingleOfInt64GetReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkSingleOfInt64GetReply(Exception exception)
         {
             IsSuccess = false;

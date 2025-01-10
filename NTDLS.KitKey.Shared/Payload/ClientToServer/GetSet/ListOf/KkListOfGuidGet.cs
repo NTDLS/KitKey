@@ -16,6 +16,15 @@ namespace NTDLS.KitKey.Shared.Payload.ClientToServer.GetSet.ListOf
         public string? ErrorMessage { get; set; }
         public Dictionary<Guid, Guid>? List { get; set; }
 
+        public KkListOfGuidGetReply EnsureSuccessful()
+        {
+            if (!IsSuccess)
+            {
+                throw new Exception(ErrorMessage);
+            }
+            return this;
+        }
+
         public KkListOfGuidGetReply(Exception exception)
         {
             IsSuccess = false;
