@@ -44,7 +44,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="Payload\ClientToServer\GetSet\SingleOf\KkSingleOfGuidSet.cs" />
+    <None Include="Payload\SingleOf\SingleOfGuid\KkSingleOfGuidSet.cs" />
   </ItemGroup>
 
   <ItemGroup>

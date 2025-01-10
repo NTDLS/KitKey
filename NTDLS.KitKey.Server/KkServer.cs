@@ -1,6 +1,7 @@
 ﻿using NTDLS.KitKey.Server.Management;
 using NTDLS.KitKey.Server.Server;
 using NTDLS.KitKey.Server.Server.QueryHandlers;
+using NTDLS.KitKey.Server.Server.QueryHandlers.ListOf;
 using NTDLS.KitKey.Shared;
 using NTDLS.ReliableMessaging;
 using NTDLS.Semaphore;
@@ -49,7 +50,24 @@ namespace NTDLS.KitKey.Server
             };
 
             _rmServer = new RmServer(rmConfiguration);
-            _rmServer.AddHandler(new InternalServerQueryHandlers(this));
+            _rmServer.AddHandler(new QueryHandlerForDeletes(this));
+            _rmServer.AddHandler(new QueryHandlerForStores(this));
+
+            _rmServer.AddHandler(new QueryHandlerForSingleOfDateTime(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfDouble(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfGuid(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfInt32(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfInt64(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfSingle(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfString(this));
+
+            _rmServer.AddHandler(new QueryHandlerForListOfDateTime(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfDouble(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfGuid(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfInt32(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfInt64(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfSingle(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfString(this));
         }
 
         /// <summary>
@@ -59,7 +77,7 @@ namespace NTDLS.KitKey.Server
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
-            _rmServer.AddHandler(new InternalServerQueryHandlers(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfInt32(this));
         }
 
         #region Management.
@@ -371,16 +389,34 @@ namespace NTDLS.KitKey.Server
         #region Get/Set List.
 
         /// <summary>
+        /// Prepends a value to a list key-store.
+        /// </summary>
+        public void PushFirst<T>(string storeKey, string valueKey, T value)
+            => GetKeyStore(storeKey).PushFirst(valueKey, value);
+
+        /// <summary>
         /// Appends a value to a list key-store.
         /// </summary>
-        public void AddListValue<T>(string storeKey, string valueKey, T value)
-            => GetKeyStore(storeKey).AddListValue(valueKey, value);
+        public void PushLast<T>(string storeKey, string valueKey, T value)
+            => GetKeyStore(storeKey).PushLast(valueKey, value);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
         public Dictionary<Guid, T>? GetList<T>(string storeKey, string valueKey)
             => GetKeyStore(storeKey).GetList<T>(valueKey);
+
+        /// <summary>
+        /// Gets the item at the bottom of the list in the key-store.
+        /// </summary>
+        public KeyValuePair<Guid, T>? GetFirst<T>(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).GetFirst<T>(valueKey);
+
+        /// <summary>
+        /// Gets the item at the top of the list in the key-store.
+        /// </summary>
+        public KeyValuePair<Guid, T>? GetLast<T>(string storeKey, string valueKey)
+            => GetKeyStore(storeKey).GetLast<T>(valueKey);
 
         #endregion
 

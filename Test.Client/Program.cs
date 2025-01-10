@@ -35,7 +35,7 @@ namespace Test.Client
 
                 var list = _client.GetList<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
 
-                _client.AddToList("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+                _client.PushLast("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
             }
 
             Console.WriteLine("Press [enter] to stop.");
