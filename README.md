@@ -6,7 +6,7 @@ Well, we wanted to keep it simple and really target the .net environment... so w
 You can run the KitKey server either from the nuget package or by downloading the dedicated [service installer](https://github.com/NTDLS/KitKey/releases)
 
 ## Testing Status
-[![Regression Tests](https://github.com/NTDLS/KitKey/actions/workflows/%20Regression%20Tests.yaml/badge.svg)](https://github.com/NTDLS/KitKey/actions/workflows/%20Regression%20Tests.yaml)
+[![Regression Tests](https://github.com/NTDLS/KitKey/actions/workflows/Regression%20Tests.yaml/badge.svg)](https://github.com/NTDLS/KitKey/actions/workflows/Regression%20Tests.yaml)
 
 ## Packages 📦
 - **Server:** https://www.nuget.org/packages/NTDLS.KitKey.Server
