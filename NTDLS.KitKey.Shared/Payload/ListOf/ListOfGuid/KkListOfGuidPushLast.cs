@@ -7,7 +7,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
     /// Appends a value to a Guid list key-store.
     /// </summary>
     public class KkListOfGuidPushLast(string storeKey, string listKey, Guid listValue)
-        : IRmQuery<KkListOfStringPushLastReply>
+        : IRmQuery<KkListOfGuidPushLastReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;

@@ -4,12 +4,12 @@ namespace KitKey.Tests.Unit
 {
     public class SingleSetAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
     {
-        [Fact(DisplayName = "Test small number of String (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (String).")]
         public void TestPersistentString()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.String";
+            var keyStoreName = "Test.String";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -18,7 +18,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.String
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (int i = 0; i < 100; i++)
             {
                 client.Set(keyStoreName, $"Key{i}", $"Value{i}");
@@ -39,12 +39,12 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of Int32 (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (Int32).")]
         public void TestPersistentInt32()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.Int32";
+            var keyStoreName = "Test.Int32";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -53,7 +53,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.Int32
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (int i = 0; i < 100; i++)
             {
                 client.Set(keyStoreName, $"Key{i}", i);
@@ -74,12 +74,12 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of Int64 (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (Int64).")]
         public void TestPersistentInt64()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.Int64";
+            var keyStoreName = "Test.Int64";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -88,7 +88,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.Int64
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (long i = 0; i < 100; i++)
             {
                 client.Set(keyStoreName, $"Key{i}", i);
@@ -109,12 +109,12 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of Single (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (Single).")]
         public void TestPersistentSingle()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.Single";
+            var keyStoreName = "Test.Single";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -123,7 +123,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.Single
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (float i = 0; i < 100; i += 0.5f)
             {
                 client.Set(keyStoreName, $"Key{i}", i);
@@ -144,12 +144,12 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of Double (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (Double).")]
         public void TestPersistentDouble()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.Double";
+            var keyStoreName = "Test.Double";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -158,7 +158,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.Double
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (double i = 0; i < 100; i += 0.5)
             {
                 client.Set(keyStoreName, $"Key{i}", i);
@@ -179,12 +179,12 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of DateTime (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (DateTime).")]
         public void TestPersistentDateTime()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.DateTime";
+            var keyStoreName = "Test.DateTime";
 
             var startDateTime = DateTime.UtcNow;
 
@@ -195,7 +195,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.DateTime
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (int i = 0; i < 100; i++)
             {
                 var testValue = startDateTime + TimeSpan.FromDays(i);
@@ -219,14 +219,14 @@ namespace KitKey.Tests.Unit
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Test small number of Guid (Set and Get).")]
+        [Fact(DisplayName = "Set and Get single values (Guid).")]
         public void TestPersistentGuid()
         {
             var client = ClientFactory.CreateAndConnect();
 
             var testLookup = new Dictionary<int, Guid>();
 
-            string keyStoreName = "Test.Guid";
+            var keyStoreName = "Test.Guid";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -235,7 +235,7 @@ namespace KitKey.Tests.Unit
                 ValueType = KkValueType.Guid
             });
 
-            //Set ang get values.
+            //Set and get values.
             for (int i = 0; i < 100; i++)
             {
                 var testGuid = Guid.NewGuid();
