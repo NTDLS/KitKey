@@ -50,7 +50,7 @@ namespace NTDLS.KitKey.Server
             };
 
             _rmServer = new RmServer(rmConfiguration);
-            _rmServer.AddHandler(new QueryHandlerForDeletes(this));
+            _rmServer.AddHandler(new QueryHandlerForRemoves(this));
             _rmServer.AddHandler(new QueryHandlerForStores(this));
 
             _rmServer.AddHandler(new QueryHandlerForSingleOfDateTime(this));
@@ -383,13 +383,13 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Removes a key from a key-store of any type.
         /// </summary>
-        public void DeleteKey(string storeKey, string valueKey)
+        public void RemoveKey(string storeKey, string valueKey)
             => GetKeyStore(storeKey).DeleteKey(valueKey);
 
         /// <summary>
         /// Removes a key from a key-store of any type.
         /// </summary>
-        public void DeleteListItemByKey(string storeKey, string valueKey, Guid listItemKey)
+        public void RemoveListItemByKey(string storeKey, string valueKey, Guid listItemKey)
             => GetKeyStore(storeKey).DeleteListItemByKey(valueKey, listItemKey);
 
         /// <summary>

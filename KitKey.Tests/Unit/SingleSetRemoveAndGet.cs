@@ -2,14 +2,14 @@ using NTDLS.KitKey.Shared;
 
 namespace KitKey.Tests.Unit
 {
-    public class SingleSetAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
+    public class SingleSetRemoveAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
     {
-        [Fact(DisplayName = "Set and Get single values (String).")]
+        [Fact(DisplayName = "Set, remove and Get single values (String).")]
         public void TestPersistentString()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.String.SingleSetAndGet";
+            var keyStoreName = "Test.String.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -26,6 +26,22 @@ namespace KitKey.Tests.Unit
                 Assert.Equal($"Value{i}", value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (int i = 0; i < 100; i++)
+            {
+                var value = client.Get<string>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal($"Value{i}", value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
@@ -33,18 +49,25 @@ namespace KitKey.Tests.Unit
             for (int i = 0; i < 100; i++)
             {
                 var value = client.Get<string>(keyStoreName, $"Key{i}");
-                Assert.Equal($"Value{i}", value);
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal($"Value{i}", value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (Int32).")]
+        [Fact(DisplayName = "Set, remove and Get single values (Int32).")]
         public void TestPersistentInt32()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.Int32.SingleSetAndGet";
+            var keyStoreName = "Test.Int32.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -61,25 +84,48 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(i, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (int i = 0; i < 100; i++)
+            {
+                var value = client.Get<int?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             //Re-get all the values.
             for (int i = 0; i < 100; i++)
             {
-                var value = client.Get<int>(keyStoreName, $"Key{i}");
-                Assert.Equal(i, value);
+                var value = client.Get<int?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (Int64).")]
+        [Fact(DisplayName = "Set, remove and Get single values (Int64).")]
         public void TestPersistentInt64()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.Int64.SingleSetAndGet";
+            var keyStoreName = "Test.Int64.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -96,25 +142,48 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(i, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (long i = 0; i < 100; i++)
+            {
+                var value = client.Get<long?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             //Re-get all the values.
             for (long i = 0; i < 100; i++)
             {
-                var value = client.Get<long>(keyStoreName, $"Key{i}");
-                Assert.Equal(i, value);
+                var value = client.Get<long?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (Single).")]
+        [Fact(DisplayName = "Set, remove and Get single values (Single).")]
         public void TestPersistentSingle()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.Single.SingleSetAndGet";
+            var keyStoreName = "Test.Single.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -131,25 +200,48 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(i, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (float i = 0; i < 100; i += 0.5f)
+            {
+                var value = client.Get<float?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             //Re-get all the values.
             for (float i = 0; i < 100; i += 0.5f)
             {
-                var value = client.Get<float>(keyStoreName, $"Key{i}");
-                Assert.Equal(i, value);
+                var value = client.Get<float?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (Double).")]
+        [Fact(DisplayName = "Set, remove and Get single values (Double).")]
         public void TestPersistentDouble()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.Double.SingleSetAndGet";
+            var keyStoreName = "Test.Double.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -166,25 +258,48 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(i, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (double i = 0; i < 100; i += 0.5)
+            {
+                var value = client.Get<double?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             //Re-get all the values.
             for (double i = 0; i < 100; i += 0.5)
             {
-                var value = client.Get<double>(keyStoreName, $"Key{i}");
-                Assert.Equal(i, value);
+                var value = client.Get<double?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(i, value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (DateTime).")]
+        [Fact(DisplayName = "Set, remove and Get single values (DateTime).")]
         public void TestPersistentDateTime()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.DateTime.SingleSetAndGet";
+            var keyStoreName = "Test.DateTime.SingleSetRemoveAndGet";
 
             var startDateTime = DateTime.UtcNow;
 
@@ -205,6 +320,23 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(testValue, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (int i = 0; i < 100; i++)
+            {
+                var testValue = startDateTime + TimeSpan.FromDays(i);
+                var value = client.Get<DateTime?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(testValue, value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
@@ -212,21 +344,28 @@ namespace KitKey.Tests.Unit
             for (int i = 0; i < 100; i++)
             {
                 var testValue = startDateTime + TimeSpan.FromDays(i);
-                var value = client.Get<DateTime>(keyStoreName, $"Key{i}");
-                Assert.Equal(testValue, value);
+                var value = client.Get<DateTime?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(testValue, value);
+                }
             }
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "Set and Get single values (Guid).")]
+        [Fact(DisplayName = "Set, remove and Get single values (Guid).")]
         public void TestPersistentGuid()
         {
             var client = ClientFactory.CreateAndConnect();
 
             var testLookup = new Dictionary<int, Guid>();
 
-            var keyStoreName = "Test.Guid.SingleSetAndGet";
+            var keyStoreName = "Test.Guid.SingleSetRemoveAndGet";
 
             client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
@@ -245,14 +384,37 @@ namespace KitKey.Tests.Unit
                 Assert.Equal(testGuid, value);
             }
 
+            client.Remove(keyStoreName, $"Key50");
+
+            //Re-get all the values.
+            for (int i = 0; i < 100; i++)
+            {
+                var value = client.Get<Guid?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(testLookup[i], value);
+                }
+            }
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             //Re-get all the values.
             for (int i = 0; i < 100; i++)
             {
-                var value = client.Get<Guid>(keyStoreName, $"Key{i}");
-                Assert.Equal(testLookup[i], value);
+                var value = client.Get<Guid?>(keyStoreName, $"Key{i}");
+                if (i == 50)
+                {
+                    Assert.Null(value);
+                }
+                else
+                {
+                    Assert.Equal(testLookup[i], value);
+                }
             }
 
             client.Disconnect();

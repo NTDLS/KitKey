@@ -5,21 +5,21 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
     /// <summary>
     /// Removes a list value from a list-of-values key-store by its id.
     /// </summary>
-    public class KkDeleteListItemByKey(string storeKey, string listKey, Guid listItemKey)
-        : IRmQuery<KkDeleteListItemByKeyReply>
+    public class KkRemoveListItemByKey(string storeKey, string listKey, Guid listItemKey)
+        : IRmQuery<KkRemoveListItemByKeyReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;
         public Guid ListItemKey { get; set; } = listItemKey;
     }
 
-    public class KkDeleteListItemByKeyReply
+    public class KkRemoveListItemByKeyReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkDeleteListItemByKeyReply EnsureSuccessful()
+        public KkRemoveListItemByKeyReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -28,18 +28,18 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
             return this;
         }
 
-        public KkDeleteListItemByKeyReply(Exception exception)
+        public KkRemoveListItemByKeyReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkDeleteListItemByKeyReply(bool isSuccess)
+        public KkRemoveListItemByKeyReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkDeleteListItemByKeyReply()
+        public KkRemoveListItemByKeyReply()
         {
         }
     }

@@ -235,13 +235,13 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store with a custom configuration.
         /// </summary>
-        public void StoreCreate(KkStoreConfiguration storeConfiguration)
+        public void CreateStore(KkStoreConfiguration storeConfiguration)
             => _rmClient.Query(new KkStoreCreate(storeConfiguration)).Result.EnsureSuccessful();
 
         /// <summary>
         /// Deletes a key-store and all its values.
         /// </summary>
-        public void StoreDelete(string storeKey)
+        public void DeleteStore(string storeKey)
             => _rmClient.Query(new KkStoreDelete(storeKey)).Result.EnsureSuccessful();
 
         /// <summary>
@@ -284,6 +284,7 @@ namespace NTDLS.KitKey.Client
         public T? Get<T>(string storeKey, string valueKey)
         {
             var genericType = typeof(T);
+            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
             if (genericType == typeof(string))
                 return (T?)(object?)_rmClient.Query(new KkSingleOfStringGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
@@ -308,7 +309,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public bool TryGet<T>(string storeKey, string valueKey, [NotNullWhen(true)] out T? outValue)
         {
-            outValue = Get<T>(storeKey, valueKey);
+            outValue = Get<T?>(storeKey, valueKey);
             return outValue != null;
         }
 
@@ -374,6 +375,7 @@ namespace NTDLS.KitKey.Client
         public List<KkListItem<T>>? GetList<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
+            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
             if (genericType == typeof(string))
                 return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfStringGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
@@ -408,6 +410,7 @@ namespace NTDLS.KitKey.Client
         public KkListItem<T>? GetFirst<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
+            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
             if (genericType == typeof(string))
                 return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
@@ -442,6 +445,7 @@ namespace NTDLS.KitKey.Client
         public KkListItem<T>? GetLast<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
+            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
             if (genericType == typeof(string))
                 return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
@@ -473,9 +477,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Removes a key from a key-store of any type.
         /// </summary>
-        public void Delete(string storeKey, string valueKey)
+        public void Remove(string storeKey, string valueKey)
         {
-            var result = _rmClient.Query(new KkDeleteKey(storeKey, valueKey)).Result;
+            var result = _rmClient.Query(new KkRemoveKey(storeKey, valueKey)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -485,9 +489,9 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Removes a list value from a list-of-values key-store by the list value id.
         /// </summary>
-        public void DeleteListItemByKey(string storeKey, string listKey, Guid listItemKey)
+        public void RemoveListItemByKey(string storeKey, string listKey, Guid listItemKey)
         {
-            var result = _rmClient.Query(new KkDeleteListItemByKey(storeKey, listKey, listItemKey)).Result;
+            var result = _rmClient.Query(new KkRemoveListItemByKey(storeKey, listKey, listItemKey)).Result;
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);

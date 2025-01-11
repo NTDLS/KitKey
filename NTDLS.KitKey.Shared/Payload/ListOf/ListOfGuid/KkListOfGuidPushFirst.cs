@@ -1,5 +1,4 @@
-﻿using NTDLS.KitKey.Shared.Payload.ListOf.ListOfString;
-using NTDLS.ReliableMessaging;
+﻿using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
 {

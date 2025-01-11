@@ -104,6 +104,7 @@ namespace NTDLS.KitKey.Server.Server
         private Type EnsureProperType<T>(bool isList)
         {
             var typeOf = typeof(T);
+            typeOf = Nullable.GetUnderlyingType(typeOf) ?? typeOf;
 
             #region Type Validation.
 

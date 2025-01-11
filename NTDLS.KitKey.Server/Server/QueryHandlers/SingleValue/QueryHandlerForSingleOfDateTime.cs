@@ -27,7 +27,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             {
                 return new KkSingleOfDateTimeGetReply(true)
                 {
-                    Value = _keyStoreServer.GetSingleValue<DateTime>(param.StoreKey, param.ValueKey)
+                    Value = _keyStoreServer.GetSingleValue<DateTime?>(param.StoreKey, param.ValueKey)
                 };
             }
             catch (Exception ex)

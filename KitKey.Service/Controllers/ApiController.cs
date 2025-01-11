@@ -38,7 +38,7 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                _keyServer.DeleteKey(storeKey, key);
+                _keyServer.RemoveKey(storeKey, key);
                 return Ok("value deleted");
             }
             catch (Exception ex)

@@ -27,7 +27,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             {
                 return new KkSingleOfGuidGetReply(true)
                 {
-                    Value = _keyStoreServer.GetSingleValue<Guid>(param.StoreKey, param.ValueKey)
+                    Value = _keyStoreServer.GetSingleValue<Guid?>(param.StoreKey, param.ValueKey)
                 };
             }
             catch (Exception ex)

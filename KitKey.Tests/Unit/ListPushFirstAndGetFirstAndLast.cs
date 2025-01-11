@@ -1,6 +1,4 @@
-using Newtonsoft.Json.Linq;
 using NTDLS.KitKey.Shared;
-using System;
 
 namespace KitKey.Tests.Unit
 {
@@ -11,9 +9,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfStrings.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -62,9 +60,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfInt32s.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -113,9 +111,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfInt64s.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -164,9 +162,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfSingles.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -221,9 +219,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfDoubles.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -281,9 +279,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfDateTimes.ListPushFirstAndGetFirstAndLast";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -338,11 +336,11 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids.PushFirst.FirstLast";
+            var keyStoreName = "Test.ListOfGuids.ListPushFirstAndGetFirstAndLast";
 
             var testLookup = new Dictionary<int, Guid>();
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,

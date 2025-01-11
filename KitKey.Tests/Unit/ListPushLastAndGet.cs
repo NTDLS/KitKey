@@ -9,9 +9,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings.Last";
+            var keyStoreName = "Test.ListOfStrings.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -52,9 +52,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s.Last";
+            var keyStoreName = "Test.ListOfInt32s.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -95,9 +95,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s.Last";
+            var keyStoreName = "Test.ListOfInt64s.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -138,9 +138,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles.Last";
+            var keyStoreName = "Test.ListOfSingles.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -189,9 +189,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles.Last";
+            var keyStoreName = "Test.ListOfDoubles.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -240,9 +240,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes.Last";
+            var keyStoreName = "Test.ListOfDateTimes.ListPushLastAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -289,11 +289,11 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids.Last";
+            var keyStoreName = "Test.ListOfGuids.ListPushLastAndGet";
 
             var testLookup = new Dictionary<int, Guid>();
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,

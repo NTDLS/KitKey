@@ -20,7 +20,7 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.StoreCreate(new KkStoreConfiguration("MyPersistentListStore")
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
                 ValueType = KkValueType.ListOfStrings
@@ -50,12 +50,12 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.StoreCreate(new KkStoreConfiguration("MyPersistentStore")
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent
             });
 
-            _client.StoreCreate(new KkStoreConfiguration("MyEphemeralStore")
+            _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Ephemeral
             });
@@ -77,8 +77,8 @@ namespace Test.Client
                 if (rand.Next(0, 100) > 75)
                 {
                     randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                    _client.Delete("MyPersistentStore", randomKey);
-                    _client.Delete("MyEphemeralStore", randomKey);
+                    _client.Remove("MyPersistentStore", randomKey);
+                    _client.Remove("MyEphemeralStore", randomKey);
                 }
             }
 

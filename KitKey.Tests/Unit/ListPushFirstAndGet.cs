@@ -1,6 +1,4 @@
-using Newtonsoft.Json.Linq;
 using NTDLS.KitKey.Shared;
-using System;
 
 namespace KitKey.Tests.Unit
 {
@@ -11,9 +9,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings.First";
+            var keyStoreName = "Test.ListOfStrings.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -54,9 +52,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s.First";
+            var keyStoreName = "Test.ListOfInt32s.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -97,9 +95,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s.First";
+            var keyStoreName = "Test.ListOfInt64s.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -109,7 +107,7 @@ namespace KitKey.Tests.Unit
             //Push values to the bottom of the list.
             for (long i = 0; i < 100; i++)
             {
-                client.PushFirst(keyStoreName, "TestValueList",i);
+                client.PushFirst(keyStoreName, "TestValueList", i);
                 var values = client.GetList<Int64>(keyStoreName, "TestValueList");
 
                 Assert.NotNull(values);
@@ -140,9 +138,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles.First";
+            var keyStoreName = "Test.ListOfSingles.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -191,9 +189,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles.First";
+            var keyStoreName = "Test.ListOfDoubles.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -242,9 +240,9 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes.First";
+            var keyStoreName = "Test.ListOfDateTimes.ListPushFirstAndGet";
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
@@ -294,11 +292,11 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids.First";
+            var keyStoreName = "Test.ListOfGuids.ListPushFirstAndGet";
 
             var testLookup = new Dictionary<int, Guid>();
 
-            client.StoreCreate(new KkStoreConfiguration(keyStoreName)
+            client.CreateStore(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,

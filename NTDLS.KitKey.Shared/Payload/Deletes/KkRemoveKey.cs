@@ -5,20 +5,20 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
     /// <summary>
     /// Removes a key from a key-store of any type.
     /// </summary>
-    public class KkDeleteKey(string storeKey, string valueKey)
-        : IRmQuery<KkDeleteKeyReply>
+    public class KkRemoveKey(string storeKey, string valueKey)
+        : IRmQuery<KkRemoveKeyReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ValueKey { get; set; } = valueKey;
     }
 
-    public class KkDeleteKeyReply
+    public class KkRemoveKeyReply
         : IRmQueryReply
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public KkDeleteKeyReply EnsureSuccessful()
+        public KkRemoveKeyReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -27,18 +27,18 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
             return this;
         }
 
-        public KkDeleteKeyReply(Exception exception)
+        public KkRemoveKeyReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
         }
 
-        public KkDeleteKeyReply(bool isSuccess)
+        public KkRemoveKeyReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
 
-        public KkDeleteKeyReply()
+        public KkRemoveKeyReply()
         {
         }
     }

@@ -18,13 +18,13 @@ namespace Test.Harness
             server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
             client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            client.StoreCreate(new KkStoreConfiguration("MyPersistentStore")
+            client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
 
             });
 
-            client.StoreCreate(new KkStoreConfiguration("MyEphemeralStore")
+            client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
             {
                 PersistenceScheme = KkPersistenceScheme.Ephemeral
             });
