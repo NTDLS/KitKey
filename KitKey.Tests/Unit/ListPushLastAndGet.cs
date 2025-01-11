@@ -158,11 +158,11 @@ namespace KitKey.Tests.Unit
                 Assert.NotNull(values);
                 Assert.Equal(i + 1, values.Count);
 
-                double testValue = 0;
+                float testValue = 0;
                 for (int index = 0; index < values.Count; index++)
                 {
                     Assert.Equal(testValue, values[index].Value);
-                    testValue += 0.5;
+                    testValue += 0.5f;
                 }
 
                 pushValue += 0.5f;
@@ -171,7 +171,7 @@ namespace KitKey.Tests.Unit
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Single>(keyStoreName, "TestValueList");
+            var postFlushValues = client.GetList<float>(keyStoreName, "TestValueList");
             Assert.NotNull(postFlushValues);
 
             float pfTestValue = 0;
