@@ -144,7 +144,7 @@ namespace NTDLS.KitKey.Server.Server
             }
             else
             {
-                throw new Exception($"Key-store value of [{typeOf.Name}] is not implemented.");
+                throw new Exception($"Invalid value type for key-store [{Configuration.StoreKey}], expected: [{Configuration.ValueType}], found: [{typeOf.Name}].");
             }
 
             #endregion
@@ -171,7 +171,7 @@ namespace NTDLS.KitKey.Server.Server
             else if (value is DateTime dateTimeValue)
                 return BitConverter.GetBytes(dateTimeValue.Ticks);
 
-            throw new Exception($"Key-store value of [{typeof(T).Name}] is not implemented.");
+            throw new Exception($"Invalid value type for key-store [{Configuration.StoreKey}], expected: [{Configuration.ValueType}], found: [{typeof(T).Name}].");
         }
 
         private T GenericFromBytes<T>(byte[] bytes, bool isList)
@@ -193,7 +193,7 @@ namespace NTDLS.KitKey.Server.Server
             else if (typeOf == typeof(DateTime))
                 return (T)(object)(new DateTime(BitConverter.ToInt64(bytes), DateTimeKind.Utc));
 
-            throw new Exception($"Key-store value of [{typeOf.Name}] is not implemented.");
+            throw new Exception($"Invalid value type for key-store [{Configuration.StoreKey}], expected: [{Configuration.ValueType}], found: [{typeOf.Name}].");
         }
 
         #endregion

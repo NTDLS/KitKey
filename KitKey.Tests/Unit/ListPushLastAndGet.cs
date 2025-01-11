@@ -1,6 +1,4 @@
-using Newtonsoft.Json.Linq;
 using NTDLS.KitKey.Shared;
-using System;
 
 namespace KitKey.Tests.Unit
 {
@@ -203,7 +201,7 @@ namespace KitKey.Tests.Unit
             double pushValue = 0;
 
             //Push values to the bottom of the list.
-            for(int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 client.PushLast(keyStoreName, "TestValueList", pushValue);
                 var values = client.GetList<Double>(keyStoreName, "TestValueList");
@@ -334,6 +332,5 @@ namespace KitKey.Tests.Unit
 
             client.Disconnect();
         }
-
     }
 }
