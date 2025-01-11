@@ -405,24 +405,24 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the first item in a list from the given key-value store.
         /// </summary>
-        public KeyValuePair<Guid, T>? GetFirst<T>(string storeKey, string listKey)
+        public KkListItem<T>? GetFirst<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
 
             if (genericType == typeof(string))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfStringGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Guid))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfGuidGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGuidGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Int32))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt32GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt32GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Int64))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt64GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt64GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Single))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfSingleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfSingleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Double))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfDoubleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDoubleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(DateTime))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
 
             throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
@@ -430,7 +430,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the first item in a list from the given key-value store, returns true if the key was found.
         /// </summary>
-        public bool TryGetFirst<T>(string storeKey, string valueKey, [NotNullWhen(true)] out KeyValuePair<Guid, T>? outValue)
+        public bool TryGetFirst<T>(string storeKey, string valueKey, [NotNullWhen(true)] out KkListItem<T>? outValue)
         {
             outValue = GetFirst<T>(storeKey, valueKey);
             return outValue != null;
@@ -439,24 +439,24 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the last item in a list from the given key-value store.
         /// </summary>
-        public KeyValuePair<Guid, T>? GetLast<T>(string storeKey, string listKey)
+        public KkListItem<T>? GetLast<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
 
             if (genericType == typeof(string))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfStringGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Guid))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfGuidGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGuidGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Int32))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt32GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt32GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Int64))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt64GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt64GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Single))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfSingleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfSingleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(Double))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfDoubleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDoubleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
             else if (genericType == typeof(DateTime))
-                return (KeyValuePair<Guid, T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
 
             throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
@@ -464,7 +464,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the last item in a list from the given key-value store, returns true if the key was found.
         /// </summary>
-        public bool TryGetLast<T>(string storeKey, string valueKey, [NotNullWhen(true)] out KeyValuePair<Guid, T>? outValue)
+        public bool TryGetLast<T>(string storeKey, string valueKey, [NotNullWhen(true)] out KkListItem<T>? outValue)
         {
             outValue = GetFirst<T>(storeKey, valueKey);
             return outValue != null;

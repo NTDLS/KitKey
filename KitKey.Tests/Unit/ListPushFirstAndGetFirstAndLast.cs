@@ -4,14 +4,14 @@ using System;
 
 namespace KitKey.Tests.Unit
 {
-    public class ListPushFirstAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
+    public class ListPushFirstAndGetFirstAndLast(ServerFixture fixture) : IClassFixture<ServerFixture>
     {
-        [Fact(DisplayName = "PushFirst values to List (String).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (String).")]
         public void TestPersistentListOfStrings()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings.First";
+            var keyStoreName = "Test.ListOfStrings.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -35,26 +35,34 @@ namespace KitKey.Tests.Unit
                 }
             }
 
+            var first = client.GetFirst<string>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal("Value99", first.Value);
+
+            var last = client.GetLast<string>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal("Value0", last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<string>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<string>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal("Value99", first.Value);
 
-            for (int t = postFlushValues.Count; t > 0; t--)
-            {
-                Assert.Equal($"Value{t - 1}", postFlushValues[postFlushValues.Count - t].Value);
-            }
+            last = client.GetLast<string>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal("Value0", last.Value);
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "PushFirst values to List (Int32).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (Int32).")]
         public void TestPersistentListOfInt32s()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s.First";
+            var keyStoreName = "Test.ListOfInt32s.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -78,26 +86,34 @@ namespace KitKey.Tests.Unit
                 }
             }
 
+            var first = client.GetFirst<int>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(99, first.Value);
+
+            var last = client.GetLast<int>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Int32>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<int>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(99, first.Value);
 
-            for (int t = postFlushValues.Count; t > 0; t--)
-            {
-                Assert.Equal(t - 1, postFlushValues[postFlushValues.Count - t].Value);
-            }
+            last = client.GetLast<int>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "PushFirst values to List (Int64).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (Int64).")]
         public void TestPersistentListOfInt64s()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s.First";
+            var keyStoreName = "Test.ListOfInt64s.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -109,7 +125,7 @@ namespace KitKey.Tests.Unit
             //Push values to the bottom of the list.
             for (long i = 0; i < 100; i++)
             {
-                client.PushFirst(keyStoreName, "TestValueList",i);
+                client.PushFirst(keyStoreName, "TestValueList", i);
                 var values = client.GetList<Int64>(keyStoreName, "TestValueList");
 
                 Assert.NotNull(values);
@@ -121,26 +137,34 @@ namespace KitKey.Tests.Unit
                 }
             }
 
+            var first = client.GetFirst<long>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(99, first.Value);
+
+            var last = client.GetLast<long>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Int64>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<long>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(99, first.Value);
 
-            for (long t = postFlushValues.Count; t > 0; t--)
-            {
-                Assert.Equal(t - 1, postFlushValues[(int)(postFlushValues.Count - t)].Value);
-            }
+            last = client.GetLast<long>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "PushFirst values to List (Single).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (Single).")]
         public void TestPersistentListOfSingles()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles.First";
+            var keyStoreName = "Test.ListOfSingles.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -170,28 +194,34 @@ namespace KitKey.Tests.Unit
                 pushValue += 0.5f;
             }
 
+            var first = client.GetFirst<float>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(49.5, first.Value);
+
+            var last = client.GetLast<float>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Single>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<float>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(49.5, first.Value);
 
-            float pfTestValue = (postFlushValues.Count - 1) * 0.5f;
-            for (int pfIndex = 0; pfIndex < postFlushValues.Count; pfIndex++)
-            {
-                Assert.Equal(pfTestValue, postFlushValues[pfIndex].Value);
-                pfTestValue -= 0.5f;
-            }
+            last = client.GetLast<float>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "PushFirst values to List (Double).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (Double).")]
         public void TestPersistentListOfDoubles()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles.First";
+            var keyStoreName = "Test.ListOfDoubles.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -206,7 +236,7 @@ namespace KitKey.Tests.Unit
             for (int i = 0; i < 100; i++)
             {
                 client.PushFirst(keyStoreName, "TestValueList", pushValue);
-                var values = client.GetList<Double>(keyStoreName, "TestValueList");
+                var values = client.GetList<double>(keyStoreName, "TestValueList");
 
                 Assert.NotNull(values);
                 Assert.Equal(i + 1, values.Count);
@@ -224,25 +254,34 @@ namespace KitKey.Tests.Unit
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Double>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            var first = client.GetFirst<double>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(49.5, first.Value);
 
-            double pfTestValue = (postFlushValues.Count - 1) * 0.5f;
-            for (int pfIndex = 0; pfIndex < postFlushValues.Count; pfIndex++)
-            {
-                Assert.Equal(pfTestValue, postFlushValues[pfIndex].Value);
-                pfTestValue -= 0.5f;
-            }
+            var last = client.GetLast<double>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
+
+            //Flush the cache so we can test persistence.
+            client.FlushCache(keyStoreName);
+
+            first = client.GetFirst<double>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(49.5, first.Value);
+
+            last = client.GetLast<double>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(0, last.Value);
 
             client.Disconnect();
         }
 
-        [Fact(DisplayName = "PushFirst values to List (DateTime).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (DateTime).")]
         public void TestPersistentListOfDateTimes()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes.First";
+            var keyStoreName = "Test.ListOfDateTimes.PushFirst.FirstLast";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -272,29 +311,34 @@ namespace KitKey.Tests.Unit
                 }
             }
 
+            var first = client.GetFirst<DateTime>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(startDateTime + TimeSpan.FromDays(99), first.Value);
+
+            var last = client.GetLast<DateTime>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(startDateTime, last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<DateTime>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<DateTime>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(startDateTime + TimeSpan.FromDays(99), first.Value);
 
-            var pfTestValue = startDateTime + TimeSpan.FromDays(postFlushValues.Count - 1);
-            for (int t = postFlushValues.Count; t > 0; t--)
-            {
-                Assert.Equal(pfTestValue, postFlushValues[(postFlushValues.Count - t)].Value);
-                pfTestValue -= TimeSpan.FromDays(1);
-            }
+            last = client.GetLast<DateTime>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(startDateTime, last.Value);
 
             client.Disconnect();
         }
 
-
-        [Fact(DisplayName = "PushFirst values to List (Guid).")]
+        [Fact(DisplayName = "PushFirst to List, Test First & Last (Guid).")]
         public void TestPersistentListOfGuids()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids.First";
+            var keyStoreName = "Test.ListOfGuids.PushFirst.FirstLast";
 
             var testLookup = new Dictionary<int, Guid>();
 
@@ -323,16 +367,24 @@ namespace KitKey.Tests.Unit
                 }
             }
 
+            var first = client.GetFirst<Guid>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(testLookup[99], first.Value);
+
+            var last = client.GetLast<Guid>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(testLookup[0], last.Value);
+
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            var postFlushValues = client.GetList<Guid>(keyStoreName, "TestValueList");
-            Assert.NotNull(postFlushValues);
+            first = client.GetFirst<Guid>(keyStoreName, "TestValueList");
+            Assert.NotNull(first);
+            Assert.Equal(testLookup[99], first.Value);
 
-            for (int t = postFlushValues.Count; t > 0; t--)
-            {
-                Assert.Equal(testLookup[t - 1], postFlushValues[postFlushValues.Count - t].Value);
-            }
+            last = client.GetLast<Guid>(keyStoreName, "TestValueList");
+            Assert.NotNull(last);
+            Assert.Equal(testLookup[0], last.Value);
 
             client.Disconnect();
         }
