@@ -229,7 +229,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Creates a new key-store with a default configuration.
         /// </summary>
-        public void StoreCreate(string storeKey)
+        public void CreateStore(string storeKey)
            => _rmClient.Query(new KkStoreCreate(new KkStoreConfiguration(storeKey))).Result.EnsureSuccessful();
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Removes all values from a key-store.
         /// </summary>
-        public void StorePurge(string storeKey)
+        public void PurgeStore(string storeKey)
             => _rmClient.Query(new KkStorePurge(storeKey)).Result.EnsureSuccessful();
 
         /// <summary>

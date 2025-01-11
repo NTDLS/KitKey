@@ -3,16 +3,16 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class QueryHandlerForStores(KkClient mqServer)
+    internal class QueryHandlerForStores(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkClient _keyStoreServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
         public KkStoreCreateReply KkStoreCreate(RmContext context, KkStoreCreate param)
         {
             try
             {
-                _keyStoreServer.StoreCreate(param.StoreConfiguration);
+                _keyStoreServer.CreateStore(param.StoreConfiguration);
                 return new KkStoreCreateReply(true);
             }
             catch (Exception ex)
@@ -25,7 +25,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.StoreDelete(param.StoreKey);
+                _keyStoreServer.DeleteStore(param.StoreKey);
                 return new KkStoreDeleteReply(true);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
         {
             try
             {
-                _keyStoreServer.StorePurge(param.StoreKey);
+                _keyStoreServer.PurgeStore(param.StoreKey);
                 return new KkStorePurgeReply(true);
             }
             catch (Exception ex)

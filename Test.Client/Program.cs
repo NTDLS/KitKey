@@ -28,7 +28,7 @@ namespace Test.Client
 
             var rand = new Random();
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 10000; i++)
             {
                 var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
                 var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);

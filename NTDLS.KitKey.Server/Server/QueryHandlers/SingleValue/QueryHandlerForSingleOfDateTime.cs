@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class QueryHandlerForSingleOfDateTime(KkClient mqServer)
+    internal class QueryHandlerForSingleOfDateTime(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkClient _keyStoreServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
         public KkSingleOfDateTimeSetReply KkSingleOfDateTimeSet(RmContext context, KkSingleOfDateTimeSet param)
         {

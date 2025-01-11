@@ -7,7 +7,7 @@ using System.Reflection;
 namespace KitKey.Service.Pages
 {
     [Authorize]
-    public class StorePurgeModel(ILogger<StorePurgeModel> logger, KkClient mqServer) : BasePageModel
+    public class StorePurgeModel(ILogger<StorePurgeModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<StorePurgeModel> _logger = logger;
 
@@ -27,7 +27,7 @@ namespace KitKey.Service.Pages
             {
                 if (UserSelection?.Equals("true") == true)
                 {
-                    mqServer.StorePurge(StoreKey);
+                    mqServer.PurgeStore(StoreKey);
                 }
                 else
                 {

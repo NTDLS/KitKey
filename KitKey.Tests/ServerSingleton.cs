@@ -6,9 +6,9 @@ namespace KitKey.Tests
     {
         private static int _referenceCount = 0;
         private static readonly object _lock = new object();
-        private static KkClient? _server;
+        private static KkServer? _server;
 
-        public static KkClient GetSingleInstance()
+        public static KkServer GetSingleInstance()
         {
             _referenceCount++;
 
@@ -23,7 +23,7 @@ namespace KitKey.Tests
             return _server;
         }
 
-        private static KkClient CreateNewInstance()
+        private static KkServer CreateNewInstance()
         {
             try
             {
@@ -42,14 +42,14 @@ namespace KitKey.Tests
                 PersistencePath = Constants.ROOT_PATH
             };
 
-            var server = new KkClient(config);
+            var server = new KkServer(config);
             server.OnLog += Server_OnLog;
             server.Start(Constants.LISTEN_PORT);
 
             return server;
         }
 
-        private static void Server_OnLog(KkClient server, NTDLS.KitKey.Shared.KkErrorLevel errorLevel, string message, Exception? ex = null)
+        private static void Server_OnLog(KkServer server, NTDLS.KitKey.Shared.KkErrorLevel errorLevel, string message, Exception? ex = null)
         {
             Console.WriteLine($"{errorLevel}: {message}");
         }

@@ -1,4 +1,5 @@
-﻿using NTDLS.KitKey.Server;
+﻿using NTDLS.KitKey.Client;
+using NTDLS.KitKey.Server;
 using NTDLS.KitKey.Shared;
 
 namespace Test.Harness
@@ -12,8 +13,8 @@ namespace Test.Harness
                 PersistencePath = Path.GetDirectoryName(Environment.ProcessPath)
             };
 
-            var server = new NTDLS.KitKey.Server.KkClient(serverConfig);
-            var client = new NTDLS.KitKey.Client.KkClient();
+            var server = new KkServer(serverConfig);
+            var client = new KkClient();
 
             server.Start(KkDefaults.DEFAULT_KEYSTORE_PORT);
             client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);

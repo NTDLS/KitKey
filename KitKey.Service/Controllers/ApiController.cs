@@ -9,9 +9,9 @@ namespace KitKey.Service.Controllers
     [Route("api")]
     public class ApiController : Controller
     {
-        private readonly KkClient _keyServer;
+        private readonly KkServer _keyServer;
 
-        public ApiController(KkClient keyServer)
+        public ApiController(KkServer keyServer)
         {
             _keyServer = keyServer;
         }
@@ -77,7 +77,7 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                _keyServer.StoreCreate(new KkStoreConfiguration
+                _keyServer.CreateStore(new KkStoreConfiguration
                 {
                     StoreKey = storeKey
                 });
@@ -105,7 +105,7 @@ namespace KitKey.Service.Controllers
                     return BadRequest("StoreKey is required.");
                 }
 
-                _keyServer.StoreCreate(config);
+                _keyServer.CreateStore(config);
 
                 return Ok("store created");
             }
@@ -121,7 +121,7 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                _keyServer.StorePurge(storeKey);
+                _keyServer.PurgeStore(storeKey);
                 return Ok("store purged");
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace KitKey.Service.Controllers
         {
             try
             {
-                _keyServer.StoreDelete(storeKey);
+                _keyServer.DeleteStore(storeKey);
                 return Ok("store deleted");
             }
             catch (Exception ex)

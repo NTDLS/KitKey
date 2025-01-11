@@ -8,7 +8,7 @@ namespace KitKey.Service.Pages
 {
     [Authorize]
 
-    public class IndexModel(ILogger<IndexModel> logger, KkClient mqServer) : BasePageModel
+    public class IndexModel(ILogger<IndexModel> logger, KkServer mqServer) : BasePageModel
     {
         private readonly ILogger<IndexModel> _logger = logger;
         public List<KkStoreDescriptor> Stores { get; private set; } = new();

@@ -13,7 +13,7 @@ namespace NTDLS.KitKey.Server
     /// <summary>
     /// Listens for connections from MessageClients and processes the incoming notifications/queries.
     /// </summary>
-    public class KkClient
+    public class KkServer
     {
         private bool _keepRunning = false;
         private readonly KkServerConfiguration _configuration;
@@ -26,7 +26,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Delegate used to notify of key-store server exceptions.
         /// </summary>
-        public delegate void OnLogEvent(KkClient server, KkErrorLevel errorLevel, string message, Exception? ex = null);
+        public delegate void OnLogEvent(KkServer server, KkErrorLevel errorLevel, string message, Exception? ex = null);
 
         /// <summary>
         /// Event used to notify of key-store server exceptions.
@@ -36,7 +36,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the key-store service.
         /// </summary>
-        public KkClient(KkServerConfiguration configuration)
+        public KkServer(KkServerConfiguration configuration)
         {
             _configuration = configuration;
 
@@ -73,7 +73,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new instance of the key-store service.
         /// </summary>
-        public KkClient()
+        public KkServer()
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
@@ -289,7 +289,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Creates a new empty key-store if it does not already exist.
         /// </summary>
-        public void StoreCreate(KkStoreConfiguration storeConfiguration)
+        public void CreateStore(KkStoreConfiguration storeConfiguration)
         {
             if (string.IsNullOrEmpty(storeConfiguration.StoreKey))
             {
@@ -352,7 +352,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Deletes an existing key-store.
         /// </summary>
-        public void StoreDelete(string storeKey)
+        public void DeleteStore(string storeKey)
         {
             var keyStore = _keyStores.Write(mqd =>
             {
@@ -395,7 +395,7 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Removes all messages from the given key-store.
         /// </summary>
-        public void StorePurge(string storeKey)
+        public void PurgeStore(string storeKey)
             => GetKeyStore(storeKey).StorePurge();
 
         /// <summary>

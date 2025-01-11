@@ -12,14 +12,14 @@ namespace NTDLS.KitKey.Server.Server
     internal class KeyStore
     {
         private readonly AtomicKeyOperation _atomicKeyOperation = new();
-        private readonly KkClient _keyServer;
+        private readonly KkServer _keyServer;
         private OptimisticCriticalResource<RocksDb>? _database;
         private readonly PartitionedMemoryCache _memoryCache;
 
         internal KkStoreConfiguration Configuration { get; private set; }
         internal KeyStoreStatistics Statistics { get; set; } = new();
 
-        public KeyStore(KkClient keyServer, KkStoreConfiguration storeConfiguration)
+        public KeyStore(KkServer keyServer, KkStoreConfiguration storeConfiguration)
         {
             _keyServer = keyServer;
             Configuration = storeConfiguration;
@@ -423,7 +423,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public List<KkListItem<T>>? GetList<T>(string listKey)
         {
-            Statistics.SetCount++;
+            Statistics.GetCount++;
 
             EnsureProperType<T>(true);
 
@@ -463,7 +463,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public KkListItem<T>? GetFirst<T>(string listKey)
         {
-            Statistics.SetCount++;
+            Statistics.GetCount++;
 
             EnsureProperType<T>(true);
 
@@ -509,7 +509,7 @@ namespace NTDLS.KitKey.Server.Server
 
         public KkListItem<T>? GetLast<T>(string listKey)
         {
-            Statistics.SetCount++;
+            Statistics.GetCount++;
 
             EnsureProperType<T>(true);
 

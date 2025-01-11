@@ -4,7 +4,7 @@ namespace KitKey.Tests
 {
     public class ServerFixture : IDisposable
     {
-        public KkClient Server { get; private set; }
+        public KkServer Server { get; private set; }
 
         public ServerFixture()
         {

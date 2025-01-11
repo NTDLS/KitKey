@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
 {
-    internal class QueryHandlerForListOfGuid(KkClient mqServer)
+    internal class QueryHandlerForListOfGuid(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkClient _keyStoreServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
         public KkListOfGuidPushLastReply KkListOfGuidPushLast(RmContext context, KkListOfGuidPushLast param)
         {

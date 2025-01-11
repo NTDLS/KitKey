@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class QueryHandlerForSingleOfInt64(KkClient mqServer)
+    internal class QueryHandlerForSingleOfInt64(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkClient _keyStoreServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
 
         public KkSingleOfInt64SetReply KkSingleOfInt64Set(RmContext context, KkSingleOfInt64Set param)

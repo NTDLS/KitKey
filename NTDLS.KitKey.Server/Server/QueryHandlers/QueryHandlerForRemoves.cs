@@ -3,10 +3,10 @@ using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Server.Server.QueryHandlers
 {
-    internal class QueryHandlerForRemoves(KkClient mqServer)
+    internal class QueryHandlerForRemoves(KkServer mqServer)
         : IRmMessageHandler
     {
-        private readonly KkClient _keyStoreServer = mqServer;
+        private readonly KkServer _keyStoreServer = mqServer;
 
         public KkRemoveKeyReply KkRemoveKey(RmContext context, KkRemoveKey param)
         {
