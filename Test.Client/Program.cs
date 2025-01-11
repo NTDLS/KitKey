@@ -7,7 +7,7 @@ namespace Test.Client
     {
         static void Main()
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 2; i++)
             {
                 new Thread(ListTestsThreadProc).Start();
                 new Thread(RandomInsertAndGetThreadProc).Start();

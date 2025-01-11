@@ -1,5 +1,8 @@
 ﻿namespace NTDLS.KitKey.Shared
 {
+    /// <summary>
+    /// Defines default configuration values for KitKey.
+    /// </summary>
     public static class KkDefaults
     {
         /// <summary>

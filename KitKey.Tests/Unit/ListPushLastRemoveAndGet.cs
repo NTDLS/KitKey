@@ -1,5 +1,4 @@
 using NTDLS.KitKey.Shared;
-using System;
 
 namespace KitKey.Tests.Unit
 {

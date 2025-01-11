@@ -98,8 +98,6 @@ namespace NTDLS.KitKey.Server
 
                 var storeMetas = mqd.Where(q => q.Value.Configuration.PersistenceScheme == KkPersistenceScheme.Persistent)
                     .Select(q => new KeyStoreMetadata(q.Value.Configuration, q.Value.Statistics)).ToList();
-
-                //Serialize using System.Text.Json as opposed to Newtonsoft for efficiency.
                 var persistedStoresJson = JsonSerializer.Serialize(storeMetas, _indentedJsonOptions);
                 File.WriteAllText(Path.Join(_configuration.PersistencePath, "stores.json"), persistedStoresJson);
             }
@@ -187,7 +185,6 @@ namespace NTDLS.KitKey.Server
                     OnLog?.Invoke(this, KkErrorLevel.Information, "Loading persistent key-stores.");
 
                     var keyStoresJson = File.ReadAllText(persistedStoresFile);
-                    //Deserialize using System.Text.Json as opposed to Newtonsoft for efficiency.
                     var storesMeta = JsonSerializer.Deserialize<List<KeyStoreMetadata>>(keyStoresJson);
 
                     if (storesMeta != null)

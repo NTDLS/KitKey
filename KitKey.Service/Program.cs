@@ -15,6 +15,8 @@ namespace KitKey.Service
             // Configure Serilog using the configuration
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
+                .WriteTo.Console()
+                .MinimumLevel.Verbose()
                 .CreateLogger();
 
             HostFactory.Run(x =>
