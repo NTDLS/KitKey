@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt32
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Dictionary<Guid, string>? List { get; set; }
+        public List<KkListItem<Int32>>? List { get; set; }
 
         public KkListOfInt32GetAllReply EnsureSuccessful()
         {

@@ -427,19 +427,19 @@ namespace NTDLS.KitKey.Server
         /// <summary>
         /// Gets a list from the key-store by its key.
         /// </summary>
-        public Dictionary<Guid, T>? GetList<T>(string storeKey, string valueKey)
+        public List<KkListItem<T>>? GetList<T>(string storeKey, string valueKey)
             => GetKeyStore(storeKey).GetList<T>(valueKey);
 
         /// <summary>
         /// Gets the item at the bottom of the list in the key-store.
         /// </summary>
-        public KeyValuePair<Guid, T>? GetFirst<T>(string storeKey, string valueKey)
+        public KkListItem<T>? GetFirst<T>(string storeKey, string valueKey)
             => GetKeyStore(storeKey).GetFirst<T>(valueKey);
 
         /// <summary>
         /// Gets the item at the top of the list in the key-store.
         /// </summary>
-        public KeyValuePair<Guid, T>? GetLast<T>(string storeKey, string valueKey)
+        public KkListItem<T>? GetLast<T>(string storeKey, string valueKey)
             => GetKeyStore(storeKey).GetLast<T>(valueKey);
 
         #endregion

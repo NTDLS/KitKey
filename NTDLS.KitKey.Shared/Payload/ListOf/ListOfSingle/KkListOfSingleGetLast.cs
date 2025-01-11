@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfSingle
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public KeyValuePair<Guid, float>? Value { get; set; }
+        public KkListItem<float>? Value { get; set; }
 
         public KkListOfSingleGetLastReply EnsureSuccessful()
         {

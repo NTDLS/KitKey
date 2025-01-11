@@ -1,44 +1,54 @@
+using Newtonsoft.Json.Linq;
 using NTDLS.KitKey.Shared;
 
 namespace KitKey.Tests.Unit
 {
-    public class SetAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
+    public class ListPushAndGet(ServerFixture fixture) : IClassFixture<ServerFixture>
     {
         [Fact(DisplayName = "Test small number of String (Set and Get).")]
-        public void TestPersistentString()
+        public void TestPersistentListOfStrings()
         {
             var client = ClientFactory.CreateAndConnect();
 
-            string keyStoreName = "Test.String";
+            string keyStoreName = "Test.ListOfStrings";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
                 CacheExpiration = TimeSpan.FromMinutes(1),
                 PersistenceScheme = KkPersistenceScheme.Persistent,
-                ValueType = KkValueType.String
+                ValueType = KkValueType.ListOfStrings
             });
 
             //Set ang get values.
             for (int i = 0; i < 100; i++)
             {
-                client.Set(keyStoreName, $"Key{i}", $"Value{i}");
-                var value = client.Get<string>(keyStoreName, $"Key{i}");
-                Assert.Equal($"Value{i}", value);
+                client.PushLast(keyStoreName, "TestValueList", $"Value{i}");
+                var values = client.GetList<string>(keyStoreName, "TestValueList");
+
+                Assert.NotNull(values);
+                Assert.Equal(i + 1, values.Count);
+
+                for (int t = 0; t < values.Count; t++)
+                {
+                    Assert.Equal($"Value{t}", values[t].Value);
+                }
             }
 
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
-            //Re-get all the values.
-            for (int i = 0; i < 100; i++)
+            var postFlushValues = client.GetList<string>(keyStoreName, "TestValueList");
+            Assert.NotNull(postFlushValues);
+
+            for (int t = 0; t < postFlushValues.Count; t++)
             {
-                var value = client.Get<string>(keyStoreName, $"Key{i}");
-                Assert.Equal($"Value{i}", value);
+                Assert.Equal($"Value{t}", postFlushValues[t].Value);
             }
 
             client.Disconnect();
         }
 
+        /*
         [Fact(DisplayName = "Test small number of Int32 (Set and Get).")]
         public void TestPersistentInt32()
         {
@@ -257,5 +267,6 @@ namespace KitKey.Tests.Unit
 
             client.Disconnect();
         }
+        */
     }
 }

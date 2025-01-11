@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Dictionary<Guid, string>? List { get; set; }
+        public List<KkListItem<Int64>>? List { get; set; }
 
         public KkListOfInt64GetAllReply EnsureSuccessful()
         {

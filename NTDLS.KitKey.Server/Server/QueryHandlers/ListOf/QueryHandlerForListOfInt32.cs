@@ -40,7 +40,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
             {
                 return new KkListOfInt32GetAllReply(true)
                 {
-                    List = _keyStoreServer.GetList<string>(param.StoreKey, param.ListKey)
+                    List = _keyStoreServer.GetList<Int32>(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)

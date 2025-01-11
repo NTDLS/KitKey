@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfSingle
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Dictionary<Guid, string>? List { get; set; }
+        public List<KkListItem<Single>>? List { get; set; }
 
         public KkListOfSingleGetAllReply EnsureSuccessful()
         {

@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDouble
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public KeyValuePair<Guid, double>? Value { get; set; }
+        public KkListItem<double>? Value { get; set; }
 
         public KkListOfDoubleGetLastReply EnsureSuccessful()
         {

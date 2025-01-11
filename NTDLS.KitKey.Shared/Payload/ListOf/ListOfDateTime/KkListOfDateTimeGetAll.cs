@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public Dictionary<Guid, DateTime>? List { get; set; }
+        public List<KkListItem<DateTime>>? List { get; set; }
 
         public KkListOfDateTimeGetAllReply EnsureSuccessful()
         {

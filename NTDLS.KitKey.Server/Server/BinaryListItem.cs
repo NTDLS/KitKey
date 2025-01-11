@@ -1,13 +1,13 @@
 ﻿using ProtoBuf;
 
-namespace NTDLS.KitKey.Server.Server
+namespace NTDLS.KitKey.Shared
 {
     /// <summary>
     /// Internal envelope for a key-store list item.
     /// </summary>
 
     [ProtoContract]
-    internal class KkListItem
+    internal class BinaryListItem
     {
         [ProtoMember(1)]
         public Guid Id { get; set; }
@@ -15,12 +15,12 @@ namespace NTDLS.KitKey.Server.Server
         [ProtoMember(2)]
         public byte[] Bytes { get; set; }
 
-        public KkListItem()
+        public BinaryListItem()
         {
             Bytes = new byte[0];
         }
 
-        public KkListItem(byte[] value)
+        public BinaryListItem(byte[] value)
         {
             Id = Guid.NewGuid();
             Bytes = value;

@@ -263,7 +263,7 @@ namespace NTDLS.KitKey.Server.Server
             _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -280,7 +280,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -290,7 +290,7 @@ namespace NTDLS.KitKey.Server.Server
                 }
 
                 //If the list does not exist. We need to create it.
-                list ??= new List<KkListItem>();
+                list ??= new List<BinaryListItem>();
 
                 //Remove the item from the list.
                 list.RemoveAll(o => o.Id == listItemKey);
@@ -320,7 +320,7 @@ namespace NTDLS.KitKey.Server.Server
             _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -337,7 +337,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -347,11 +347,11 @@ namespace NTDLS.KitKey.Server.Server
                 }
 
                 //If the list does not exist. We need to create it.
-                list ??= new List<KkListItem>();
+                list ??= new List<BinaryListItem>();
 
                 //Add item to the list.
                 var valueBytes = GenericToBytes<T>(valueToAdd, true);
-                list.Add(new KkListItem(valueBytes));
+                list.Add(new BinaryListItem(valueBytes));
 
                 //Persist the serialized list.
                 var valueListBytes = BinarySerialization.ToBytes(list);
@@ -378,7 +378,7 @@ namespace NTDLS.KitKey.Server.Server
             _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -395,7 +395,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -405,11 +405,11 @@ namespace NTDLS.KitKey.Server.Server
                 }
 
                 //If the list does not exist. We need to create it.
-                list ??= new List<KkListItem>();
+                list ??= new List<BinaryListItem>();
 
                 //Add item to the list.
                 var valueBytes = GenericToBytes<T>(valueToAdd, true);
-                list.Insert(0, new KkListItem(valueBytes));
+                list.Insert(0, new BinaryListItem(valueBytes));
 
                 //Persist the serialized list.
                 var valueListBytes = BinarySerialization.ToBytes(list);
@@ -420,7 +420,7 @@ namespace NTDLS.KitKey.Server.Server
             });
         }
 
-        public Dictionary<Guid, T>? GetList<T>(string listKey)
+        public List<KkListItem<T>>? GetList<T>(string listKey)
         {
             Statistics.SetCount++;
 
@@ -429,7 +429,7 @@ namespace NTDLS.KitKey.Server.Server
             return _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -447,7 +447,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -455,11 +455,12 @@ namespace NTDLS.KitKey.Server.Server
                         }
                     });
                 }
-                return list?.ToDictionary(o => o.Id, o => GenericFromBytes<T>(o.Bytes, true));
+
+                return list?.Select(o => new KkListItem<T>(o.Id, GenericFromBytes<T>(o.Bytes, true))).ToList();
             });
         }
 
-        public KeyValuePair<Guid, T>? GetFirst<T>(string listKey)
+        public KkListItem<T>? GetFirst<T>(string listKey)
         {
             Statistics.SetCount++;
 
@@ -468,7 +469,7 @@ namespace NTDLS.KitKey.Server.Server
             return _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -486,7 +487,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -498,14 +499,14 @@ namespace NTDLS.KitKey.Server.Server
                 var firstListItem = list?.FirstOrDefault();
                 if (firstListItem != null)
                 {
-                    return new KeyValuePair<Guid, T>(firstListItem.Id, GenericFromBytes<T>(firstListItem.Bytes, true));
+                    return new KkListItem<T>(firstListItem.Id, GenericFromBytes<T>(firstListItem.Bytes, true));
                 }
 
                 return default;
             });
         }
 
-        public KeyValuePair<Guid, T>? GetLast<T>(string listKey)
+        public KkListItem<T>? GetLast<T>(string listKey)
         {
             Statistics.SetCount++;
 
@@ -514,7 +515,7 @@ namespace NTDLS.KitKey.Server.Server
             return _atomicKeyOperation.Execute(listKey, () =>
             {
                 //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<KkListItem>? list) && list != null)
+                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
                 {
                     Statistics.CacheHits++;
                 }
@@ -532,7 +533,7 @@ namespace NTDLS.KitKey.Server.Server
                         if (valueListBytes != null)
                         {
                             Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<KkListItem>>(valueListBytes);
+                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
                         }
                         else
                         {
@@ -544,7 +545,7 @@ namespace NTDLS.KitKey.Server.Server
                 var lastListItem = list?.LastOrDefault();
                 if (lastListItem != null)
                 {
-                    return new KeyValuePair<Guid, T>(lastListItem.Id, GenericFromBytes<T>(lastListItem.Bytes, true));
+                    return new KkListItem<T>(lastListItem.Id, GenericFromBytes<T>(lastListItem.Bytes, true));
                 }
 
                 return default;

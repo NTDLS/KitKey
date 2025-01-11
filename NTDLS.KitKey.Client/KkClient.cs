@@ -371,24 +371,24 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the full list from the given key-value store.
         /// </summary>
-        public Dictionary<Guid, T>? GetList<T>(string storeKey, string listKey)
+        public List<KkListItem<T>>? GetList<T>(string storeKey, string listKey)
         {
             var genericType = typeof(T);
 
             if (genericType == typeof(string))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfStringGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfStringGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Guid))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfGuidGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfGuidGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Int32))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt32GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfInt32GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Int64))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfInt64GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfInt64GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Single))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfSingleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfSingleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(Double))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfDoubleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfDoubleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
             else if (genericType == typeof(DateTime))
-                return (Dictionary<Guid, T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfDateTimeGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
 
             throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
@@ -396,7 +396,7 @@ namespace NTDLS.KitKey.Client
         /// <summary>
         /// Gets the full list from the given key-value store, returns true if the key was found.
         /// </summary>
-        public bool TryGetList<T>(string storeKey, string valueKey, [NotNullWhen(true)] out Dictionary<Guid, T>? outValue)
+        public bool TryGetList<T>(string storeKey, string valueKey, [NotNullWhen(true)] out List<KkListItem<T>>? outValue)
         {
             outValue = GetList<T>(storeKey, valueKey);
             return outValue != null;

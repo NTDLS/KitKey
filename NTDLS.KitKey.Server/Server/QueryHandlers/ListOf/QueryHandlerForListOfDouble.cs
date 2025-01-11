@@ -40,7 +40,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
             {
                 return new KkListOfDoubleGetAllReply(true)
                 {
-                    List = _keyStoreServer.GetList<string>(param.StoreKey, param.ListKey)
+                    List = _keyStoreServer.GetList<double>(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)

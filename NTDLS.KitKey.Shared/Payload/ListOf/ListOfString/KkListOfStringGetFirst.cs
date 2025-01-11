@@ -14,7 +14,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfString
     {
         public bool IsSuccess { get; set; }
         public string? ErrorMessage { get; set; }
-        public KeyValuePair<Guid, string>? Value { get; set; }
+        public KkListItem<string>? Value { get; set; }
 
         public KkListOfStringGetFirstReply EnsureSuccessful()
         {

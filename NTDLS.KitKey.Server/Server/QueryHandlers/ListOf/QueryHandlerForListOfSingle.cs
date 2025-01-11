@@ -40,7 +40,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
             {
                 return new KkListOfSingleGetAllReply(true)
                 {
-                    List = _keyStoreServer.GetList<string>(param.StoreKey, param.ListKey)
+                    List = _keyStoreServer.GetList<Single>(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
             {
                 return new KkListOfSingleGetLastReply(true)
                 {
-                    Value = _keyStoreServer.GetLast<float>(param.StoreKey, param.ListKey)
+                    Value = _keyStoreServer.GetLast<Single>(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)
@@ -70,7 +70,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers.ListOf
             {
                 return new KkListOfSingleGetFirstReply(true)
                 {
-                    Value = _keyStoreServer.GetFirst<float>(param.StoreKey, param.ListKey)
+                    Value = _keyStoreServer.GetFirst<Single>(param.StoreKey, param.ListKey)
                 };
             }
             catch (Exception ex)
