@@ -1,4 +1,6 @@
+using Newtonsoft.Json.Linq;
 using NTDLS.KitKey.Shared;
+using System;
 
 namespace KitKey.Tests.Unit
 {
@@ -9,7 +11,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings";
+            var keyStoreName = "Test.ListOfStrings.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -52,7 +54,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s";
+            var keyStoreName = "Test.ListOfInt32s.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -95,7 +97,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s";
+            var keyStoreName = "Test.ListOfInt64s.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -138,7 +140,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles";
+            var keyStoreName = "Test.ListOfSingles.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -168,20 +170,18 @@ namespace KitKey.Tests.Unit
                 pushValue += 0.5f;
             }
 
-            /*
             //Flush the cache so we can test persistence.
             client.FlushCache(keyStoreName);
 
             var postFlushValues = client.GetList<Single>(keyStoreName, "TestValueList");
             Assert.NotNull(postFlushValues);
 
-            float pfTestValue = 0;
+            float pfTestValue = (postFlushValues.Count - 1) * 0.5f;
             for (int pfIndex = 0; pfIndex < postFlushValues.Count; pfIndex++)
             {
                 Assert.Equal(pfTestValue, postFlushValues[pfIndex].Value);
-                pfTestValue += 0.5f;
+                pfTestValue -= 0.5f;
             }
-            */
 
             client.Disconnect();
         }
@@ -191,7 +191,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles";
+            var keyStoreName = "Test.ListOfDoubles.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -211,11 +211,11 @@ namespace KitKey.Tests.Unit
                 Assert.NotNull(values);
                 Assert.Equal(i + 1, values.Count);
 
-                double testValue = 0;
-                for (int index = 0; index < values.Count; index++)
+                double testValue = (values.Count - 1) * 0.5f;
+                for (long t = values.Count; t > 0; t--)
                 {
-                    Assert.Equal(testValue, values[index].Value);
-                    testValue += 0.5;
+                    Assert.Equal(testValue, values[(int)(values.Count - t)].Value);
+                    testValue -= 0.5f;
                 }
 
                 pushValue += 0.5;
@@ -227,11 +227,11 @@ namespace KitKey.Tests.Unit
             var postFlushValues = client.GetList<Double>(keyStoreName, "TestValueList");
             Assert.NotNull(postFlushValues);
 
-            double pfTestValue = 0;
+            double pfTestValue = (postFlushValues.Count - 1) * 0.5f;
             for (int pfIndex = 0; pfIndex < postFlushValues.Count; pfIndex++)
             {
                 Assert.Equal(pfTestValue, postFlushValues[pfIndex].Value);
-                pfTestValue += 0.5f;
+                pfTestValue -= 0.5f;
             }
 
             client.Disconnect();
@@ -242,7 +242,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes";
+            var keyStoreName = "Test.ListOfDateTimes.First";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -264,10 +264,11 @@ namespace KitKey.Tests.Unit
                 Assert.NotNull(values);
                 Assert.Equal(i + 1, values.Count);
 
-                for (int index = 0; index < values.Count; index++)
+                var testValue = startDateTime + TimeSpan.FromDays(values.Count - 1);
+                for (int t = values.Count; t > 0; t--)
                 {
-                    var testValue = startDateTime + TimeSpan.FromDays(index);
-                    Assert.Equal(testValue, values[index].Value);
+                    Assert.Equal(testValue, values[(values.Count - t)].Value);
+                    testValue -= TimeSpan.FromDays(1);
                 }
             }
 
@@ -277,10 +278,11 @@ namespace KitKey.Tests.Unit
             var postFlushValues = client.GetList<DateTime>(keyStoreName, "TestValueList");
             Assert.NotNull(postFlushValues);
 
-            for (int pfIndex = 0; pfIndex < postFlushValues.Count; pfIndex++)
+            var pfTestValue = startDateTime + TimeSpan.FromDays(postFlushValues.Count - 1);
+            for (int t = postFlushValues.Count; t > 0; t--)
             {
-                var testValue = startDateTime + TimeSpan.FromDays(pfIndex);
-                Assert.Equal(testValue, postFlushValues[pfIndex].Value);
+                Assert.Equal(pfTestValue, postFlushValues[(postFlushValues.Count - t)].Value);
+                pfTestValue -= TimeSpan.FromDays(1);
             }
 
             client.Disconnect();
@@ -292,7 +294,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids";
+            var keyStoreName = "Test.ListOfGuids.First";
 
             var testLookup = new Dictionary<int, Guid>();
 
@@ -315,9 +317,9 @@ namespace KitKey.Tests.Unit
                 Assert.NotNull(values);
                 Assert.Equal(i + 1, values.Count);
 
-                for (int t = 0; t < values.Count; t++)
+                for (int t = values.Count; t > 0; t--)
                 {
-                    Assert.Equal(testLookup[i], values[i].Value);
+                    Assert.Equal(testLookup[t - 1], values[(values.Count - t)].Value);
                 }
             }
 
@@ -327,9 +329,9 @@ namespace KitKey.Tests.Unit
             var postFlushValues = client.GetList<Guid>(keyStoreName, "TestValueList");
             Assert.NotNull(postFlushValues);
 
-            for (int t = 0; t < postFlushValues.Count; t++)
+            for (int t = postFlushValues.Count; t > 0; t--)
             {
-                Assert.Equal(testLookup[t], postFlushValues[t].Value);
+                Assert.Equal(testLookup[t - 1], postFlushValues[postFlushValues.Count - t].Value);
             }
 
             client.Disconnect();

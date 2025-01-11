@@ -9,7 +9,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfStrings";
+            var keyStoreName = "Test.ListOfStrings.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -52,7 +52,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt32s";
+            var keyStoreName = "Test.ListOfInt32s.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -95,7 +95,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfInt64s";
+            var keyStoreName = "Test.ListOfInt64s.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -138,7 +138,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfSingles";
+            var keyStoreName = "Test.ListOfSingles.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -189,7 +189,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDoubles";
+            var keyStoreName = "Test.ListOfDoubles.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -240,7 +240,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfDateTimes";
+            var keyStoreName = "Test.ListOfDateTimes.Last";
 
             client.StoreCreate(new KkStoreConfiguration(keyStoreName)
             {
@@ -290,7 +290,7 @@ namespace KitKey.Tests.Unit
         {
             var client = ClientFactory.CreateAndConnect();
 
-            var keyStoreName = "Test.ListOfGuids";
+            var keyStoreName = "Test.ListOfGuids.Last";
 
             var testLookup = new Dictionary<int, Guid>();
 

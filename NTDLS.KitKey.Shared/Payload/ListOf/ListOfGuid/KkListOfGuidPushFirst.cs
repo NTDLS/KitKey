@@ -7,7 +7,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
     /// Prepends a value to a Guid list key-store.
     /// </summary>
     public class KkListOfGuidPushFirst(string storeKey, string listKey, Guid listValue)
-        : IRmQuery<KkListOfStringPushFirstReply>
+        : IRmQuery<KkListOfGuidPushFirstReply>
     {
         public string StoreKey { get; set; } = storeKey;
         public string ListKey { get; set; } = listKey;
