@@ -77,7 +77,24 @@ namespace NTDLS.KitKey.Server
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
+            _rmServer.AddHandler(new QueryHandlerForRemoves(this));
+            _rmServer.AddHandler(new QueryHandlerForStores(this));
+
+            _rmServer.AddHandler(new QueryHandlerForSingleOfDateTime(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfDouble(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfGuid(this));
             _rmServer.AddHandler(new QueryHandlerForSingleOfInt32(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfInt64(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfSingle(this));
+            _rmServer.AddHandler(new QueryHandlerForSingleOfString(this));
+
+            _rmServer.AddHandler(new QueryHandlerForListOfDateTime(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfDouble(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfGuid(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfInt32(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfInt64(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfSingle(this));
+            _rmServer.AddHandler(new QueryHandlerForListOfString(this));
         }
 
         #region Management.
