@@ -6,7 +6,7 @@ Well, we wanted to keep it simple and really target the .net environment... so w
 You can run the KitKey server either from the nuget package or by downloading the dedicated [service installer](https://github.com/NTDLS/KitKey/releases)
 
 KitKey key-value stores are "strongly typed", it supports stores for int32, int64, float, double, date-time and guid.
-In addition to single value key-value stores, KeyKey also supports lists of values for a single key, where you can push-first, push-last, get the entire list, get the first or last item and of course remove items from the list.
+In addition to single value key-value stores, KitKey also supports lists of values for a single key, where you can push-first, push-last, get the entire list, get the first or last item and of course remove items from the list.
 
 ## Testing Status
 [![Regression Tests](https://github.com/NTDLS/KitKey/actions/workflows/Regression%20Tests.yaml/badge.svg)](https://github.com/NTDLS/KitKey/actions/workflows/Regression%20Tests.yaml)
