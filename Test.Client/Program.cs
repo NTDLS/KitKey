@@ -39,7 +39,7 @@ namespace Test.Client
                 var randomKey1 = Guid.NewGuid().ToString().Substring(0, 2);
                 var randomKey2 = Guid.NewGuid().ToString().Substring(0, 2);
 
-                var list = _client.GetList<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
+                var list = _client.GetList<string>("MyPersistentListStore.Strings", $"MyKey:{randomKey1}");
 
                 _client.PushLast("MyPersistentListStore.Strings", $"MyKey:{randomKey2}", $"Item #{i:n0}");
                 _client.PushLast("MyPersistentListStore.Int32s", $"MyKey:{randomKey2}", i);
