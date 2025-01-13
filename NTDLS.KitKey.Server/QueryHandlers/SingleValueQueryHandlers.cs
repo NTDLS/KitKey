@@ -1,14 +1,14 @@
 ﻿using NTDLS.KitKey.Shared.Payload.SingleOf;
 using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Server.Server.QueryHandlers
+namespace NTDLS.KitKey.Server.QueryHandlers
 {
     internal class SingleValueQueryHandlers<T>(KkServer mqServer)
         : IRmMessageHandler
     {
         private readonly KkServer _keyStoreServer = mqServer;
 
-        public KkSetSingleOfReply KkSetSingleOf(RmContext context, KkSetSingleOf<T> param)
+        public KkSetSingleOfReply KkSetSingleOf(KkSetSingleOf<T> param)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkGetSingleOfReply<T> KkGetSingleOf(RmContext context, KkGetSingleOf<T> param)
+        public KkGetSingleOfReply<T> KkGetSingleOf(KkGetSingleOf<T> param)
         {
             try
             {

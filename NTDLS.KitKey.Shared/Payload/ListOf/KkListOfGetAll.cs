@@ -6,7 +6,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// API payload used to get all items from a list type key-value store.
     /// </summary>
     public class KkListOfGetAll<T>(string storeKey, string listKey)
-        : IRmQuery<KkListOfDateTimeGetAllReply<T>>
+        : IRmQuery<KkListOfGetAllReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -22,7 +22,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// <summary>
     /// API payload used to get all items from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimeGetAllReply<T>
+    public class KkListOfGetAllReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimeGetAllReply<T> EnsureSuccessful()
+        public KkListOfGetAllReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetAllReply(Exception exception)
+        public KkListOfGetAllReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetAllReply(bool isSuccess)
+        public KkListOfGetAllReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetAllReply()
+        public KkListOfGetAllReply()
         {
         }
     }

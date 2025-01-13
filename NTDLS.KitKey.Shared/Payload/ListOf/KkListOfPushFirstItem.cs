@@ -3,10 +3,10 @@
 namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to prepend an item to a list type key-value store.
     /// </summary>
-    public class KkListOfPushLast<T>(string storeKey, string listKey, T listValue)
-        : IRmQuery<KkListOfPushLastReply>
+    public class KkListOfPushFirstItem<T>(string storeKey, string listKey, KkListItem<T> listItem)
+        : IRmQuery<KkListOfPushFirstItemReply>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -19,15 +19,15 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         public string ListKey { get; set; } = listKey;
 
         /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
+        /// The item add to the list inside the key-value store for the given ListKey.
         /// </summary>
-        public T ListValue { get; set; } = listValue;
+        public KkListItem<T> ListItem { get; set; } = listItem;
     }
 
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to prepend a value to a list type key-value store.
     /// </summary>
-    public class KkListOfPushLastReply
+    public class KkListOfPushFirstItemReply
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfPushLastReply EnsureSuccessful()
+        public KkListOfPushFirstItemReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfPushLastReply(Exception exception)
+        public KkListOfPushFirstItemReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfPushLastReply(bool isSuccess)
+        public KkListOfPushFirstItemReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfPushLastReply()
+        public KkListOfPushFirstItemReply()
         {
         }
     }

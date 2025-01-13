@@ -1,6 +1,6 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.Deletes
+namespace NTDLS.KitKey.Shared.Payload.Remove
 {
     /// <summary>
     /// API payload used to remove a key from a key-store of any type.

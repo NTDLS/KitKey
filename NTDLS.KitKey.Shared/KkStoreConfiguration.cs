@@ -9,6 +9,7 @@ namespace NTDLS.KitKey.Shared
     public class KkStoreConfiguration
     {
         private string? _storeName;
+
         /// <summary>
         /// The name of the key-store.
         /// </summary>

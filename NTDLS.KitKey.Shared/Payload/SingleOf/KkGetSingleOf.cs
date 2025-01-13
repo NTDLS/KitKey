@@ -1,18 +1,4 @@
-﻿
-/* Unmerged change from project 'NTDLS.KitKey.Shared (net8.0)'
-Before:
-using NTDLS.ReliableMessaging;
-After:
-using NTDLS;
-using NTDLS.KitKey;
-using NTDLS.KitKey.Shared;
-using NTDLS.KitKey.Shared.Payload;
-using NTDLS.KitKey.Shared.Payload.SingleOf;
-using NTDLS.KitKey.Shared.Payload.SingleOf;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfDateTime;
-using NTDLS.ReliableMessaging;
-*/
-using NTDLS.ReliableMessaging;
+﻿using NTDLS.ReliableMessaging;
 
 namespace NTDLS.KitKey.Shared.Payload.SingleOf
 {

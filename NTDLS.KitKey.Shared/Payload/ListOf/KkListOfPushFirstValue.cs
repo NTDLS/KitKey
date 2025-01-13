@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.SingleOf
+namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
-    /// API payload used to insert or update a single value in a key-store.
+    /// API payload used to prepend a value to a list type key-value store.
     /// </summary>
-    public class KkSetSingleOf<T>(string storeKey, string valueKey, T value)
-        : IRmQuery<KkSetSingleOfReply>
+    public class KkListOfPushFirstValue<T>(string storeKey, string listKey, T listValue)
+        : IRmQuery<KkListOfPushFirstValueReply>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -16,18 +16,18 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf
         /// <summary>
         /// The key (or identifier) of the value in the key-value store.
         /// </summary>
-        public string ValueKey { get; set; } = valueKey;
+        public string ListKey { get; set; } = listKey;
 
         /// <summary>
-        /// The value to insert or update to the key-value store for the given ValueKey.
+        /// The value add to the list inside the key-value store for the given ListKey.
         /// </summary>
-        public T Value { get; set; } = value;
+        public T ListValue { get; set; } = listValue;
     }
 
     /// <summary>
-    /// API payload used to insert or update a single value in a key-store.
+    /// API payload used to prepend a value to a list type key-value store.
     /// </summary>
-    public class KkSetSingleOfReply
+    public class KkListOfPushFirstValueReply
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkSetSingleOfReply EnsureSuccessful()
+        public KkListOfPushFirstValueReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkSetSingleOfReply(Exception exception)
+        public KkListOfPushFirstValueReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkSetSingleOfReply(bool isSuccess)
+        public KkListOfPushFirstValueReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.SingleOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkSetSingleOfReply()
+        public KkListOfPushFirstValueReply()
         {
         }
     }

@@ -6,7 +6,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// API payload used to get the first item from a list type key-value store.
     /// </summary>
     public class KkListOfGetFirst<T>(string storeKey, string listKey)
-        : IRmQuery<KkListOfDateTimeGetFirstReply<T>>
+        : IRmQuery<KkListOfGetFirstReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -22,7 +22,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// <summary>
     /// API payload used to get the first item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimeGetFirstReply<T>
+    public class KkListOfGetFirstReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimeGetFirstReply<T> EnsureSuccessful()
+        public KkListOfGetFirstReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetFirstReply(Exception exception)
+        public KkListOfGetFirstReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetFirstReply(bool isSuccess)
+        public KkListOfGetFirstReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetFirstReply()
+        public KkListOfGetFirstReply()
         {
         }
     }

@@ -13,16 +13,15 @@ namespace NTDLS.KitKey.Shared
         public Guid Id { get; set; }
 
         [ProtoMember(2)]
-        public byte[] Bytes { get; set; }
+        public byte[]? Bytes { get; set; }
 
         public BinaryListItem()
         {
-            Bytes = new byte[0];
         }
 
-        public BinaryListItem(byte[] value)
+        public BinaryListItem(Guid id, byte[] value)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Bytes = value;
         }
     }

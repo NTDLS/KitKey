@@ -1,14 +1,14 @@
 ﻿using NTDLS.KitKey.Shared.Payload.Stores;
 using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Server.Server.QueryHandlers
+namespace NTDLS.KitKey.Server.QueryHandlers
 {
-    internal class QueryHandlerForStores(KkServer mqServer)
+    internal class StoresQueryHandler(KkServer mqServer)
         : IRmMessageHandler
     {
         private readonly KkServer _keyStoreServer = mqServer;
 
-        public KkStoreCreateReply KkStoreCreate(RmContext context, KkStoreCreate param)
+        public KkStoreCreateReply KkStoreCreate(KkStoreCreate param)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkStoreDeleteReply KkStoreDelete(RmContext context, KkStoreDelete param)
+        public KkStoreDeleteReply KkStoreDelete(KkStoreDelete param)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkStorePurgeReply KkStorePurge(RmContext context, KkStorePurge param)
+        public KkStorePurgeReply KkStorePurge(KkStorePurge param)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkStoreFlushAllCachesReply KkStoreFlushAllCaches(RmContext context, KkStoreFlushAllCaches param)
+        public KkStoreFlushAllCachesReply KkStoreFlushAllCaches(KkStoreFlushAllCaches param)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkStoreFlushCacheReply KkStoreFlushCache(RmContext context, KkStoreFlushCache param)
+        public KkStoreFlushCacheReply KkStoreFlushCache(KkStoreFlushCache param)
         {
             try
             {

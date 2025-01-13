@@ -1,6 +1,6 @@
 ﻿using NTDLS.KitKey.Shared;
 
-namespace NTDLS.KitKey.Server.Management
+namespace NTDLS.KitKey.Server
 {
     /// <summary>
     /// Key-store client configuration parameters.

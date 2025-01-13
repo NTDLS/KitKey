@@ -1,5 +1,5 @@
 ﻿using NTDLS.KitKey.Shared;
-using NTDLS.KitKey.Shared.Payload.Deletes;
+using NTDLS.KitKey.Shared.Payload.Remove;
 using NTDLS.KitKey.Shared.Payload.ListOf;
 using NTDLS.KitKey.Shared.Payload.SingleOf;
 using NTDLS.KitKey.Shared.Payload.Stores;
@@ -281,7 +281,20 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushLast<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushLastValue<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+        }
+
+        /// <summary>
+        /// Appends an item to the list in the given key-value store.
+        /// </summary>
+        public void PushLast<T>(string storeKey, string listKey, KkListItem<T> item)
+        {
+            if (item.Value == null)
+            {
+                throw new Exception("Key-value stores do not allow null values.");
+            }
+
+            _rmClient.Query(new KkListOfPushFirstItem<T>(storeKey, listKey, item)).Result.EnsureSuccessful();
         }
 
         /// <summary>
@@ -294,7 +307,20 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushFirst<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushFirstValue<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+        }
+
+        /// <summary>
+        /// Prepends an item to the list in the given key-value store.
+        /// </summary>
+        public void PushFirst<T>(string storeKey, string listKey, KkListItem<T> item)
+        {
+            if (item.Value == null)
+            {
+                throw new Exception("Key-value stores do not allow null values.");
+            }
+
+            _rmClient.Query(new KkListOfPushLastItem<T>(storeKey, listKey, item)).Result.EnsureSuccessful();
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// API payload used to get the last item from a list type key-value store.
     /// </summary>
     public class KkListOfGetLast<T>(string storeKey, string listKey)
-        : IRmQuery<KkListOfDateTimeGetLastReply<T>>
+        : IRmQuery<KkListOfGetLastReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -22,7 +22,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
     /// <summary>
     /// API payload used to get the last item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimeGetLastReply<T>
+    public class KkListOfGetLastReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimeGetLastReply<T> EnsureSuccessful()
+        public KkListOfGetLastReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetLastReply(Exception exception)
+        public KkListOfGetLastReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetLastReply(bool isSuccess)
+        public KkListOfGetLastReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimeGetLastReply()
+        public KkListOfGetLastReply()
         {
         }
     }

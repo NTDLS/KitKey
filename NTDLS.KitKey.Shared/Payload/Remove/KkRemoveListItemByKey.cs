@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf
+namespace NTDLS.KitKey.Shared.Payload.Remove
 {
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to remove a list value from a list-of-values key-store by its id.
     /// </summary>
-    public class KkListOfPushFirst<T>(string storeKey, string listKey, T listValue)
-        : IRmQuery<KkListOfDateTimePushFirstReply>
+    public class KkRemoveListItemByKey(string storeKey, string listKey, Guid listItemKey)
+        : IRmQuery<KkRemoveListItemByKeyReply>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -19,15 +19,15 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         public string ListKey { get; set; } = listKey;
 
         /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
+        /// The key (or identifier) of the list item value in the key-value store list.
         /// </summary>
-        public T ListValue { get; set; } = listValue;
+        public Guid ListItemKey { get; set; } = listItemKey;
     }
 
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to remove a list value from a list-of-values key-store by its id.
     /// </summary>
-    public class KkListOfDateTimePushFirstReply
+    public class KkRemoveListItemByKeyReply
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimePushFirstReply EnsureSuccessful()
+        public KkRemoveListItemByKeyReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply(Exception exception)
+        public KkRemoveListItemByKeyReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply(bool isSuccess)
+        public KkRemoveListItemByKeyReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply()
+        public KkRemoveListItemByKeyReply()
         {
         }
     }

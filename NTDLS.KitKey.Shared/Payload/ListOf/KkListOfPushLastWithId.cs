@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.Deletes
+namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
-    /// API payload used to remove a list value from a list-of-values key-store by its id.
+    /// API payload used to append an item to a list type key-value store.
     /// </summary>
-    public class KkRemoveListItemByKey(string storeKey, string listKey, Guid listItemKey)
-        : IRmQuery<KkRemoveListItemByKeyReply>
+    public class KkListOfPushLastItem<T>(string storeKey, string listKey, KkListItem<T> listItem)
+        : IRmQuery<KkListOfPushLastItemReply>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -19,15 +19,15 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
         public string ListKey { get; set; } = listKey;
 
         /// <summary>
-        /// The key (or identifier) of the list item value in the key-value store list.
+        /// The item add to the list inside the key-value store for the given ListKey.
         /// </summary>
-        public Guid ListItemKey { get; set; } = listItemKey;
+        public KkListItem<T> ListItem { get; set; } = listItem;
     }
 
     /// <summary>
-    /// API payload used to remove a list value from a list-of-values key-store by its id.
+    /// API payload used to append a value to a list type key-value store.
     /// </summary>
-    public class KkRemoveListItemByKeyReply
+    public class KkListOfPushLastItemReply
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +43,7 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkRemoveListItemByKeyReply EnsureSuccessful()
+        public KkListOfPushLastItemReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkRemoveListItemByKeyReply(Exception exception)
+        public KkListOfPushLastItemReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkRemoveListItemByKeyReply(bool isSuccess)
+        public KkListOfPushLastItemReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.Deletes
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkRemoveListItemByKeyReply()
+        public KkListOfPushLastItemReply()
         {
         }
     }

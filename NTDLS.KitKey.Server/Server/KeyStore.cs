@@ -19,6 +19,12 @@ namespace NTDLS.KitKey.Server.Server
         internal KkStoreConfiguration Configuration { get; private set; }
         internal KeyStoreStatistics Statistics { get; set; } = new();
 
+        private enum PushPosition
+        {
+            First,
+            Last
+        }
+
         public KeyStore(KkServer keyServer, KkStoreConfiguration storeConfiguration)
         {
             _keyServer = keyServer;
@@ -175,9 +181,11 @@ namespace NTDLS.KitKey.Server.Server
             throw new Exception($"Invalid value type for key-store [{Configuration.StoreKey}], expected: [{Configuration.ValueType}], found: [{typeof(T).Name}].");
         }
 
-        private T GenericFromBytes<T>(byte[] bytes, bool isList)
+        private T GenericFromBytes<T>(byte[]? bytes, bool isList)
         {
             var typeOf = EnsureProperType<T>(isList);
+
+            bytes ??= new byte[0];
 
             if (typeOf == typeof(string))
                 return (T)(object)Encoding.UTF8.GetString(bytes);
@@ -307,8 +315,6 @@ namespace NTDLS.KitKey.Server.Server
 
         public void PushLast<T>(string listKey, T valueToAdd)
         {
-            Statistics.SetCount++;
-
             if (valueToAdd == null)
             {
                 throw new Exception("Key-value stores do not allow null values.");
@@ -316,63 +322,56 @@ namespace NTDLS.KitKey.Server.Server
 
             EnsureProperType<T>(true);
 
-            var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
+            var valueBytes = GenericToBytes<T>(valueToAdd, true);
+            var binaryItem = new BinaryListItem(Guid.NewGuid(), valueBytes);
+            Push(PushPosition.Last, listKey, binaryItem);
+        }
 
-            _atomicKeyOperation.Execute(listKey, () =>
+        public void PushLast<T>(string listKey, KkListItem<T> itemToAdd)
+        {
+            if (itemToAdd.Value == null)
             {
-                //See if we have the list in memory.
-                if (_memoryCache.TryGet(listKey, out List<BinaryListItem>? list) && list != null)
-                {
-                    Statistics.CacheHits++;
-                }
-                else
-                {
-                    Statistics.CacheMisses++;
-                }
+                throw new Exception("Key-value stores do not allow null values.");
+            }
 
-                if (list == null) //didn't get a value from cache, so let's try the database.
-                {
-                    _database?.Read(db =>
-                    {
-                        var valueListBytes = db.Get(listKeyBytes, listKeyBytes.Length);
-                        if (valueListBytes != null)
-                        {
-                            Statistics.DatabaseHits++;
-                            list = BinarySerialization.FromBytes<List<BinaryListItem>>(valueListBytes);
-                        }
-                        else
-                        {
-                            Statistics.DatabaseHits++;
-                        }
-                    });
-                }
+            EnsureProperType<T>(true);
 
-                //If the list does not exist. We need to create it.
-                list ??= new List<BinaryListItem>();
-
-                //Add item to the list.
-                var valueBytes = GenericToBytes<T>(valueToAdd, true);
-                list.Add(new BinaryListItem(valueBytes));
-
-                //Persist the serialized list.
-                var valueListBytes = BinarySerialization.ToBytes(list);
-                _database?.Write(db => db.Put(listKeyBytes, listKeyBytes.Length, valueListBytes, valueListBytes.Length));
-
-                //Cache the list.
-                _memoryCache.Upsert(listKey, list, Configuration.CacheExpiration);
-            });
+            var valueBytes = GenericToBytes<T>(itemToAdd.Value, true);
+            var binaryItem = new BinaryListItem(itemToAdd.Id, valueBytes);
+            Push(PushPosition.Last, listKey, binaryItem);
         }
 
         public void PushFirst<T>(string listKey, T valueToAdd)
         {
-            Statistics.SetCount++;
-
             if (valueToAdd == null)
             {
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
             EnsureProperType<T>(true);
+
+            var valueBytes = GenericToBytes<T>(valueToAdd, true);
+            var binaryItem = new BinaryListItem(Guid.NewGuid(), valueBytes);
+            Push(PushPosition.First, listKey, binaryItem);
+        }
+
+        public void PushFirst<T>(string listKey, KkListItem<T> itemToAdd)
+        {
+            if (itemToAdd.Value == null)
+            {
+                throw new Exception("Key-value stores do not allow null values.");
+            }
+
+            EnsureProperType<T>(true);
+
+            var valueBytes = GenericToBytes<T>(itemToAdd.Value, true);
+            var binaryItem = new BinaryListItem(itemToAdd.Id, valueBytes);
+            Push(PushPosition.First, listKey, binaryItem);
+        }
+
+        private void Push(PushPosition position, string listKey, BinaryListItem itemToAdd)
+        {
+            Statistics.SetCount++;
 
             var listKeyBytes = Encoding.UTF8.GetBytes(listKey);
 
@@ -409,8 +408,14 @@ namespace NTDLS.KitKey.Server.Server
                 list ??= new List<BinaryListItem>();
 
                 //Add item to the list.
-                var valueBytes = GenericToBytes<T>(valueToAdd, true);
-                list.Insert(0, new BinaryListItem(valueBytes));
+                if (position == PushPosition.First)
+                {
+                    list.Insert(0, itemToAdd);
+                }
+                else if (position == PushPosition.Last)
+                {
+                    list.Add(itemToAdd);
+                }
 
                 //Persist the serialized list.
                 var valueListBytes = BinarySerialization.ToBytes(list);

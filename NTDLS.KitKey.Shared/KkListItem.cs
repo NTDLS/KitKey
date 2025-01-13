@@ -17,14 +17,8 @@
         /// </summary>
         public T Value
         {
-            get
-            {
-                return _value ?? throw new Exception("List values can not be null.");
-            }
-            set
-            {
-                _value = value;
-            }
+            get => _value ?? throw new Exception("List values can not be null.");
+            set => _value = value;
         }
 
         /// <summary>

@@ -1,14 +1,14 @@
-﻿using NTDLS.KitKey.Shared.Payload.Deletes;
+﻿using NTDLS.KitKey.Shared.Payload.Remove;
 using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Server.Server.QueryHandlers
+namespace NTDLS.KitKey.Server.QueryHandlers
 {
-    internal class QueryHandlerForRemoves(KkServer mqServer)
+    internal class RemovesQueryHandler(KkServer mqServer)
         : IRmMessageHandler
     {
         private readonly KkServer _keyStoreServer = mqServer;
 
-        public KkRemoveKeyReply KkRemoveKey(RmContext context, KkRemoveKey param)
+        public KkRemoveKeyReply KkRemoveKey(KkRemoveKey param)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace NTDLS.KitKey.Server.Server.QueryHandlers
             }
         }
 
-        public KkRemoveListItemByKeyReply KkRemoveListItemByKey(RmContext context, KkRemoveListItemByKey param)
+        public KkRemoveListItemByKeyReply KkRemoveListItemByKey(KkRemoveListItemByKey param)
         {
             try
             {

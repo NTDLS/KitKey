@@ -1,6 +1,5 @@
-﻿using NTDLS.KitKey.Server.Management;
+﻿using NTDLS.KitKey.Server.QueryHandlers;
 using NTDLS.KitKey.Server.Server;
-using NTDLS.KitKey.Server.Server.QueryHandlers;
 using NTDLS.KitKey.Shared;
 using NTDLS.ReliableMessaging;
 using NTDLS.Semaphore;
@@ -49,8 +48,9 @@ namespace NTDLS.KitKey.Server
             };
 
             _rmServer = new RmServer(rmConfiguration);
-            _rmServer.AddHandler(new QueryHandlerForRemoves(this));
-            _rmServer.AddHandler(new QueryHandlerForStores(this));
+
+            _rmServer.AddHandler(new RemovesQueryHandler(this));
+            _rmServer.AddHandler(new StoresQueryHandler(this));
 
             _rmServer.AddHandler(new SingleValueQueryHandlers<string>(this));
             _rmServer.AddHandler(new SingleValueQueryHandlers<Int32?>(this));
@@ -88,8 +88,9 @@ namespace NTDLS.KitKey.Server
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
-            _rmServer.AddHandler(new QueryHandlerForRemoves(this));
-            _rmServer.AddHandler(new QueryHandlerForStores(this));
+
+            _rmServer.AddHandler(new RemovesQueryHandler(this));
+            _rmServer.AddHandler(new StoresQueryHandler(this));
 
             _rmServer.AddHandler(new SingleValueQueryHandlers<string>(this));
             _rmServer.AddHandler(new SingleValueQueryHandlers<Int32?>(this));
@@ -460,6 +461,19 @@ namespace NTDLS.KitKey.Server
         /// </summary>
         public void PushLast<T>(string storeKey, string valueKey, T value)
             => GetKeyStore(storeKey).PushLast(valueKey, value);
+
+
+        /// <summary>
+        /// Prepends a value to a list key-store.
+        /// </summary>
+        public void PushFirst<T>(string storeKey, string valueKey, KkListItem<T> item)
+            => GetKeyStore(storeKey).PushFirst(valueKey, item);
+
+        /// <summary>
+        /// Appends a value to a list key-store.
+        /// </summary>
+        public void PushLast<T>(string storeKey, string valueKey, KkListItem<T> item)
+            => GetKeyStore(storeKey).PushLast(valueKey, item);
 
         /// <summary>
         /// Gets a list from the key-store by its key.
