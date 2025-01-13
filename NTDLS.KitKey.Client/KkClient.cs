@@ -1,19 +1,7 @@
 ﻿using NTDLS.KitKey.Shared;
 using NTDLS.KitKey.Shared.Payload.Deletes;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfDouble;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt32;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfSingle;
-using NTDLS.KitKey.Shared.Payload.ListOf.ListOfString;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfDateTime;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfDouble;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfGuid;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfInt32;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfInt64;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfSingle;
-using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfString;
+using NTDLS.KitKey.Shared.Payload.ListOf;
+using NTDLS.KitKey.Shared.Payload.SingleOf;
 using NTDLS.KitKey.Shared.Payload.Stores;
 using NTDLS.ReliableMessaging;
 using System.Diagnostics.CodeAnalysis;
@@ -260,22 +248,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            if (value is string stringValue)
-                _rmClient.Query(new KkSingleOfStringSet(storeKey, valueKey, stringValue)).Result.EnsureSuccessful();
-            else if (value is Guid guidValue)
-                _rmClient.Query(new KkSingleOfGuidSet(storeKey, valueKey, guidValue)).Result.EnsureSuccessful();
-            else if (value is Int32 int32Value)
-                _rmClient.Query(new KkSingleOfInt32Set(storeKey, valueKey, int32Value)).Result.EnsureSuccessful();
-            else if (value is Int64 int64Value)
-                _rmClient.Query(new KkSingleOfInt64Set(storeKey, valueKey, int64Value)).Result.EnsureSuccessful();
-            else if (value is Single singleValue)
-                _rmClient.Query(new KkSingleOfSingleSet(storeKey, valueKey, singleValue)).Result.EnsureSuccessful();
-            else if (value is Double doubleValue)
-                _rmClient.Query(new KkSingleOfDoubleSet(storeKey, valueKey, doubleValue)).Result.EnsureSuccessful();
-            else if (value is DateTime dateTimeValue)
-                _rmClient.Query(new KkSingleOfDateTimeSet(storeKey, valueKey, dateTimeValue)).Result.EnsureSuccessful();
-            else
-                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            _rmClient.Query(new KkSetSingleOf<T>(storeKey, valueKey, value)).Result.EnsureSuccessful();
         }
 
         /// <summary>
@@ -286,22 +259,7 @@ namespace NTDLS.KitKey.Client
             var genericType = typeof(T);
             genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
-            if (genericType == typeof(string))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfStringGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(Guid))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfGuidGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(Int32))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfInt32Get(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(Int64))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfInt64Get(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(Single))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfSingleGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(Double))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfDoubleGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-            else if (genericType == typeof(DateTime))
-                return (T?)(object?)_rmClient.Query(new KkSingleOfDateTimeGet(storeKey, valueKey)).Result.EnsureSuccessful().Value;
-
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            return (T?)(object?)_rmClient.Query(new KkGetSingleOf<T>(storeKey, valueKey)).Result.EnsureSuccessful().Value;
         }
 
         /// <summary>
@@ -323,22 +281,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            if (listValue is string stringValue)
-                _rmClient.Query(new KkListOfStringPushLast(storeKey, listKey, stringValue)).Result.EnsureSuccessful();
-            else if (listValue is Guid guidValue)
-                _rmClient.Query(new KkListOfGuidPushLast(storeKey, listKey, guidValue)).Result.EnsureSuccessful();
-            else if (listValue is Int32 int32Value)
-                _rmClient.Query(new KkListOfInt32PushLast(storeKey, listKey, int32Value)).Result.EnsureSuccessful();
-            else if (listValue is Int64 int64Value)
-                _rmClient.Query(new KkListOfInt64PushLast(storeKey, listKey, int64Value)).Result.EnsureSuccessful();
-            else if (listValue is Single singleValue)
-                _rmClient.Query(new KkListOfSinglePushLast(storeKey, listKey, singleValue)).Result.EnsureSuccessful();
-            else if (listValue is Double doubleValue)
-                _rmClient.Query(new KkListOfDoublePushLast(storeKey, listKey, doubleValue)).Result.EnsureSuccessful();
-            else if (listValue is DateTime dateTimeValue)
-                _rmClient.Query(new KkListOfDateTimePushLast(storeKey, listKey, dateTimeValue)).Result.EnsureSuccessful();
-            else
-                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            _rmClient.Query(new KkListOfPushLast<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
         }
 
         /// <summary>
@@ -351,22 +294,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            if (listValue is string stringValue)
-                _rmClient.Query(new KkListOfStringPushFirst(storeKey, listKey, stringValue)).Result.EnsureSuccessful();
-            else if (listValue is Guid guidValue)
-                _rmClient.Query(new KkListOfGuidPushFirst(storeKey, listKey, guidValue)).Result.EnsureSuccessful();
-            else if (listValue is Int32 int32Value)
-                _rmClient.Query(new KkListOfInt32PushFirst(storeKey, listKey, int32Value)).Result.EnsureSuccessful();
-            else if (listValue is Int64 int64Value)
-                _rmClient.Query(new KkListOfInt64PushFirst(storeKey, listKey, int64Value)).Result.EnsureSuccessful();
-            else if (listValue is Single singleValue)
-                _rmClient.Query(new KkListOfSinglePushFirst(storeKey, listKey, singleValue)).Result.EnsureSuccessful();
-            else if (listValue is Double doubleValue)
-                _rmClient.Query(new KkListOfDoublePushFirst(storeKey, listKey, doubleValue)).Result.EnsureSuccessful();
-            else if (listValue is DateTime dateTimeValue)
-                _rmClient.Query(new KkListOfDateTimePushFirst(storeKey, listKey, dateTimeValue)).Result.EnsureSuccessful();
-            else
-                throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            _rmClient.Query(new KkListOfPushFirst<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
         }
 
         /// <summary>
@@ -374,25 +302,8 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public List<KkListItem<T>>? GetList<T>(string storeKey, string listKey)
         {
-            var genericType = typeof(T);
-            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
+            return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfGetAll<T>(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
 
-            if (genericType == typeof(string))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfStringGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(Guid))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfGuidGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(Int32))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfInt32GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(Int64))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfInt64GetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(Single))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfSingleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(Double))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfDoubleGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-            else if (genericType == typeof(DateTime))
-                return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfDateTimeGetAll(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
-
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
         }
 
         /// <summary>
@@ -409,25 +320,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetFirst<T>(string storeKey, string listKey)
         {
-            var genericType = typeof(T);
-            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
-
-            if (genericType == typeof(string))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Guid))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGuidGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Int32))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt32GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Int64))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt64GetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Single))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfSingleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Double))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDoubleGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(DateTime))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetFirst(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGetFirst<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
         }
 
         /// <summary>
@@ -444,25 +337,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetLast<T>(string storeKey, string listKey)
         {
-            var genericType = typeof(T);
-            genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
-
-            if (genericType == typeof(string))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfStringGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Guid))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGuidGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Int32))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt32GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Int64))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfInt64GetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Single))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfSingleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(Double))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDoubleGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-            else if (genericType == typeof(DateTime))
-                return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfDateTimeGetLast(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
-
-            throw new Exception($"Key-store [{typeof(T).Name}] is not implemented.");
+            return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGetLast<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
         }
 
         /// <summary>

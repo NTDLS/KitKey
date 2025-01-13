@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
+namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to get the first item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimePushFirst(string storeKey, string listKey, DateTime listValue)
-        : IRmQuery<KkListOfDateTimePushFirstReply>
+    public class KkListOfGetFirst<T>(string storeKey, string listKey)
+        : IRmQuery<KkListOfDateTimeGetFirstReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -17,17 +17,12 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// The key (or identifier) of the value in the key-value store.
         /// </summary>
         public string ListKey { get; set; } = listKey;
-
-        /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
-        /// </summary>
-        public DateTime ListValue { get; set; } = listValue;
     }
 
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to get the first item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimePushFirstReply
+    public class KkListOfDateTimeGetFirstReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -41,9 +36,14 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         public string? ErrorMessage { get; set; }
 
         /// <summary>
+        /// The value retrieved from the list inside the key-value store for the given ListKey.
+        /// </summary>
+        public KkListItem<T>? Value { get; set; }
+
+        /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimePushFirstReply EnsureSuccessful()
+        public KkListOfDateTimeGetFirstReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply(Exception exception)
+        public KkListOfDateTimeGetFirstReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply(bool isSuccess)
+        public KkListOfDateTimeGetFirstReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushFirstReply()
+        public KkListOfDateTimeGetFirstReply()
         {
         }
     }

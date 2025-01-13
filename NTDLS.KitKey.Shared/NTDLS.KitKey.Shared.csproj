@@ -44,11 +44,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="Payload\SingleOf\SingleOfGuid\KkSingleOfGuidSet.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NTDLS.ReliableMessaging" Version="1.12.0" />
+    <PackageReference Include="NTDLS.ReliableMessaging" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

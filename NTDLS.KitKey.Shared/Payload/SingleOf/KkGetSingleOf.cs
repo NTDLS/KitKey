@@ -1,12 +1,26 @@
-﻿using NTDLS.ReliableMessaging;
+﻿
+/* Unmerged change from project 'NTDLS.KitKey.Shared (net8.0)'
+Before:
+using NTDLS.ReliableMessaging;
+After:
+using NTDLS;
+using NTDLS.KitKey;
+using NTDLS.KitKey.Shared;
+using NTDLS.KitKey.Shared.Payload;
+using NTDLS.KitKey.Shared.Payload.SingleOf;
+using NTDLS.KitKey.Shared.Payload.SingleOf;
+using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfDateTime;
+using NTDLS.ReliableMessaging;
+*/
+using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
+namespace NTDLS.KitKey.Shared.Payload.SingleOf
 {
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to get a single value from a key-store.
     /// </summary>
-    public class KkListOfGuidPushFirst(string storeKey, string listKey, Guid listValue)
-        : IRmQuery<KkListOfGuidPushFirstReply>
+    public class KkGetSingleOf<T>(string storeKey, string valueKey)
+        : IRmQuery<KkGetSingleOfReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -16,18 +30,13 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
         /// <summary>
         /// The key (or identifier) of the value in the key-value store.
         /// </summary>
-        public string ListKey { get; set; } = listKey;
-
-        /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
-        /// </summary>
-        public Guid ListValue { get; set; } = listValue;
+        public string ValueKey { get; set; } = valueKey;
     }
 
     /// <summary>
-    /// API payload used to prepend a value to a list type key-value store.
+    /// API payload used to get a single value from a key-store.
     /// </summary>
-    public class KkListOfGuidPushFirstReply
+    public class KkGetSingleOfReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -41,9 +50,14 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
         public string? ErrorMessage { get; set; }
 
         /// <summary>
+        /// The value retrieved from the key-value store for the given ValueKey.
+        /// </summary>
+        public T? Value { get; set; }
+
+        /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfGuidPushFirstReply EnsureSuccessful()
+        public KkGetSingleOfReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +69,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfGuidPushFirstReply(Exception exception)
+        public KkGetSingleOfReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +78,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfGuidPushFirstReply(bool isSuccess)
+        public KkGetSingleOfReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +86,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfGuid
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfGuidPushFirstReply()
+        public KkGetSingleOfReply()
         {
         }
     }

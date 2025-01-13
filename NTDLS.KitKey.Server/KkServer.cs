@@ -1,7 +1,6 @@
 ﻿using NTDLS.KitKey.Server.Management;
 using NTDLS.KitKey.Server.Server;
 using NTDLS.KitKey.Server.Server.QueryHandlers;
-using NTDLS.KitKey.Server.Server.QueryHandlers.ListOf;
 using NTDLS.KitKey.Shared;
 using NTDLS.ReliableMessaging;
 using NTDLS.Semaphore;
@@ -53,21 +52,33 @@ namespace NTDLS.KitKey.Server
             _rmServer.AddHandler(new QueryHandlerForRemoves(this));
             _rmServer.AddHandler(new QueryHandlerForStores(this));
 
-            _rmServer.AddHandler(new QueryHandlerForSingleOfDateTime(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfDouble(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfGuid(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfInt32(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfInt64(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfSingle(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfString(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<string>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int32?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int32>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int64?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int64>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Single?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Single>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Double?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Double>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<DateTime?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<DateTime>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Guid?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Guid>(this));
 
-            _rmServer.AddHandler(new QueryHandlerForListOfDateTime(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfDouble(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfGuid(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfInt32(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfInt64(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfSingle(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfString(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<string>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int32?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int32>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int64?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int64>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Single?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Single>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Double?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Double>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<DateTime?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<DateTime>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Guid?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Guid>(this));
         }
 
         /// <summary>
@@ -80,21 +91,33 @@ namespace NTDLS.KitKey.Server
             _rmServer.AddHandler(new QueryHandlerForRemoves(this));
             _rmServer.AddHandler(new QueryHandlerForStores(this));
 
-            _rmServer.AddHandler(new QueryHandlerForSingleOfDateTime(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfDouble(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfGuid(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfInt32(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfInt64(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfSingle(this));
-            _rmServer.AddHandler(new QueryHandlerForSingleOfString(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<string>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int32?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int32>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int64?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Int64>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Single?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Single>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Double?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Double>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<DateTime?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<DateTime>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Guid?>(this));
+            _rmServer.AddHandler(new SingleValueQueryHandlers<Guid>(this));
 
-            _rmServer.AddHandler(new QueryHandlerForListOfDateTime(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfDouble(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfGuid(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfInt32(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfInt64(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfSingle(this));
-            _rmServer.AddHandler(new QueryHandlerForListOfString(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<string>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int32?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int32>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int64?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Int64>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Single?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Single>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Double?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Double>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<DateTime?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<DateTime>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Guid?>(this));
+            _rmServer.AddHandler(new ListsQueryHandlers<Guid>(this));
         }
 
         #region Management.

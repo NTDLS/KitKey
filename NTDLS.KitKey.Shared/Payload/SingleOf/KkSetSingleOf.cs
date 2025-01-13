@@ -1,12 +1,26 @@
-﻿using NTDLS.ReliableMessaging;
+﻿
+/* Unmerged change from project 'NTDLS.KitKey.Shared (net8.0)'
+Before:
+using NTDLS.ReliableMessaging;
+After:
+using NTDLS;
+using NTDLS.KitKey;
+using NTDLS.KitKey.Shared;
+using NTDLS.KitKey.Shared.Payload;
+using NTDLS.KitKey.Shared.Payload.SingleOf;
+using NTDLS.KitKey.Shared.Payload.SingleOf;
+using NTDLS.KitKey.Shared.Payload.SingleOf.SingleOfDateTime;
+using NTDLS.ReliableMessaging;
+*/
+using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
+namespace NTDLS.KitKey.Shared.Payload.SingleOf
 {
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to insert or update a single value in a key-store.
     /// </summary>
-    public class KkListOfInt64PushLast(string storeKey, string listKey, long listValue)
-        : IRmQuery<KkListOfInt64PushLastReply>
+    public class KkSetSingleOf<T>(string storeKey, string valueKey, T value)
+        : IRmQuery<KkSetSingleOfReply>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -16,18 +30,18 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// The key (or identifier) of the value in the key-value store.
         /// </summary>
-        public string ListKey { get; set; } = listKey;
+        public string ValueKey { get; set; } = valueKey;
 
         /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
+        /// The value to insert or update to the key-value store for the given ValueKey.
         /// </summary>
-        public long ListValue { get; set; } = listValue;
+        public T Value { get; set; } = value;
     }
 
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to insert or update a single value in a key-store.
     /// </summary>
-    public class KkListOfInt64PushLastReply
+    public class KkSetSingleOfReply
         : IRmQueryReply
     {
         /// <summary>
@@ -43,7 +57,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfInt64PushLastReply EnsureSuccessful()
+        public KkSetSingleOfReply EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +69,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64PushLastReply(Exception exception)
+        public KkSetSingleOfReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +78,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64PushLastReply(bool isSuccess)
+        public KkSetSingleOfReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +86,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64PushLastReply()
+        public KkSetSingleOfReply()
         {
         }
     }

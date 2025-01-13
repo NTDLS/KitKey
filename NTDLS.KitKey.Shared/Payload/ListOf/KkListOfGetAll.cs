@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
+namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
     /// API payload used to get all items from a list type key-value store.
     /// </summary>
-    public class KkListOfInt64GetAll(string storeKey, string listKey)
-        : IRmQuery<KkListOfInt64GetAllReply>
+    public class KkListOfGetAll<T>(string storeKey, string listKey)
+        : IRmQuery<KkListOfDateTimeGetAllReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -22,7 +22,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
     /// <summary>
     /// API payload used to get all items from a list type key-value store.
     /// </summary>
-    public class KkListOfInt64GetAllReply
+    public class KkListOfDateTimeGetAllReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -38,12 +38,12 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// All items stored in the key-value store for the given ListKey.
         /// </summary>
-        public List<KkListItem<Int64>>? List { get; set; }
+        public List<KkListItem<T>>? List { get; set; }
 
         /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfInt64GetAllReply EnsureSuccessful()
+        public KkListOfDateTimeGetAllReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64GetAllReply(Exception exception)
+        public KkListOfDateTimeGetAllReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64GetAllReply(bool isSuccess)
+        public KkListOfDateTimeGetAllReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfInt64
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfInt64GetAllReply()
+        public KkListOfDateTimeGetAllReply()
         {
         }
     }

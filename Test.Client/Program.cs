@@ -20,10 +20,16 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore")
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore.Strings")
             {
                 PersistenceScheme = KkPersistenceScheme.Persistent,
                 ValueType = KkValueType.ListOfStrings
+            });
+
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentListStore.Int32s")
+            {
+                PersistenceScheme = KkPersistenceScheme.Persistent,
+                ValueType = KkValueType.ListOfInt32s
             });
 
             var rand = new Random();
@@ -35,7 +41,8 @@ namespace Test.Client
 
                 var list = _client.GetList<string>("MyPersistentListStore", $"MyKey:{randomKey1}");
 
-                _client.PushLast("MyPersistentListStore", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+                _client.PushLast("MyPersistentListStore.Strings", $"MyKey:{randomKey2}", $"Item #{i:n0}");
+                _client.PushLast("MyPersistentListStore.Int32s", $"MyKey:{randomKey2}", i);
             }
 
             Console.WriteLine("Press [enter] to stop.");
@@ -50,14 +57,16 @@ namespace Test.Client
 
             _client.Connect("localhost", KkDefaults.DEFAULT_KEYSTORE_PORT);
 
-            _client.CreateStore(new KkStoreConfiguration("MyPersistentStore")
+            _client.CreateStore(new KkStoreConfiguration("MyPersistentStore.String")
             {
-                PersistenceScheme = KkPersistenceScheme.Persistent
+                PersistenceScheme = KkPersistenceScheme.Persistent,
+                ValueType = KkValueType.String
             });
 
-            _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore")
+            _client.CreateStore(new KkStoreConfiguration("MyEphemeralStore.Int32")
             {
-                PersistenceScheme = KkPersistenceScheme.Ephemeral
+                PersistenceScheme = KkPersistenceScheme.Ephemeral,
+                ValueType = KkValueType.Int32
             });
 
             var rand = new Random();
@@ -67,18 +76,18 @@ namespace Test.Client
                 var randomKey = Guid.NewGuid().ToString().Substring(0, 4);
                 var randomValue = Guid.NewGuid().ToString();
 
-                _client.Set("MyPersistentStore", randomKey, randomValue);
-                _client.Set("MyEphemeralStore", randomKey, randomValue);
+                _client.Set("MyPersistentStore.String", randomKey, randomValue);
+                _client.Set("MyEphemeralStore.Int32", randomKey, i);
 
                 randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                var a = _client.Get<string>("MyPersistentStore", randomKey);
-                var b = _client.Get<string>("MyEphemeralStore", randomKey);
+                var a = _client.Get<string>("MyPersistentStore.String", randomKey);
+                var b = _client.Get<int>("MyEphemeralStore.Int32", randomKey);
 
                 if (rand.Next(0, 100) > 75)
                 {
                     randomKey = Guid.NewGuid().ToString().Substring(0, 4);
-                    _client.Remove("MyPersistentStore", randomKey);
-                    _client.Remove("MyEphemeralStore", randomKey);
+                    _client.Remove("MyPersistentStore.String", randomKey);
+                    _client.Remove("MyEphemeralStore.Int32", randomKey);
                 }
             }
 

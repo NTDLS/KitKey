@@ -1,12 +1,12 @@
 ﻿using NTDLS.ReliableMessaging;
 
-namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
+namespace NTDLS.KitKey.Shared.Payload.ListOf
 {
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to get the last item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimePushLast(string storeKey, string listKey, DateTime listValue)
-        : IRmQuery<KkListOfDateTimePushLastReply>
+    public class KkListOfGetLast<T>(string storeKey, string listKey)
+        : IRmQuery<KkListOfDateTimeGetLastReply<T>>
     {
         /// <summary>
         /// The name (or identifier) for a key-value store.
@@ -17,17 +17,12 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// The key (or identifier) of the value in the key-value store.
         /// </summary>
         public string ListKey { get; set; } = listKey;
-
-        /// <summary>
-        /// The value add to the list inside the key-value store for the given ListKey.
-        /// </summary>
-        public DateTime ListValue { get; set; } = listValue;
     }
 
     /// <summary>
-    /// API payload used to append a value to a list type key-value store.
+    /// API payload used to get the last item from a list type key-value store.
     /// </summary>
-    public class KkListOfDateTimePushLastReply
+    public class KkListOfDateTimeGetLastReply<T>
         : IRmQueryReply
     {
         /// <summary>
@@ -41,9 +36,14 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         public string? ErrorMessage { get; set; }
 
         /// <summary>
+        /// The value retrieved from the list inside the key-value store for the given ListKey.
+        /// </summary>
+        public KkListItem<T>? Value { get; set; }
+
+        /// <summary>
         /// Throws the ErrorMessage where IsSuccess is not true.
         /// </summary>
-        public KkListOfDateTimePushLastReply EnsureSuccessful()
+        public KkListOfDateTimeGetLastReply<T> EnsureSuccessful()
         {
             if (!IsSuccess)
             {
@@ -55,7 +55,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushLastReply(Exception exception)
+        public KkListOfDateTimeGetLastReply(Exception exception)
         {
             IsSuccess = false;
             ErrorMessage = exception.Message;
@@ -64,7 +64,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushLastReply(bool isSuccess)
+        public KkListOfDateTimeGetLastReply(bool isSuccess)
         {
             IsSuccess = isSuccess;
         }
@@ -72,7 +72,7 @@ namespace NTDLS.KitKey.Shared.Payload.ListOf.ListOfDateTime
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        public KkListOfDateTimePushLastReply()
+        public KkListOfDateTimeGetLastReply()
         {
         }
     }
