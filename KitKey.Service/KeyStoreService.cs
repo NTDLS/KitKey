@@ -35,6 +35,7 @@ namespace KitKey.Service
                 builder.Services.AddAuthentication("CookieAuth")
                     .AddCookie("CookieAuth", options =>
                     {
+                        options.Cookie.Name = "KitKeyAuth";
                         options.LoginPath = "/Login";
                     });
 
