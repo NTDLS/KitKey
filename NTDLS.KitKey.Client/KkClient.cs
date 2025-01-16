@@ -1,6 +1,6 @@
 ﻿using NTDLS.KitKey.Shared;
-using NTDLS.KitKey.Shared.Payload.Remove;
 using NTDLS.KitKey.Shared.Payload.ListOf;
+using NTDLS.KitKey.Shared.Payload.Remove;
 using NTDLS.KitKey.Shared.Payload.SingleOf;
 using NTDLS.KitKey.Shared.Payload.Stores;
 using NTDLS.ReliableMessaging;
@@ -259,7 +259,7 @@ namespace NTDLS.KitKey.Client
             var genericType = typeof(T);
             genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
-            return (T?)(object?)_rmClient.Query(new KkGetSingleOf<T>(storeKey, valueKey)).Result.EnsureSuccessful().Value;
+            return _rmClient.Query(new KkGetSingleOf<T>(storeKey, valueKey)).Result.EnsureSuccessful().Value;
         }
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public List<KkListItem<T>>? GetList<T>(string storeKey, string listKey)
         {
-            return (List<KkListItem<T>>?)(object)(_rmClient.Query(new KkListOfGetAll<T>(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new());
+            return _rmClient.Query(new KkListOfGetAll<T>(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new();
 
         }
 
@@ -346,7 +346,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetFirst<T>(string storeKey, string listKey)
         {
-            return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGetFirst<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+            return _rmClient.Query(new KkListOfGetFirst<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new();
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetLast<T>(string storeKey, string listKey)
         {
-            return (KkListItem<T>?)(object)(_rmClient.Query(new KkListOfGetLast<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new());
+            return _rmClient.Query(new KkListOfGetLast<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new();
         }
 
         /// <summary>
