@@ -17,7 +17,7 @@ In addition to single value key-value stores, KitKey also supports lists of valu
 
 ## See also:
  - https://github.com/NTDLS/CatMQ
- - 
+
 ## Server
 Besides running the dedicated service using the installer, you can run the server from code:
 
