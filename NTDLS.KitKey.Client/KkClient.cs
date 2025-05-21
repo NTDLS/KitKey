@@ -61,7 +61,6 @@ namespace NTDLS.KitKey.Client
 
             var rmConfiguration = new RmConfiguration()
             {
-                AsynchronousQueryWaiting = configuration.AsynchronousAcknowledgment,
                 InitialReceiveBufferSize = configuration.InitialReceiveBufferSize,
                 MaxReceiveBufferSize = configuration.MaxReceiveBufferSize,
                 QueryTimeout = configuration.QueryTimeout,
@@ -69,6 +68,7 @@ namespace NTDLS.KitKey.Client
             };
 
             _rmClient = new RmClient(rmConfiguration);
+            _rmClient.SetCompressionProvider(new RmDeflateCompressionProvider());
         }
 
         /// <summary>
@@ -78,6 +78,7 @@ namespace NTDLS.KitKey.Client
         {
             _configuration = new KkClientConfiguration();
             _rmClient = new RmClient();
+            _rmClient.SetCompressionProvider(new RmDeflateCompressionProvider());
 
             _rmClient.OnConnected += RmClient_OnConnected;
             _rmClient.OnDisconnected += RmClient_OnDisconnected;

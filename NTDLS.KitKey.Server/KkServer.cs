@@ -40,7 +40,6 @@ namespace NTDLS.KitKey.Server
 
             var rmConfiguration = new RmConfiguration()
             {
-                AsynchronousQueryWaiting = configuration.AsynchronousAcknowledgment,
                 InitialReceiveBufferSize = configuration.InitialReceiveBufferSize,
                 MaxReceiveBufferSize = configuration.MaxReceiveBufferSize,
                 QueryTimeout = TimeSpan.FromSeconds(configuration.AcknowledgmentTimeoutSeconds),
@@ -48,6 +47,7 @@ namespace NTDLS.KitKey.Server
             };
 
             _rmServer = new RmServer(rmConfiguration);
+            _rmServer.SetCompressionProvider(new RmDeflateCompressionProvider());
 
             _rmServer.AddHandler(new RemovesQueryHandler(this));
             _rmServer.AddHandler(new StoresQueryHandler(this));
@@ -88,6 +88,7 @@ namespace NTDLS.KitKey.Server
         {
             _configuration = new KkServerConfiguration();
             _rmServer = new RmServer();
+            _rmServer.SetCompressionProvider(new RmDeflateCompressionProvider());
 
             _rmServer.AddHandler(new RemovesQueryHandler(this));
             _rmServer.AddHandler(new StoresQueryHandler(this));
@@ -152,7 +153,6 @@ namespace NTDLS.KitKey.Server
         {
             return new KkServerDescriptor
             {
-                AsynchronousAcknowledgment = _configuration.AsynchronousAcknowledgment,
                 AcknowledgmentTimeoutSeconds = _configuration.AcknowledgmentTimeoutSeconds,
                 InitialReceiveBufferSize = _configuration.InitialReceiveBufferSize,
                 MaxReceiveBufferSize = _configuration.MaxReceiveBufferSize,

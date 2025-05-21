@@ -16,7 +16,6 @@ namespace KitKey.Service
             _keyServer = new KkServer(new KkServerConfiguration
             {
                 PersistencePath = serviceConfiguration.DataPath,
-                AsynchronousAcknowledgment = serviceConfiguration.AsynchronousAcknowledgment,
                 InitialReceiveBufferSize = serviceConfiguration.InitialReceiveBufferSize,
                 MaxReceiveBufferSize = serviceConfiguration.MaxReceiveBufferSize,
                 AcknowledgmentTimeoutSeconds = serviceConfiguration.AcknowledgmentTimeoutSeconds,
