@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <version>2.1.4</version>
+    <version>2.1.5</version>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Topshelf" Version="4.3.0" />
   </ItemGroup>
 
