@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>NTDLS.KitKey.Server</Title>
-    <Copyright>Copyright © 2025 NetworkDLS</Copyright>
+    <Copyright>Copyright © 2026 NetworkDLS</Copyright>
     <Description>
       A low latency, high-performance, and reliable persistent or ephemeral key-value store over TCP/IP.
     </Description>
@@ -15,13 +15,13 @@
     <RepositoryUrl>https://github.com/NTDLS/NTDLS.KitKey</RepositoryUrl>
     <PackageTags>ipc;message-queue;inter-process-communication;tcp-ip;message-broker;mq;</PackageTags>
     <PackageReleaseNotes>
-      Dependency updates and introduced .net 10 support.
+      Dependency updates.
     </PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>NetworkDLS</Authors>
     <Company>NetworkDLS</Company>
-    <version>2.1.5</version>
+    <version>2.1.6</version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>Logo.png</PackageIcon>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
@@ -47,8 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NTDLS.FastMemoryCache" Version="1.9.3" />
-    <PackageReference Include="RocksDB" Version="10.4.2.62659" />
+    <PackageReference Include="NTDLS.FastMemoryCache" Version="1.9.5" />
+    <PackageReference Include="RocksDB" Version="11.8.1.4423" />
   </ItemGroup>
 
   <ItemGroup>

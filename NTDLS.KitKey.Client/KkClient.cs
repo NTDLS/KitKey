@@ -84,7 +84,7 @@ namespace NTDLS.KitKey.Client
             _rmClient.OnDisconnected += RmClient_OnDisconnected;
         }
 
-        private void RmClient_OnConnected(RmContext context)
+        private void RmClient_OnConnected(RmContext context, bool isReconnect)
         {
             _explicitDisconnect = false;
             OnConnected?.Invoke(this);
@@ -219,25 +219,25 @@ namespace NTDLS.KitKey.Client
         /// Creates a new key-store with a default configuration.
         /// </summary>
         public void CreateStore(string storeKey)
-           => _rmClient.Query(new KkStoreCreate(new KkStoreConfiguration(storeKey))).Result.EnsureSuccessful();
+           => _rmClient.Query(new KkStoreCreate(new KkStoreConfiguration(storeKey))).EnsureSuccessful();
 
         /// <summary>
         /// Creates a new key-store with a custom configuration.
         /// </summary>
         public void CreateStore(KkStoreConfiguration storeConfiguration)
-            => _rmClient.Query(new KkStoreCreate(storeConfiguration)).Result.EnsureSuccessful();
+            => _rmClient.Query(new KkStoreCreate(storeConfiguration)).EnsureSuccessful();
 
         /// <summary>
         /// Deletes a key-store and all its values.
         /// </summary>
         public void DeleteStore(string storeKey)
-            => _rmClient.Query(new KkStoreDelete(storeKey)).Result.EnsureSuccessful();
+            => _rmClient.Query(new KkStoreDelete(storeKey)).EnsureSuccessful();
 
         /// <summary>
         /// Removes all values from a key-store.
         /// </summary>
         public void PurgeStore(string storeKey)
-            => _rmClient.Query(new KkStorePurge(storeKey)).Result.EnsureSuccessful();
+            => _rmClient.Query(new KkStorePurge(storeKey)).EnsureSuccessful();
 
         /// <summary>
         /// Inserts or updates a value in the given key-value store.
@@ -249,7 +249,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkSetSingleOf<T>(storeKey, valueKey, value)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkSetSingleOf<T>(storeKey, valueKey, value)).EnsureSuccessful();
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace NTDLS.KitKey.Client
             var genericType = typeof(T);
             genericType = Nullable.GetUnderlyingType(genericType) ?? genericType;
 
-            return _rmClient.Query(new KkGetSingleOf<T>(storeKey, valueKey)).Result.EnsureSuccessful().Value;
+            return _rmClient.Query(new KkGetSingleOf<T>(storeKey, valueKey)).EnsureSuccessful().Value;
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushLastValue<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushLastValue<T>(storeKey, listKey, listValue)).EnsureSuccessful();
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushFirstItem<T>(storeKey, listKey, item)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushFirstItem<T>(storeKey, listKey, item)).EnsureSuccessful();
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushFirstValue<T>(storeKey, listKey, listValue)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushFirstValue<T>(storeKey, listKey, listValue)).EnsureSuccessful();
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace NTDLS.KitKey.Client
                 throw new Exception("Key-value stores do not allow null values.");
             }
 
-            _rmClient.Query(new KkListOfPushLastItem<T>(storeKey, listKey, item)).Result.EnsureSuccessful();
+            _rmClient.Query(new KkListOfPushLastItem<T>(storeKey, listKey, item)).EnsureSuccessful();
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public List<KkListItem<T>>? GetList<T>(string storeKey, string listKey)
         {
-            return _rmClient.Query(new KkListOfGetAll<T>(storeKey, listKey)).Result.EnsureSuccessful()?.List ?? new();
+            return _rmClient.Query(new KkListOfGetAll<T>(storeKey, listKey)).EnsureSuccessful()?.List ?? new();
 
         }
 
@@ -347,7 +347,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetFirst<T>(string storeKey, string listKey)
         {
-            return _rmClient.Query(new KkListOfGetFirst<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new();
+            return _rmClient.Query(new KkListOfGetFirst<T>(storeKey, listKey)).EnsureSuccessful()?.Value ?? new();
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public KkListItem<T>? GetLast<T>(string storeKey, string listKey)
         {
-            return _rmClient.Query(new KkListOfGetLast<T>(storeKey, listKey)).Result.EnsureSuccessful()?.Value ?? new();
+            return _rmClient.Query(new KkListOfGetLast<T>(storeKey, listKey)).EnsureSuccessful()?.Value ?? new();
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void Remove(string storeKey, string valueKey)
         {
-            var result = _rmClient.Query(new KkRemoveKey(storeKey, valueKey)).Result;
+            var result = _rmClient.Query(new KkRemoveKey(storeKey, valueKey));
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -393,7 +393,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void RemoveListItemByKey(string storeKey, string listKey, Guid listItemKey)
         {
-            var result = _rmClient.Query(new KkRemoveListItemByKey(storeKey, listKey, listItemKey)).Result;
+            var result = _rmClient.Query(new KkRemoveListItemByKey(storeKey, listKey, listItemKey));
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -405,7 +405,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void FlushCache(string storeKey)
         {
-            var result = _rmClient.Query(new KkStoreFlushCache(storeKey)).Result;
+            var result = _rmClient.Query(new KkStoreFlushCache(storeKey));
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
@@ -417,7 +417,7 @@ namespace NTDLS.KitKey.Client
         /// </summary>
         public void FlushCache()
         {
-            var result = _rmClient.Query(new KkStoreFlushAllCaches()).Result;
+            var result = _rmClient.Query(new KkStoreFlushAllCaches());
             if (result.IsSuccess == false)
             {
                 throw new Exception(result.ErrorMessage);
